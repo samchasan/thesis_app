@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1 #{title}
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='Name') Name:
+      input#Name.form-control(type='text', placeholder='Jakes Cafe, Green Bean Roasters etc.' name='Name' value=(undefined===roaster ? '' : roaster.name))
+    div
+    div.form-group
+      label(for='Address') Address:
+      input#Address.form-control(type='text', placeholder='101 lenox Rd' name='Address' value=(undefined===roaster ? '' : roaster.address))
+    div
+    div.form-group
+      label(for='Phone') Phone:
+      input#Phone.form-control(type='text', placeholder='101-000-999' name='Phone' value=(undefined===roaster ? '' : roaster.phone))
+
+
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+   ul
+    for error in errors
+     li!= error.msg

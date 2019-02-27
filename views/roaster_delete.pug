@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  p #[strong #{title}]:
+  h1 #{name}
+
+  div
+  p Do you really want to delete this Roaster?
+
+  form(method='POST' action='')
+        div.form-group
+          input#roasterid.form-control(type='hidden',name='roasterid', required='true', value=id )
+
+          button.btn.btn-primary(type='submit') Delete

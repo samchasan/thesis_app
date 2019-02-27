@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  p #{title}:
+  h1 #{roaster.name}
+  p #[strong Address:] #{roaster.address}
+  p #[strong Phone:] #{roaster.phone}
+
+  hr
+  p
+    a(href=roaster.id+`/delete`) Delete roaster
