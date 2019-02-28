@@ -9,12 +9,13 @@ var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
 var compression = require('compression');
 
-
+const yelp = require('yelp-fusion');
+const apiKey = 'wGqzd3D0HanzPEzCzsL6564joQ193ruYklVwN3si1zfkH6tQfsUnYHyOaMSmF4Qlz3kcnweFNGRcukXCcuvaJ_9MOw-1PfHc2Ql1BR-hXXv5cevs43CgmZVgiTpxXHYx';
 var app = express();
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var dev_db_url = 'mongodb+srv://root:1Ab029384756@chaffmap-ljx1a.mongodb.net/Chaff_Map?retryWrites=true';
+var dev_db_url = 'mongodb+srv://root:1Ab029384756@chaffmap-ljx1a.mongodb.net/Chaff_Map?retryWrites=true?readPreference=secondary&replicaSet=chaffmap-shard-00-01-ljx1a.mongodb.net:27017&ssl=true';
 var mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;

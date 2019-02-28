@@ -4,6 +4,8 @@ const async = require('async')
 var debug = require('debug')('roaster');
 
 
+
+
 var Roaster = require('../models/roasters');
 
 exports.index = function(req, res) {
@@ -63,8 +65,6 @@ exports.Roaster_detail = function(req, res, next) {
 
 
 
-
-
 // Display Roaster create form on GET.
 exports.Roaster_create_get = function(req, res, next) {
     async.parallel({
@@ -76,8 +76,6 @@ exports.Roaster_create_get = function(req, res, next) {
         res.render('roaster_form', { title: 'Create Roaster', roaster: results.name, address: results.address, phone: results.phone } );
     });
 };
-
-
 
 
 // Handle Roaster create on POST.

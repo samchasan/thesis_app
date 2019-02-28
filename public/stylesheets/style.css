@@ -3,3 +3,126 @@
     padding: 0;
     list-style: none;
 }
+
+body {
+  margin: 0px;
+  padding-left: 10px;
+  font-family: "Sans-serif", Helvetica;
+}
+
+/* h3 {
+  font-size: 30vw;
+} */
+
+a{
+  text-decoration: none;
+  color: gray;
+}
+
+p{
+  width: 80%;
+  /* margin-left: 30px; */
+}
+
+a:hover{
+  background-color: lightgray;
+  color: #fcfcfc;
+}
+
+a:active{
+  color: white;
+}
+
+hr{
+  width: 80%;
+}
+
+#head{
+  padding-top:0px;
+  padding-left:10px;
+  position: sticky;
+  /* background-color: #ddd; */
+}
+
+#hero{
+  max-width: 80%;
+}
+
+#map {
+  position: relative;
+  top: 110px;
+  bottom: 0;
+  width: 100%;
+}
+
+#nav{
+  position: static;
+  top: 30px;
+  left: 220px;
+}
+
+#title{
+  width: 200px;
+  max-width: 300px;
+  size: fixed;
+}
+
+#marker {
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.mapboxgl-marker :hover {
+  cursor: pointer;
+}
+
+.menuItem{
+  /* padding: 20; */
+  margin: 10px;
+  padding-top: 3px;
+  padding-left: 3px;
+}
+
+.project-box {
+  box-sizing: border-box;
+  float: left;
+  font-size: 1rem;
+  /* margin: 6rem 0 0; */
+  padding: 0 3%;
+  width: 33%;
+}
+
+.project-box h3 {
+  color: #fff;
+  font-size: 3vw;
+  margin: -40px 0 0.5em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 4px #000;
+}
+
+.project-box .social-link {
+  display: block;
+  margin: 2em auto 1em;
+}
+
+.project-box img{
+  width: 100%;
+  max-width: 300px
+}
+
+.project-box-blurb {
+  font-size: 0.75em;
+  text-align: center;
+}
+
+.project-box-blurb p{
+  margin-left: 2em
+}
