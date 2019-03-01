@@ -2,11 +2,16 @@ const {body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const async = require('async')
 var debug = require('debug')('roaster');
-
-
-
-
 var Roaster = require('../models/roasters');
+var bodyParser = require('body-parser');
+const yelp = require('yelp-fusion');
+const apiKey = 'wGqzd3D0HanzPEzCzsL6564joQ193ruYklVwN3si1zfkH6tQfsUnYHyOaMSmF4Qlz3kcnweFNGRcukXCcuvaJ_9MOw-1PfHc2Ql1BR-hXXv5cevs43CgmZVgiTpxXHYx';
+const mongoose = require('mongoose');
+const math = require('mathjs');
+var whatever = require('libphonenumber-js');
+
+
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 exports.index = function(req, res) {
   async.series({
@@ -20,6 +25,75 @@ exports.index = function(req, res) {
       data: results
     });
   });
+};
+
+exports.search = function(req, res, next) {
+
+    let inputContent = req.body.textField;
+  	// console.log(inputContent);
+
+    const searchRequest = {
+      term:'Coffee Roasters',
+      location: inputContent,
+      limit: 30
+    };
+
+    const client = yelp.client(apiKey);
+
+    let result = {};
+    let results = [];
+
+    client.search(searchRequest).then(response => {
+      const keys = Object.keys(response.jsonBody.businesses)
+
+      // console.log(keys);
+
+
+      for (let i = 0; i < keys.length; i++){
+        const name = response.jsonBody.businesses[i].name;
+        const rawPhone = response.jsonBody.businesses[i].phone;
+        const loc = response.jsonBody.businesses[i].location;
+        const coords = response.jsonBody.businesses[i].coordinates;
+        const rawDist = response.jsonBody.businesses[i].distance;
+
+        // parseNo = whatever.parsePhoneNumberFromString()
+
+        const phoneString = rawPhone.toString()
+        const phoneNumber = whatever.parsePhoneNumberFromString(phoneString)
+        const phone = phoneNumber.formatNational()
+        const address = `${loc.display_address[0]}, ${loc.display_address[1]}`
+        const lat = math.round(coords.latitude,3)
+        const long = math.round(coords.longitude,3)
+        const distInMiles = math.round((rawDist/1609.34),1)
+        const dist = `${distInMiles} mi`
+        // console.log(coords)
+        // console.log(loc)
+
+        result = {
+          "name" : name.toString(),
+          "location" : address,
+          "coordinates" : `${lat}, ${long}`,
+          "phone" : phone,
+          "distance" : dist
+        }
+        console.log(result)
+
+        var roaster = new Roaster({
+          name: result.name,
+          address: result.location,
+          coords: result.coordinates,
+          phone: result.phone,
+          dist: result.distance
+        });
+
+        console.log(roaster)
+
+          roaster.save(function(err) {
+            if (err) {  return next(err); }
+          });
+        }
+    })
+  res.redirect('/catalog')
 };
 
 

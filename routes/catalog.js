@@ -9,6 +9,9 @@ var roaster_controller = require('../controllers/roasterController');
 // GET catalog home page.
 router.get('/', roaster_controller.index);
 
+// GET catalog home page.
+router.post('/', roaster_controller.search);
+
 // GET request for creating a roaster. NOTE This must come before routes that display roaster (uses id).
 router.get('/roasters/create', roaster_controller.Roaster_create_get);
 

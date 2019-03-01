@@ -1,8 +1,4 @@
-function setup(){
-  addMap();
-}
-
-function addMap() {
+$(document).ready(
   console.log('adding map')
   mapboxgl.accessToken = 'pk.eyJ1IjoiY2hhc2Fuc2MiLCJhIjoiY2pyd2cyeWduMGNnNzQ5cDk4bHRwYmVxayJ9.sAZTXvzkVOfBdIg3GmFsLQ' // add your own mapbox token to make this example work
   let map = new mapboxgl.Map({
@@ -12,6 +8,7 @@ function addMap() {
     minZoom: 2,
     zoom: 10
   })
+)
 
   // rawData = [];
   // roasters = []
@@ -48,4 +45,4 @@ function addMap() {
   //     })
   //   })
   // })
-}
+// }
