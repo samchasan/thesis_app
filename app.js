@@ -1,8 +1,13 @@
 var createError = require('http-errors');
 var express = require('express');
+var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const session = require('express-session')
 var logger = require('morgan');
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var MongoStore = require('connect-mongo')(session);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -11,14 +16,44 @@ var compression = require('compression');
 
 const yelp = require('yelp-fusion');
 const apiKey = 'wGqzd3D0HanzPEzCzsL6564joQ193ruYklVwN3si1zfkH6tQfsUnYHyOaMSmF4Qlz3kcnweFNGRcukXCcuvaJ_9MOw-1PfHc2Ql1BR-hXXv5cevs43CgmZVgiTpxXHYx';
-var app = express();
 
-//Set up mongoose connection
-var mongoose = require('mongoose');
-var dev_db_url = 'mongodb+srv://root:1Ab029384756@chaffmap-ljx1a.mongodb.net/Chaff_Map?retryWrites=true?readPreference=secondary&replicaSet=chaffmap-shard-00-01-ljx1a.mongodb.net:27017&ssl=true';
-var mongoDB = process.env.MONGODB_URI || dev_db_url;
-mongoose.connect(mongoDB);
+const uuid = require('uuid/v4')
+const uniqueID = uuid()
+
+// timeout in seconds
+const timeout = 30
+
+
+// setTimeout(function(){
+//   db.dropDatabase(uniqueID)
+// }, timeout)
+
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url);
+
 mongoose.Promise = global.Promise;
+
+app.use(logger('dev'))
+app.use(cookieParser())
+app.use(bodyParser.urlencoded({extended:false}))
+// add & configure middleware
+app.use(session({
+  genid: function(req) {
+    return genuuid() // use UUIDs for session IDs
+    // const id = req.sessionID
+  },
+  secret: uniqueID,
+  saveUninitialized: true,
+  resave: true,
+  store: new MongoStore ({mongooseConnection: mongoose.connection,
+                          ttl: timeout })
+}))
+
+function genuuid(){
+  return uuid()
+}
+
+
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -27,10 +62,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 app.use(compression()); //Compress all routes
 
@@ -38,11 +71,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
-// app.use('/search', catalogRouter);  // Add catalog routes to middleware chain.
+app.use('/catalog', catalogRouter);
 
-
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
@@ -56,6 +86,13 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+
+  const sessionID = req.session
+  // console.log(sessionID)
+  	// console.log("===================");
+	// console.log(req.user);
+	next();
 });
+
 
 module.exports = app;

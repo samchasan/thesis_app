@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Roaster = new Schema({
+  userID: {type: String},
   name: {type: String},
   address: {type: String},
   coordinates: {type: String},

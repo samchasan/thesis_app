@@ -6,34 +6,24 @@ var roaster_controller = require('../controllers/roasterController');
 
 /// roaster ROUTES ///
 
-// GET catalog home page.
+// GET/POST catalog home page.
 router.get('/', roaster_controller.index);
-
-// GET catalog home page.
 router.post('/', roaster_controller.search);
+// router.post('/', roaster_controller.timeout);
 
-// GET request for creating a roaster. NOTE This must come before routes that display roaster (uses id).
+// GET/POST create a roaster
 router.get('/roasters/create', roaster_controller.Roaster_create_get);
-
-// POST request for creating roaster.
 router.post('/roasters/create', roaster_controller.Roaster_create_post);
 
-// GET request to delete roaster.
+// GET/POST delete a roaster
 router.get('/roasters/:id/delete', roaster_controller.Roaster_delete_get);
-
-// POST request to delete roaster.
 router.post('/roasters/:id/delete', roaster_controller.Roaster_delete_post);
 
-// GET request to update roaster.
-// router.get('/roasters/:id/update', roaster_controller.Roaster_update_get);
-
-// POST request to update roaster.
-// router.post('/roasters/:id/update', roaster_controller.Roaster_update_post);
-
-// GET request for one roaster.
+// GET request show a roaster
 router.get('/roasters/:id', roaster_controller.Roaster_detail);
 
-// GET request for list of all roaster items.
-router.get('/roasters', roaster_controller.Roaster_list);
+// GET/POST show all roasters
+router.get('/roasters', roaster_controller.Roaster_list_get);
+router.post('/roasters/delete', roaster_controller.Roaster_list_post);
 
 module.exports = router;

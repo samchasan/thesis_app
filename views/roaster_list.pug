@@ -3,11 +3,23 @@ extends layout
 block content
   h1= title
 
-  ul
+
+  form(method='POST' action=`roasters/delete` )
+        div.form-group
+          input#deleteList.form-control(type='hidden',name='roasterlist', required='true', value=id )
+          button#delete(type='submit') Delete List
+
+
+
+  ol#bizlist
     each roaster in roaster_list
       li
-        a(href=`/catalog/roasters/`+roaster.id) #{roaster.name}
-        p #{roaster.address} | #{roaster.phone}
+        a#listHeader(href= `/catalog/roasters/`+ roaster.id ) #{roaster.name}
+      ul#bizListInfo
+        li #[strong Address:] #{roaster.address}
+        li #[strong Phone:] #{roaster.phone}
+        li #[strong Coordinates:] #{roaster.coordinates}
+        li #[strong Distance:] #{roaster.distance}
 
     else
       li There are no Roasters.

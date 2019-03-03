@@ -7,7 +7,7 @@ block content
   div
   p Do you really want to delete this Roaster?
 
-  form(method='POST' action='')
+  form(method='POST' action=`roasters/`+roaster.id )
         div.form-group
           input#roasterid.form-control(type='hidden',name='roasterid', required='true', value=id )
 

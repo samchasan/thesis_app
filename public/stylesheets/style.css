@@ -37,6 +37,37 @@ hr{
   width: 80%;
 }
 
+ol{
+  list-style: none;
+}
+
+#bizListInfo{
+  font-size: 8pt;
+}
+
+#bizListInfo li{
+  font-size: 8pt;
+  list-style: none;
+  position: relative;
+  color: #888;
+
+  /* padding-left: -20px; */
+}
+
+#listHeader{
+  color: black;
+}
+
+#bizlist{
+  position: absolute;
+  padding-left: 15px;
+}
+
+#bizlist ul{
+  position: relative;
+  padding-left: 10px;
+}
+
 #head{
   padding-top:0px;
   padding-left:10px;

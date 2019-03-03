@@ -8,12 +8,24 @@ const yelp = require('yelp-fusion');
 const apiKey = 'wGqzd3D0HanzPEzCzsL6564joQ193ruYklVwN3si1zfkH6tQfsUnYHyOaMSmF4Qlz3kcnweFNGRcukXCcuvaJ_9MOw-1PfHc2Ql1BR-hXXv5cevs43CgmZVgiTpxXHYx';
 const mongoose = require('mongoose');
 const math = require('mathjs');
-var whatever = require('libphonenumber-js');
+var phoneParser = require('libphonenumber-js');
+var rawPhone = "0000000000"
+const uuid = require('uuid/v4')
+const uniqueID = uuid()
+console.log('roaster controller: ' + uniqueID)
+// timeout in milliseconds
+const timeout = 30 * 1000
 
+
+
+
+// const uuid = require('uuid/v4')
+// const session = require('express-session')
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 exports.index = function(req, res) {
+  // console.log(req.sessionID)
   async.series({
     roaster_count: function(callback) {
       Roaster.countDocuments({}, callback);
@@ -27,87 +39,178 @@ exports.index = function(req, res) {
   });
 };
 
+
 exports.search = function(req, res, next) {
+  setTimeout(function(){
+    Roaster.deleteMany({ 'userID': uniqueID}, function (err, roaster) {
+    // console.log(roaster)
+    console.log(`roasters with userID = "${uniqueID}" deleted`)})
+    }, timeout)
 
-    let inputContent = req.body.textField;
-  	// console.log(inputContent);
-
-    const searchRequest = {
-      term:'Coffee Roasters',
-      location: inputContent,
-      limit: 30
-    };
+  let inputContent = req.body.textField;
+	// console.log(inputContent);
+  const searchRequest = {
+    term:'Coffee Roasters',
+    location: inputContent,
+    limit: 5
+  };
 
     const client = yelp.client(apiKey);
-
     let result = {};
     let results = [];
 
     client.search(searchRequest).then(response => {
       const keys = Object.keys(response.jsonBody.businesses)
 
-      // console.log(keys);
-
-
-      for (let i = 0; i < keys.length; i++){
+        for (var i = 0; i < keys.length; i++){
         const name = response.jsonBody.businesses[i].name;
-        const rawPhone = response.jsonBody.businesses[i].phone;
+        const isPhone = response.jsonBody.businesses[i].phone
+        if(isPhone){
+              rawPhone = isPhone;
+            }
         const loc = response.jsonBody.businesses[i].location;
         const coords = response.jsonBody.businesses[i].coordinates;
         const rawDist = response.jsonBody.businesses[i].distance;
 
-        // parseNo = whatever.parsePhoneNumberFromString()
-
         const phoneString = rawPhone.toString()
-        const phoneNumber = whatever.parsePhoneNumberFromString(phoneString)
+        const phoneNumber = phoneParser.parsePhoneNumberFromString(phoneString)
         const phone = phoneNumber.formatNational()
         const address = `${loc.display_address[0]}, ${loc.display_address[1]}`
         const lat = math.round(coords.latitude,3)
         const long = math.round(coords.longitude,3)
         const distInMiles = math.round((rawDist/1609.34),1)
         const dist = `${distInMiles} mi`
-        // console.log(coords)
-        // console.log(loc)
 
         result = {
+          "userID": uniqueID.toString(),
           "name" : name.toString(),
-          "location" : address,
-          "coordinates" : `${lat}, ${long}`,
+          "loc" : address.toString(),
+          "coords" : `${lat}, ${long}`,
           "phone" : phone,
-          "distance" : dist
+          "dist" : dist.toString()
         }
-        console.log(result)
 
-        var roaster = new Roaster({
-          name: result.name,
-          address: result.location,
-          coords: result.coordinates,
-          phone: result.phone,
-          dist: result.distance
+        // returns all the names to be added
+        // console.log(result.name)
+
+        async.series({
+            input: function(callback){
+              callback(null,result)
+            },
+            search: function(callback) {
+                Roaster.findOne({name:result.name}, function(err, obj){
+                  callback(null, obj)
+                })
+                  // .exec(callback)
+
+            }
+        }, function(err, result) {
+            if (err) { return next(err); }
+            var search = result.search
+            var input = result.input
+            // console.log(search)
+            if (search <= 1){
+              var roaster = new Roaster({
+                  userID: result.input.userID,
+                  name: result.input.name,
+                  address: result.input.loc,
+                  coordinates: result.input.coords,
+                  phone: result.input.phone,
+                  distance: result.input.dist
+                });
+                console.log(`adding ${roaster}`)
+                roaster.save(function(err) {
+                      if (err) {  return next(err); }
+                    })
+            } else {
+              console.log(`${result.input.name} exists`)
+            }
+            // if (results.roaster.length == 0) { // No results.
+            //      console.log('not found, saving')
+            //      console.log(results.roaster.length)
+                //  var roaster = new Roaster({
+                //      userID: result.userID,
+                //      name: result.name,
+                //      address: result.loc,
+                //      coordinates: result.coords,
+                //      phone: result.phone,
+                //      distance: result.dist
+                //    });
+                //    roaster.save(function(err) {
+                //          if (err) {  return next(err); }
+                //        })
+                // } else {
+            //     console.log('roaster found, not saving')
+            // }
+            // Successful, so render
+            // res.render('roaster_detail', { title: 'Roaster Detail', roaster: results.roaster } );
         });
 
-        console.log(roaster)
+        // async.series([
+        //    function(cb){
+        //      console.log(`searching for ${result.name}`)
+        //       cb(null, Roaster.find({'name':result.name}));
+        //    }],
+        //    function(err, result){
+        //      console.log(result)
+             // if(result == null){
+             //   console.log(`saving ${result} to db!`)
+             //
+             //   var roaster = new Roaster({
+             //     userID: result.userID,
+             //     name: result.name,
+             //     address: result.loc,
+             //     coordinates: result.coords,
+             //     phone: result.phone,
+             //     distance: result.dist
+             //   });
+             //   roaster.save(function(err) {
+             //         if (err) {  return next(err); }
+             //       })
+             //   } else {
+             //     console.log(`${result.name} exists!`)
+             //     // console.log(results)
+             //   }
+           // });
 
-          roaster.save(function(err) {
-            if (err) {  return next(err); }
-          });
-        }
-    })
+
+
+            // roaster.save(function(err) {
+            //   if (err) {  return next(err); }
+            // });
+          }
+        })
+
   res.redirect('/catalog')
 };
 
-
-
 // Display list of all Roasters.
-exports.Roaster_list = function(req, res, next) {
-    Roaster.find()
-      // .populate('roaster')
+exports.Roaster_list_get = function(req, res, next) {
+    Roaster.find({ 'userID': uniqueID})
       .sort([['name', 'ascending']])
       .exec(function(err, list_roasters) {
       if (err) { return next(err) }
       res.render('roaster_list', {
         title: 'Roaster List',
         roaster_list: list_roasters
+      });
+    });
+
+};
+
+// Display list of all Roasters.
+exports.Roaster_list_post = function(req, res, next) {
+    Roaster.find()
+    Roaster.remove()
+
+      // .populate('roaster')
+      .exec(function(err, list_roasters) {
+      if (err) { return next(err) }
+      res.render('index',{
+        title: 'Chaff Map Home',
+        data:{
+          roaster_count: 0
+        }
       });
     });
 };
@@ -204,7 +307,7 @@ exports.Roaster_delete_get = function(req, res, next) {
           },
       }, function(err, results) {
           if (err) { return next(err); }
-          console.log(results.roaster.name)
+          // console.log(results.roaster.name)
 
           // Successful, so render.
           res.render('roaster_delete', { title: 'Delete Roaster', name: results.roaster.name, id: results.roaster.id} );
