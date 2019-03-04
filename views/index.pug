@@ -1,17 +1,15 @@
 extends layout
 
 block content
-  h1= title
+  h4= title
 
   hr
 
-  p Welcome to #[em Chaff Map], a very basic express app
-    | this is a paragraph as one single string of text
-    | this is a paragraph as one single string of text
-    | this is a paragraph as one single string of text
-    | this is a paragraph as one single string of text
-
-  p This is another paragraph
+  h2 Welcome to #[em Chaff Map]. Where you can find Chaff.
+  p Coffee roasters produce Chaff as a by product. Often it is sent to landfills.
+  | But there are a number of amazing uses for chaff. Here at Chaffmap, you can
+  | find chaff near you, and projects to help you learn how to make amazing
+  | things with chaff!
 
   hr
 
@@ -31,4 +29,5 @@ block content
 
   hr
 
-  div#map
+  div#mapid
+  script(src='javascripts/map.js')

@@ -82,8 +82,10 @@ ol{
 #map {
   position: relative;
   top: 110px;
+  height: 180px;
   bottom: 0;
   width: 100%;
+  visibility: visible;
 }
 
 #nav{
@@ -104,6 +106,10 @@ ol{
   height: 50px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.mapboxgl-canary{
+  visibility: visible;
 }
 
 .mapboxgl-popup {

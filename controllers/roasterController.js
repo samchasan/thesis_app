@@ -14,7 +14,7 @@ const uuid = require('uuid/v4')
 const uniqueID = uuid()
 console.log('roaster controller: ' + uniqueID)
 // timeout in milliseconds
-const timeout = 30 * 1000
+const timeout = 2 * 60 * 1000
 
 
 
@@ -32,7 +32,7 @@ exports.index = function(req, res) {
     }
   }, function(err, results) {
     res.render('index', {
-      title: 'Chaff Map Home',
+      title: 'Home',
       error: err,
       data: results
     });
