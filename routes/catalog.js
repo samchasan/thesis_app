@@ -24,6 +24,6 @@ router.get('/roasters/:id', roaster_controller.Roaster_detail);
 
 // GET/POST show all roasters
 router.get('/roasters', roaster_controller.Roaster_list_get);
-router.post('/roasters/delete', roaster_controller.Roaster_list_post);
+router.post('/roasters', roaster_controller.Roaster_list_post);
 
 module.exports = router;

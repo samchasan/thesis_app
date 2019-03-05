@@ -7,7 +7,7 @@ var Roaster = new Schema({
   userID: {type: String},
   name: {type: String},
   address: {type: String},
-  coordinates: {type: String},
+  coordinates: {type: Object},
   phone: {type: String},
   distance: {type: String}
 });

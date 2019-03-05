@@ -12,6 +12,7 @@ var MongoStore = require('connect-mongo')(session);
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
+var dataRouter = require('./routes/data');  //Import routes for "catalog" area of site
 var compression = require('compression');
 
 const yelp = require('yelp-fusion');
@@ -21,7 +22,7 @@ const uuid = require('uuid/v4')
 const uniqueID = uuid()
 
 // timeout in seconds
-const timeout = 30
+const timeout = 2 * 60
 
 
 // setTimeout(function(){
@@ -69,9 +70,14 @@ app.use(compression()); //Compress all routes
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
+app.use('/data', dataRouter);
+
 
 app.use(function(req, res, next) {
   next(createError(404));

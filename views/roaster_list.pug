@@ -4,7 +4,7 @@ block content
   h1= title
 
 
-  form(method='POST' action=`roasters/delete` )
+  form(method='POST' action=`` )
         div.form-group
           input#deleteList.form-control(type='hidden',name='roasterlist', required='true', value=id )
           button#delete(type='submit') Delete List
@@ -12,14 +12,15 @@ block content
 
 
   ol#bizlist
-    each roaster in roaster_list
-      li
-        a#listHeader(href= `/catalog/roasters/`+ roaster.id ) #{roaster.name}
-      ul#bizListInfo
-        li #[strong Address:] #{roaster.address}
-        li #[strong Phone:] #{roaster.phone}
-        li #[strong Coordinates:] #{roaster.coordinates}
-        li #[strong Distance:] #{roaster.distance}
+    if(roaster_list)
+      each roaster in roaster_list
+        li
+          a#listHeader(href= `/catalog/roasters/`+ roaster.id ) #{roaster.name}
+        ul#bizListInfo
+          li #[strong Address:] #{roaster.address}
+          li #[strong Phone:] #{roaster.phone}
+          li #[strong Coordinates:] #{roaster.coordinates}
+          li #[strong Distance:] #{roaster.distance}
 
     else
       li There are no Roasters.

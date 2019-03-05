@@ -15,8 +15,34 @@ const uniqueID = uuid()
 console.log('roaster controller: ' + uniqueID)
 // timeout in milliseconds
 const timeout = 2 * 60 * 1000
+let dataArray;
 
+// Display list of all Roasters.
+exports.data = function(req, res, next) {
+  dataArray = []
+    Roaster.find({ 'userID': uniqueID})
+      .sort([['name', 'ascending']])
+      .exec(function(err, list_roasters) {
+      if (err) { return next(err) }
 
+      list_roasters.forEach(function(roaster){
+        const entry = { name: roaster.name,
+                          address: roaster.address,
+                          coordinates: roaster.coordinates,
+                          phone: roaster.phone,
+                          distance: roaster.distance
+          }
+          console.log(entry)
+
+          dataArray.push(entry)
+        })
+// console.log(dataArray)
+      res.json({
+        title: 'Roaster List',
+        data: dataArray
+      });
+  });
+}
 
 
 // const uuid = require('uuid/v4')
@@ -28,7 +54,7 @@ exports.index = function(req, res) {
   // console.log(req.sessionID)
   async.series({
     roaster_count: function(callback) {
-      Roaster.countDocuments({}, callback);
+      Roaster.countDocuments({'userID': uniqueID}, callback);
     }
   }, function(err, results) {
     res.render('index', {
@@ -41,6 +67,7 @@ exports.index = function(req, res) {
 
 
 exports.search = function(req, res, next) {
+  dataArray = []
   setTimeout(function(){
     Roaster.deleteMany({ 'userID': uniqueID}, function (err, roaster) {
     // console.log(roaster)
@@ -52,7 +79,7 @@ exports.search = function(req, res, next) {
   const searchRequest = {
     term:'Coffee Roasters',
     location: inputContent,
-    limit: 5
+    limit: 30
   };
 
     const client = yelp.client(apiKey);
@@ -85,7 +112,7 @@ exports.search = function(req, res, next) {
           "userID": uniqueID.toString(),
           "name" : name.toString(),
           "loc" : address.toString(),
-          "coords" : `${lat}, ${long}`,
+          "coords" : {lat: lat, lng: long} ,
           "phone" : phone,
           "dist" : dist.toString()
         }
@@ -107,7 +134,7 @@ exports.search = function(req, res, next) {
         }, function(err, result) {
             if (err) { return next(err); }
             var search = result.search
-            var input = result.input
+            // var input = result.input
             // console.log(search)
             if (search <= 1){
               var roaster = new Roaster({
@@ -125,62 +152,9 @@ exports.search = function(req, res, next) {
             } else {
               console.log(`${result.input.name} exists`)
             }
-            // if (results.roaster.length == 0) { // No results.
-            //      console.log('not found, saving')
-            //      console.log(results.roaster.length)
-                //  var roaster = new Roaster({
-                //      userID: result.userID,
-                //      name: result.name,
-                //      address: result.loc,
-                //      coordinates: result.coords,
-                //      phone: result.phone,
-                //      distance: result.dist
-                //    });
-                //    roaster.save(function(err) {
-                //          if (err) {  return next(err); }
-                //        })
-                // } else {
-            //     console.log('roaster found, not saving')
-            // }
-            // Successful, so render
-            // res.render('roaster_detail', { title: 'Roaster Detail', roaster: results.roaster } );
-        });
-
-        // async.series([
-        //    function(cb){
-        //      console.log(`searching for ${result.name}`)
-        //       cb(null, Roaster.find({'name':result.name}));
-        //    }],
-        //    function(err, result){
-        //      console.log(result)
-             // if(result == null){
-             //   console.log(`saving ${result} to db!`)
-             //
-             //   var roaster = new Roaster({
-             //     userID: result.userID,
-             //     name: result.name,
-             //     address: result.loc,
-             //     coordinates: result.coords,
-             //     phone: result.phone,
-             //     distance: result.dist
-             //   });
-             //   roaster.save(function(err) {
-             //         if (err) {  return next(err); }
-             //       })
-             //   } else {
-             //     console.log(`${result.name} exists!`)
-             //     // console.log(results)
-             //   }
-           // });
-
-
-
-            // roaster.save(function(err) {
-            //   if (err) {  return next(err); }
-            // });
-          }
-        })
-
+          });
+        }
+      })
   res.redirect('/catalog')
 };
 
@@ -195,27 +169,21 @@ exports.Roaster_list_get = function(req, res, next) {
         roaster_list: list_roasters
       });
     });
-
 };
 
 // Display list of all Roasters.
 exports.Roaster_list_post = function(req, res, next) {
-    Roaster.find()
-    Roaster.remove()
-
+    Roaster.find({ 'userID': uniqueID})
+    Roaster.remove({ 'userID': uniqueID})
       // .populate('roaster')
-      .exec(function(err, list_roasters) {
+      .exec(function(err) {
       if (err) { return next(err) }
-      res.render('index',{
-        title: 'Chaff Map Home',
-        data:{
-          roaster_count: 0
-        }
+      res.render('roaster_list', {
+        title: 'Roaster List',
+        // roaster_list: list_roasters
       });
-    });
+    })
 };
-
-
 
 
 // Display detail page for a specific Roaster.
