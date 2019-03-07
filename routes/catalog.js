@@ -4,12 +4,16 @@ var router = express.Router();
 // Require controller modules.
 var roaster_controller = require('../controllers/roasterController');
 var project_controller = require('../controllers/projectController');
+var about_controller = require('../controllers/aboutController');
 
 /// roaster ROUTES ///
 
 // GET/POST catalog home page.
 router.get('/', roaster_controller.index);
 router.post('/', roaster_controller.search);
+
+router.get('/about', about_controller.about);
+
 
 // GET projects page.
 router.get('/project_list', project_controller.project_list);

@@ -33,6 +33,9 @@ exports.project_detail = function(req, res) {
         case 'Poultry_bedding':
           title = 'Poultry Bedding'
           break;
+        case 'Eco-bricks':
+          title = 'Eco-Bricks'
+          break;
       }
 
       console.log(title)
