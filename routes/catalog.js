@@ -3,13 +3,23 @@ var router = express.Router();
 
 // Require controller modules.
 var roaster_controller = require('../controllers/roasterController');
+var project_controller = require('../controllers/projectController');
 
 /// roaster ROUTES ///
 
 // GET/POST catalog home page.
 router.get('/', roaster_controller.index);
 router.post('/', roaster_controller.search);
-// router.post('/', roaster_controller.timeout);
+
+// GET projects page.
+router.get('/project_list', project_controller.project_list);
+
+// GET project detail page.
+router.get('/project_list/:id', project_controller.project_detail);
+
+// router.post('/', roaster_controller.search);
+
+
 
 // GET/POST create a roaster
 router.get('/roasters/create', roaster_controller.Roaster_create_get);

@@ -1,85 +1,79 @@
 $('.my_selector').click(function(){
    $.get('http://localhost:3000/roaster_list', {}, function(data){
-        // console.log(data)
+        console.log(data)
    });
 });
 
-let dataPoints
-let markerPoints = []
+let dataPoints = [];
+let markerPoints = [];
+let center;
 
+
+$(window).load(function(){
+  map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 12, center: center });
+      addCoords()
+})
+
+function addCoords(){
 var jSON = $.getJSON('/data', function(roasterList) {
   dataPoints = roasterList.data
-  dataPoints.forEach( dataPoint=>{
-    // console.log(dataPoint.name)
-    let roaster = {
-        name: `${dataPoint.name}`,
-        address: `${dataPoint.address}`,
-        coordinates: `${dataPoint.coordinates}`,
-        phone: `${dataPoint.phone}`,
-        distance: `${dataPoint.distance}`
-      }
-      var coords = dataPoint.coordinates;
-      // console.log(coords)
-      markerPoints.push(coords)
-      // console.log(coords)
-      // let marker = new google.maps.Marker({position: coords, map: map});
+
+    if(dataPoints){
+        dataPoints.forEach( dataPoint=>{
+          console.log(dataPoint.coordinates)
+          // let lat = dataPoint.coordinates.lat
 
 
-      // dataPoints.push(roaster)
-      // console.log(roaster)
 
-    })
+          let roaster = {
+              name: `${dataPoint.name}`,
+              address: `${dataPoint.address}`,
+              coordinates: `${dataPoint.coordinates}`,
+              phone: `${dataPoint.phone}`,
+              distance: `${dataPoint.distance}`
+            }
+            var coords = dataPoint.coordinates;
+            markerPoints.push(coords)
+            // console.log("markerpoints:" + markerPoints)
+      })
+    } else {
+      console.log('waiting for input')
+    }
   })
   .fail(function() {
     console.log( "error" );
   })
   .always(function() {
-    console.log( "comp" );
+    console.log( "done" );
   });
-
 jSON.complete(function() {
-  console.log( "lete" );
+  newCoords(markerPoints)
+  // console.log(markerPoints)
 });
+}
 
 
-$(window).load(function(){
-  // console.log('hello world')
-
-  let center;
-
+function newCoords(markerPoints){
   if(markerPoints.length == 0 ){
   var nyc = {lng: -73.97332, lat: 40.685787};
   center = nyc
+  setMap(center)
 } else {
   center = markerPoints[0]
-  // console.log(markerPoints)
-}
-  // The map, centered at Uluru
-  var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 12, center: center });
-  // The marker, positioned at Uluru
+  // console.log(center)
+  setMap(center)
   markerPoints.forEach(markerPoint => {
-    console.log(markerPoint)
+  // console.log(markerPoint)
   var marker = new google.maps.Marker({position: markerPoint, map: map});
     })
-  // dataPoints = []
-  // console.log('adding map')
-})
+  }
+}
 
-
-  // mapboxgl.accessToken = 'pk.eyJ1IjoiY2hhc2Fuc2MiLCJhIjoiY2pyd2cyeWduMGNnNzQ5cDk4bHRwYmVxayJ9.sAZTXvzkVOfBdIg3GmFsLQ' // add your own mapbox token to make this example work
-  // let map = new mapboxgl.Map({
-  //   container: 'mapid',
-  //   style: 'https://api.mapbox.com/styles/v1/chasansc/cjstm33jp4vxr1fo6x37sbf3i.html?fresh=true&title=true&access_token=pk.eyJ1IjoiY2hhc2Fuc2MiLCJhIjoiY2pyd2cyeWduMGNnNzQ5cDk4bHRwYmVxayJ9.sAZTXvzkVOfBdIg3GmFsLQ#12.0/48.866500/2.317600/0',
-  //   center: [-73.97332, 40.685787],
-  //   minZoom: 2,
-  //   zoom: 10
-  // }, function (map){
-  //   $('#mapid').show()
-  //
-  //   map.resize();
-  // })
-
+function setMap(coords){
+  center = new google.maps.LatLng(coords)
+  map.panTo(center);
+}
 
 
 

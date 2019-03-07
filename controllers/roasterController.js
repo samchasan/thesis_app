@@ -19,7 +19,6 @@ let dataArray;
 
 // Display list of all Roasters.
 exports.data = function(req, res, next) {
-  dataArray = []
     Roaster.find({ 'userID': uniqueID})
       .sort([['name', 'ascending']])
       .exec(function(err, list_roasters) {
@@ -32,8 +31,7 @@ exports.data = function(req, res, next) {
                           phone: roaster.phone,
                           distance: roaster.distance
           }
-          console.log(entry)
-
+          // console.log(entry)
           dataArray.push(entry)
         })
 // console.log(dataArray)
@@ -55,6 +53,7 @@ exports.index = function(req, res) {
   async.series({
     roaster_count: function(callback) {
       Roaster.countDocuments({'userID': uniqueID}, callback);
+      // console.log(callback)
     }
   }, function(err, results) {
     res.render('index', {
@@ -67,11 +66,15 @@ exports.index = function(req, res) {
 
 
 exports.search = function(req, res, next) {
+  Roaster.deleteMany({ 'userID': uniqueID}, function (err, roaster) {})
+
   dataArray = []
   setTimeout(function(){
     Roaster.deleteMany({ 'userID': uniqueID}, function (err, roaster) {
-    // console.log(roaster)
-    console.log(`roasters with userID = "${uniqueID}" deleted`)})
+    if (err){console.log(err)}
+    // console.log(`${roaster}`)
+    // console.log(`roasters with userID = "${uniqueID}" deleted`)
+   })
     }, timeout)
 
   let inputContent = req.body.textField;
@@ -79,7 +82,7 @@ exports.search = function(req, res, next) {
   const searchRequest = {
     term:'Coffee Roasters',
     location: inputContent,
-    limit: 30
+    limit: 5
   };
 
     const client = yelp.client(apiKey);
@@ -112,13 +115,13 @@ exports.search = function(req, res, next) {
           "userID": uniqueID.toString(),
           "name" : name.toString(),
           "loc" : address.toString(),
-          "coords" : {lat: lat, lng: long} ,
+          "coords" : {lat: lat, lng: long},
           "phone" : phone,
           "dist" : dist.toString()
         }
 
         // returns all the names to be added
-        // console.log(result.name)
+        // console.log(`from search ${result.coords}`)
 
         async.series({
             input: function(callback){
@@ -135,8 +138,8 @@ exports.search = function(req, res, next) {
             if (err) { return next(err); }
             var search = result.search
             // var input = result.input
-            // console.log(search)
-            if (search <= 1){
+            // console.log(input)
+            if (search < 1){
               var roaster = new Roaster({
                   userID: result.input.userID,
                   name: result.input.name,
@@ -145,16 +148,17 @@ exports.search = function(req, res, next) {
                   phone: result.input.phone,
                   distance: result.input.dist
                 });
-                console.log(`adding ${roaster}`)
+                // console.log(`adding ${roaster}`)
                 roaster.save(function(err) {
                       if (err) {  return next(err); }
                     })
             } else {
-              console.log(`${result.input.name} exists`)
+              // console.log(`${result.input.name} exists`)
             }
           });
         }
       })
+      // console.log(dataArray.length)
   res.redirect('/catalog')
 };
 
@@ -163,6 +167,20 @@ exports.Roaster_list_get = function(req, res, next) {
     Roaster.find({ 'userID': uniqueID})
       .sort([['name', 'ascending']])
       .exec(function(err, list_roasters) {
+
+// console.log(list_roasters)
+
+list_roasters.forEach(function(roaster){
+  lat = roaster.coordinates.lat
+  long = roaster.coordinates.lat
+  roaster.coordinates = `lat: ${lat}, long: ${long}`
+})
+console.log(list_roasters)
+
+        // lat = list_roasters.coordinates.lat
+        // long = list_roasters.coordinates.lat
+
+        // list_roasters.coordinatess = `lat: ${lat}, long: ${long}`
       if (err) { return next(err) }
       res.render('roaster_list', {
         title: 'Roaster List',
@@ -171,10 +189,11 @@ exports.Roaster_list_get = function(req, res, next) {
     });
 };
 
-// Display list of all Roasters.
+// Delete Roasters.
 exports.Roaster_list_post = function(req, res, next) {
-    Roaster.find({ 'userID': uniqueID})
-    Roaster.remove({ 'userID': uniqueID})
+  Roaster.deleteMany({})
+  // Roaster.deleteMany()
+
       // .populate('roaster')
       .exec(function(err) {
       if (err) { return next(err) }
@@ -183,6 +202,7 @@ exports.Roaster_list_post = function(req, res, next) {
         // roaster_list: list_roasters
       });
     })
+
 };
 
 
@@ -283,11 +303,7 @@ exports.Roaster_delete_get = function(req, res, next) {
 };
 
 
-
-
-
-
-// Handle Roaster delete on POST.
+// delete roaster
 exports.Roaster_delete_post = function(req, res, next) {
 
       async.parallel({
@@ -303,8 +319,6 @@ exports.Roaster_delete_post = function(req, res, next) {
             // nothing
           }
       });};
-
-
 
 // Display Roaster update form on GET.
 // exports.Roaster_update_get = function(req, resnext) {
