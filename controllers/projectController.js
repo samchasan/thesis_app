@@ -9,6 +9,10 @@ const async = require('async')
 var Project = require('../models/projects');
 const mongoose = require('mongoose');
 var S = require('string');
+const fs = require('fs-extra')
+var MarkdownIt = require('markdown-it'),
+    md = new MarkdownIt();
+var md2pug = new (require('markdown-to-pug'))();
 
 
 
@@ -56,36 +60,63 @@ exports.project_detail = function(req, res) {
       // return next(err);
     }
     var description
-    switch (results.project[0].title) {
-      case 'Mushrooms':
-        console.log('on the mushrooms page')
-        description = 'on the mushrooms page'
-        break;
-      case 'Composting':
-        console.log('on the composting page')
-        description = 'on the composting page'
-        break;
-      case 'Mulching':
-        console.log('on the Mmlching page')
-        description = 'on the mulching page'
-        break;
-      case 'Cattle Feed':
-        console.log('on the Cattle Feed page')
-        description = 'on the Catte Feed  page'
-        break;
-      case 'Poultry Bedding':
-        console.log('on the Poultry Bedding page')
-        description = 'on the Poultry Bedding page'
-        break;
-      case 'Eco-Bricks':
-        console.log('on the Eco-Bricks page')
-        description = 'on the Eco-Bricks page'
-        break;
+    var title = results.project[0].title
+
+    getCase(title, description => {
+      console.log(description)
+      fs.writeFile('views/description.pug', description, (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+        render(description, msg =>{
+      });
+    })
+  })
+
+  function readMd(filePath,callback){
+    const fileText = fs.readFileSync(`./public/projects/${filePath}.md`, "utf8")
+    var mdText = md.render(fileText);
+    description = md2pug.render(fileText);
+    callback(description)
+
+  }
+
+    // async.series (
+      function getCase (phrase, callback){
+        switch (phrase) {
+          case 'Mushrooms':
+            console.log('on the mushrooms page')
+            // description = $.get('/public/mushrooms.txt')
+            readMd('mushrooms',callback)
+          break;
+          case 'Composting':
+            console.log('on the composting page')
+            readMd('compost',callback)
+            break;
+          case 'Mulching':
+            console.log('on the Mmlching page')
+            readMd('mulch',callback)
+            break;
+          case 'Cattle Feed':
+            console.log('on the Cattle Feed page')
+            readMd('cattle_feed',callback)
+            break;
+          case 'Poultry Bedding':
+            console.log('on the Poultry Bedding page')
+            readMd('poultry_bedding',callback)
+            break;
+          case 'Eco-Bricks':
+            console.log('on the Eco-Bricks page')
+            readMd('eco-bricks',callback)
+            break;
+      }
+
+
     }
 
-
+    function render (description, callback){
+      console.log('in render')
     // Successful, so render
-    res.render('project_detail', {
+      res.render('project_detail', {
       title: results.project[0].title,
       materials: S([results.project[0].materials]).toCSV().s, //'"a","b","c"',
       complexity: results.project[0].complexity,
@@ -94,6 +125,9 @@ exports.project_detail = function(req, res) {
       headline: results.project[0].headline,
       description: description
     })
+    callback('successful')
+  }
+
 
 
 
