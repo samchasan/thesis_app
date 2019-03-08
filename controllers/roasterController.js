@@ -82,7 +82,7 @@ exports.search = function(req, res, next) {
   const searchRequest = {
     term:'Coffee Roasters',
     location: inputContent,
-    limit: 5
+    limit: 15
   };
 
     const client = yelp.client(apiKey);
@@ -91,7 +91,7 @@ exports.search = function(req, res, next) {
 
     client.search(searchRequest).then(response => {
       const keys = Object.keys(response.jsonBody.businesses)
-
+console.log(keys)
         for (var i = 0; i < keys.length; i++){
         const name = response.jsonBody.businesses[i].name;
         const isPhone = response.jsonBody.businesses[i].phone
