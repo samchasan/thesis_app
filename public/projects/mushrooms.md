@@ -1,5 +1,13 @@
-Mushrooms are a very simple thing to make using chaff. Once you prepare it you just sit and wait!
+Mushrooms are a very simple thing to make using chaff. Once you prepare it you just *sit and wait*!
 
+**Steps**
+1. • Obtain Chaff
+2. • Sterilize Chaff
+3. • Mix in spores
+4. • Put in airtight container
+    * *Make sure to put small airholes in plugged with cotton, felt, or something else that allows air exchange*
+5. • Place container in dark area
+6. • Wait!
 
 Basically you get chaff from your local roaster, and boil it in water for a long time, to make sure that all the nasty bugs and bacteria are killed off.
 

@@ -20,7 +20,7 @@ let dataArray;
 // Display list of all Roasters.
 exports.data = function(req, res, next) {
     Roaster.find({ 'userID': uniqueID})
-      .sort([['name', 'ascending']])
+      // .sort([['name', 'ascending']])
       .exec(function(err, list_roasters) {
       if (err) { return next(err) }
 
