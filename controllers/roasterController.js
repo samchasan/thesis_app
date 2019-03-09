@@ -25,7 +25,10 @@ exports.data = function(req, res, next) {
       if (err) { return next(err) }
 
       list_roasters.forEach(function(roaster){
-        const entry = { name: roaster.name,
+        console.log(roaster.id)
+        // console.log(roaster._id)
+        const entry = {   id: roaster.id,
+                          name: roaster.name,
                           address: roaster.address,
                           coordinates: roaster.coordinates,
                           phone: roaster.phone,

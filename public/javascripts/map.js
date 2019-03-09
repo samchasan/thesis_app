@@ -1,9 +1,3 @@
-// $('.my_selector').click(function(){
-//    $.get('http://localhost:3000/roaster_list', {}, function(data){
-//         // console.log(data)
-//    });
-// });
-
 let dataPoints = [];
 let center;
 let ibArray = [];
@@ -19,13 +13,114 @@ $(window).load(function(){
         // console.log(map)
           addMarkers(roasters, callback => {
             // console.log(markerList)
-              addMarkerFunctions(roasters, callback => {
-                // console.log(ibArray)
-            })
+              // addMarkerFunctions(roasters, callback => {
+                console.log(ibArray)
+            // })
          })
       })
     })
 })
+
+
+function getData(path, callback){
+var jSON = $.getJSON(path, function(roasterList) {
+  dataPoints = roasterList.data
+    if(dataPoints){
+        dataPoints.forEach( dataPoint=>{
+          // console.log(dataPoint)
+          let lat = dataPoint.coordinates.lat
+          let long = dataPoint.coordinates.lng
+
+          console.log(dataPoint.id)
+
+          let roaster = {
+              id: dataPoint.id,
+              name: `${dataPoint.name}`,
+              address: `${dataPoint.address}`,
+              coordinates: `latitude: ${lat}, longitude: ${long}`,
+              phone: `${dataPoint.phone}`,
+              distance: `${dataPoint.distance}`,
+              coordinatesObj: dataPoint.coordinates
+            }
+            // var coords = dataPoint.coordinates;
+            roasters.push(roaster)
+            // console.log(roaster)
+      })
+
+
+    } else {
+      console.log('waiting for input')
+    }
+  })
+  .fail(function() {
+    console.log( "error" );
+  })
+  .always(function() {
+    console.log( "done" );
+    // newCoords(roasters)
+  });
+jSON.complete(function() {
+  callback(roasters)
+
+});
+}
+
+
+function addMarkers(roasters, callback){
+  console.log('roasters' + roasters)
+  if(roasters.length == 0 ){
+  var nyc = {lng: -73.97332, lat: 40.685787};
+  center = nyc
+  setMap(center)
+} else {
+  center = roasters[0].coordinatesObj
+  console.log(center)
+  setMap(center)
+  roasters.forEach(roaster => {
+    var infoBox;
+    addMarkerFunctions(roaster, infoWindow => {
+      infoBox = infoWindow
+    })
+  var marker = new google.maps.Marker({
+      position: roaster.coordinatesObj,
+      map: map
+    });
+
+    marker.addListener('click', function() {
+        closeBoxes()
+        infoBox.open(map, marker);
+        });
+    })
+  }
+
+callback(markerList)
+
+}
+
+
+function addMarkerFunctions(roaster, callback){
+
+    console.log(roaster)
+    var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            `<a href= '/catalog/roasters/${roaster.id}'<h3 id="firstHeading" class="firstHeading">${roaster.name}</h3></a>`+
+            '<div id="bodyContent">'+
+            `<p><b>Address:</b> ${roaster.address}` +
+            `<p><b>Coordinates:</b> ${roaster.coordinates}` +
+            `<p><b>Distance:</b> ${roaster.distance}` +
+            `<p><b>Phone:</b> ${roaster.phone}` +
+            '</div>'+
+            '</div>';
+
+        infowindow = new google.maps.InfoWindow({
+          content: contentString,
+          maxWidth: 320
+                });
+          ibArray.push(infowindow)
+
+  callback(infowindow)
+}
 
 
 function closeBoxes(){
@@ -354,140 +449,3 @@ function makeMap(id, callback){
           });
           callback(map)
     }
-
-
-
-function getData(path, callback){
-var jSON = $.getJSON(path, function(roasterList) {
-  dataPoints = roasterList.data
-    if(dataPoints){
-        dataPoints.forEach( dataPoint=>{
-          // console.log(dataPoint)
-          let lat = dataPoint.coordinates.lat
-          let long = dataPoint.coordinates.lng
-
-          let roaster = {
-              name: `${dataPoint.name}`,
-              address: `${dataPoint.address}`,
-              coordinates: `latitude: ${lat}, longitude: ${long}`,
-              phone: `${dataPoint.phone}`,
-              distance: `${dataPoint.distance}`,
-              coordinatesObj: dataPoint.coordinates
-            }
-            // var coords = dataPoint.coordinates;
-            roasters.push(roaster)
-            // console.log(roaster)
-      })
-
-
-    } else {
-      console.log('waiting for input')
-    }
-  })
-  .fail(function() {
-    console.log( "error" );
-  })
-  .always(function() {
-    console.log( "done" );
-    // newCoords(roasters)
-  });
-jSON.complete(function() {
-  callback(roasters)
-
-});
-}
-
-
-function addMarkers(roasters, callback){
-  console.log('roasters' + roasters)
-  if(roasters.length == 0 ){
-  var nyc = {lng: -73.97332, lat: 40.685787};
-  center = nyc
-  setMap(center)
-} else {
-  center = roasters[0].coordinatesObj
-  console.log(center)
-  setMap(center)
-  roasters.forEach(roaster => {
-  var marker = new google.maps.Marker({
-      position: roaster.coordinatesObj,
-      map: map,
-      primaryColor: '#000'
-    });
-    markerList.push(marker)
-    // console.log(marker)
-      marker.addListener('click', function() {
-          closeBoxes()
-          infowindow.open(map, marker);
-        });
-    })
-  }
-
-callback(markerList)
-
-}
-
-
-function addMarkerFunctions(roasters, callback){
-  // console.log(markers)
-  roasters.forEach(roaster => {
-
-    var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            `<h3 id="firstHeading" class="firstHeading">${roaster.name}</h3>`+
-            '<div id="bodyContent">'+
-            `<p><b>Address:</b> ${roaster.address}` +
-            `<p><b>Coordinates:</b> ${roaster.coordinates}` +
-            `<p><b>Distance:</b> ${roaster.distance}` +
-            `<p><b>Phone:</b> ${roaster.phone}` +
-            '</div>'+
-            '</div>';
-
-        infowindow = new google.maps.InfoWindow({
-          content: contentString,
-          maxWidth: 320
-                });
-          ibArray.push(infowindow)
-  // console.log(markerPoint)
-})
-  callback(ibArray)
-}
-
-
-  // rawData = [];
-  // roasters = []
-
-  // map.on('load', () => {
-  //
-  //   // you can use data directly from nyc open data without downloading the file, just specify their api endpoint
-  //   d3.json('data/roasters.json').then(d => {
-  //     rawData = d;
-  //
-  //     // get the data into a format we can map -- geojson!
-  //     rawData.forEach(d => {
-  //       let lat = d.lat;
-  //       let lng = d.lng;
-  //       let name = d.biz_name;
-  //       let address = d.address;
-  //       if (d.phone) {
-  //         let phone = d.phone;
-  //       }
-  //       // create the popup
-  //       var popup = new mapboxgl.Popup({
-  //           offset: 25
-  //         })
-  //         .setText(`${name}, ${address}`);
-  //
-  //       // create DOM element for the marker
-  //       var el = document.createElement('div');
-  //       el.id = 'marker';
-  //
-  //       var marker = new mapboxgl.Marker()
-  //         .setLngLat([lng, lat])
-  //         .setPopup(popup)
-  //         .addTo(map);
-  //     })
-  //   })
-  // })
-// }
