@@ -8,14 +8,15 @@ let markerList = [];
 $(window).load(function(){
       // console.log(map)
       getData('/data', data => {
-        // console.log(data)
+        console.log('getting data')
+        console.log(data)
         makeMap('map', map => {
-        // console.log(map)
-          addMarkers(roasters, callback => {
-            // console.log(markerList)
-              // addMarkerFunctions(roasters, callback => {
-                console.log(ibArray)
-            // })
+        console.log('getting map')
+        console.log(map)
+          addMarkers(roasters, info_window => {
+            console.log('getting infowindow')
+            console.log(info_window)
+            console.log(ibArray)
          })
       })
     })
@@ -31,7 +32,7 @@ var jSON = $.getJSON(path, function(roasterList) {
           let lat = dataPoint.coordinates.lat
           let long = dataPoint.coordinates.lng
 
-          console.log(dataPoint.id)
+          // console.log(dataPoint.id)
 
           let roaster = {
               id: dataPoint.id,
@@ -67,14 +68,14 @@ jSON.complete(function() {
 
 
 function addMarkers(roasters, callback){
-  console.log('roasters' + roasters)
+  // console.log('roasters' + roasters)
   if(roasters.length == 0 ){
   var nyc = {lng: -73.97332, lat: 40.685787};
   center = nyc
   setMap(center)
 } else {
   center = roasters[0].coordinatesObj
-  console.log(center)
+  // console.log(center)
   setMap(center)
   roasters.forEach(roaster => {
     var infoBox;
@@ -100,7 +101,7 @@ callback(markerList)
 
 function addMarkerFunctions(roaster, callback){
 
-    console.log(roaster)
+    // console.log(roaster)
     var contentString = '<div id="content">'+
             '<div id="siteNotice">'+
             '</div>'+
