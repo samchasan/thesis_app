@@ -6,21 +6,35 @@ let roasters = [];
 let markerList = [];
 
 $(window).load(function(){
-      // console.log(map)
-      getData('/data', data => {
-        console.log('getting data')
-        console.log(data)
-        makeMap('map', map => {
-        console.log('getting map')
-        console.log(map)
-          addMarkers(roasters, info_window => {
-            console.log('getting infowindow')
-            console.log(info_window)
-            console.log(ibArray)
-         })
-      })
-    })
+  makeMap('map', map => {
+    console.log('making map')
+  })
 })
+
+function doStuff(){
+getSomeAsyncData('/data').then(roasters => {
+addMarkers(roasters, info_window => {
+  console.log(roasters)
+})
+}).catch(e => {
+});
+}
+
+
+function fetchTheData(someValue){
+    return new Promise(function(resolve, reject){
+        getData(someValue, function(result){
+                resolve(result);
+        })
+    });
+}
+
+async function getSomeAsyncData(value){
+    const result = await fetchTheData(value);
+    return result;
+}
+
+
 
 
 function getData(path, callback){
@@ -448,5 +462,10 @@ function makeMap(id, callback){
       google.maps.event.addDomListener(map, 'click', function() {
         closeBoxes()
           });
+      google.maps.event.addListenerOnce(map, 'idle', function(){
+         console.log('map loaded')
+         doStuff()
+      })
+
           callback(map)
     }

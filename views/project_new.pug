@@ -1,0 +1,28 @@
+| <% include ../partials/header %>
+.row
+  h1(style='text-align: center') Create a New Campground
+  div(style='width: 30%; margin: 25px auto;')
+    form(action='/campgrounds', method='POST')
+      .form-group
+        label(for='title') Title
+        input#title.form-control(type='text', name='name', placeholder='Yosemite')
+      .form-group
+        label(for='image') Image Url
+        input#image.form-control(type='text', name='image', placeholder='https://source.unsplash.com/TCCCKgdFmBo')
+      .form-group
+        label(for='cost') Cost
+        input#cost.form-control(type='number', name='cost', placeholder='9.99', step='0.01', min='0', required='')
+      .form-group
+        label(for='materials') Materials
+        input#materials.form-control(type='text', name='materials', placeholder='Yosemite National Park, CA')
+      .form-group
+        label(for='description') Description
+        input#description.form-control(type='text', name='description', placeholder='California’s Sierra Nevada mountains.')
+      .form-group
+        label(for='description') Tags
+        input#tags.form-control(type='text', name='tags', placeholder='easy, outdoors, wood')
+      .form-group
+        button.btn.btn-lg.btn-primary.btn-block Submit!
+    a(href='/projects') Go Back
+
+    

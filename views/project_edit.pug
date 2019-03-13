@@ -1,0 +1,27 @@
+extends layout
+
+.row
+  h1(style='text-align: center') Edit {projectName}
+  div(style='width: 30%; margin: 25px auto;')
+    form(action='/projects/edit', method='POST')
+      .form-group
+        label(for='title') Title
+        input#name.form-control(type='text', name='name', value='= project.name ')
+      .form-group
+        label(for='image') Image
+        input#image.form-control(type='text', name='image', value='= project.image ')
+      .form-group
+        label(for='cost') Cost
+        input#cost.form-control(type='number', name='cost', value='= project.cost ', step='0.01', min='0', required='')
+      .form-group
+        label(for='materials') Materials
+        input#location.form-control(type='text', name='materials', value='= project.materials ')
+      .form-group
+        label(for='tags') Tags
+        input#location.form-control(type='text', name='tags', value='= project.tags ')    
+      .form-group
+        label(for='description') Description
+        input#description.form-control(type='text', name='description', value='= project.description ')
+      .form-group
+        button.btn.btn-lg.btn-primary.btn-block Update!
+    a(href='/projects') Go Back

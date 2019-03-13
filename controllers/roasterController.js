@@ -274,7 +274,12 @@ exports.Roaster_create_post = [
           },
         }, function(err, results) {
                 if (err) { return next(err); }
-    res.render('roaster_form', { title: 'Create Roaster', roaster: results.name, address: results.address, phone: results.phone, errors: errors.array() });
+    res.render('roaster_form', {
+      title: 'Create Roaster',
+      roaster: results.name,
+      address: results.address,
+      phone: results.phone,
+      errors: errors.array() });
   });
     return;
     } else {

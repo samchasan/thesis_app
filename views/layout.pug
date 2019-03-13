@@ -7,18 +7,11 @@ html(lang='en')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-
     script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOlt3Oe5zfpFaNrtUDQ-dGe0_JZ_9yUI")
-
     script(src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js')
     link(rel='stylesheet', href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css')
-
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='/javascripts/form.js')
-    script(src='/javascripts/map.js')
-
-
-
 
   body
     div(class='container-fluid')
@@ -34,6 +27,16 @@ html(lang='en')
                 a(href='/catalog/project_list') Projects
               li
                 a(href='/catalog/about') About
+              if (!currentUser)  
+                li
+                  a(href='/catalog/user_login') Login
+                  a(href='/catalog/user_create') Register
+              if (currentUser)
+                li Signed in as 
+                  a(href = '#') #{currentUser.username}
+                  a(href = '/catalog/user_logout') Logout
+                  
+              
 
         div(class='col-sm-10')
           block content
