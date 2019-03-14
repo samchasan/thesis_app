@@ -36,12 +36,21 @@ exports.login_get = function(req, res) {
 }
 
 exports.login_post = function(req, res) {
-currentUser = req.body
-// console.log(currentUser)
-      res.render('index', {
-        currentUser: currentUser
+user = req.body
+// console.log(user)
+User.findOne({username: user.username}, function(err, user){
+      if(err){
+          res.render('login', {
+            title: 'Error, try again'
+          })
+        } else{
+      // res.redirect('profile')
+      res.render('user/profile', {
+        title: 'Welcome Back',
+        currentUser: user
       })
-
+    }
+      })
 }
 
 exports.create_get = function(req, res) {
@@ -52,8 +61,6 @@ exports.create_get = function(req, res) {
 }
 
 exports.create_post = function(req, res) {
-
-  // console.log(req.body)
 
   if (req.body.email &&
   req.body.username &&
@@ -76,16 +83,14 @@ exports.create_post = function(req, res) {
       return res.render('user/create', {error: err.message});
     } else {
       console.log(user)
-      // passport.authenticate('local')(req, res, function(){
-           // req.flash('success', 'Successfully Signed Up! Nice to meet you ' + req.body.username);
-      return res.render('user/profile',
+            return res.render('user/profile',
         { title: `Welcome ${user.username}`,
           currentUser: user
         });
             }
         })
       }
-    }    
+    }
 
 
 

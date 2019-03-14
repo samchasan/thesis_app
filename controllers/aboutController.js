@@ -6,7 +6,7 @@ const passport = require('passport');
 exports.about = function(req, res) {
   // hope to have user here
 
-console.log(req.user)
+// console.log(req.user)
 // let user = req
 // console.log(req.user)
   // passport.authenticate('local', function(err, user, info) {
@@ -14,10 +14,10 @@ console.log(req.user)
   //     if (!user) { return res.redirect('user/login'); }
   //     req.logIn(user, function(err) {
   //       if (err) { return next(err); }
-  //       res.render('about', {
-  //           title: 'About',
-  //           user: req.user.username
-  //           })
+        res.render('about', {
+            title: 'About',
+            // user: req.user.username
+            })
   //   })(req, res, next);
   // });
 }

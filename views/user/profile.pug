@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  p #{title}
+  p #{title}:
   if (currentUser)
-  h3 #[strong #{currentUser}]
-  //- p [strong Email:]  #{currentUser.email}
+  h3 #[strong] #{currentUser.username}
+  p  #[strong Email:] #{currentUser.email}

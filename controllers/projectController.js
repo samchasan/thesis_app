@@ -17,7 +17,7 @@ var md2pug = new (require('markdown-to-pug'))();
 
 
 exports.project_list = function(req, res) {
-  res.render('project_list', {
+  res.render('project/list', {
     title: 'Projects'
   })
 }
@@ -116,7 +116,7 @@ exports.project_detail = function(req, res) {
     function render (description, callback){
       console.log('in render')
     // Successful, so render
-      res.render('project_detail', {
+      res.render('project/detail', {
       title: results.project[0].title,
       materials: S([results.project[0].materials]).toCSV().s, //'"a","b","c"',
       complexity: results.project[0].complexity,

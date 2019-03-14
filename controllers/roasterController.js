@@ -30,7 +30,7 @@ exports.data = function(req, res, next) {
       list_roasters.forEach(function(roaster){
         console.log(roaster.id)
         // console.log(roaster._id)
-        const entry = {   id: roaster.id,
+        const entry = {   id: roaster._id,
                           name: roaster.name,
                           address: roaster.address,
                           coordinates: roaster.coordinates,
@@ -55,19 +55,20 @@ exports.data = function(req, res, next) {
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 exports.index = function(req, res) {
-  if(passport.userLoggedIn){
-    currentUser = user
-  }else{
-    currentUser = null
-  }
-
-  console.log(currentUser)
+  // if(passport.userLoggedIn){
+  //   currentUser = user
+  // }else{
+  //   currentUser = null
+  // }
+  //
+  // console.log(currentUser)
   async.series({
     roaster_count: function(callback) {
       Roaster.countDocuments({'userID': uniqueID}, callback);
       // console.log(callback)
     }
   }, function(err, results) {
+    console.log(results)
     res.render('index', {
       title: 'Home',
       error: err,
@@ -177,6 +178,9 @@ console.log(keys)
 
 // Display list of all Roasters.
 exports.Roaster_list_get = function(req, res, next) {
+
+    console.log(req.body)
+
     Roaster.find({ 'userID': uniqueID})
       .sort([['name', 'ascending']])
       .exec(function(err, list_roasters) {
@@ -195,7 +199,7 @@ console.log(list_roasters)
 
         // list_roasters.coordinatess = `lat: ${lat}, long: ${long}`
       if (err) { return next(err) }
-      res.render('roaster_list', {
+      res.render('roaster/list', {
         title: 'Roaster List',
         roaster_list: list_roasters
       });
@@ -210,7 +214,7 @@ exports.Roaster_list_post = function(req, res, next) {
       // .populate('roaster')
       .exec(function(err) {
       if (err) { return next(err) }
-      res.render('roaster_list', {
+      res.render('roaster/list', {
         title: 'Roaster List',
         // roaster_list: list_roasters
       });
@@ -235,7 +239,7 @@ exports.Roaster_detail = function(req, res, next) {
             return next(err);
         }
         // Successful, so render
-        res.render('roaster_detail', { title: 'Roaster Detail', roaster: results.roaster } );
+        res.render('roaster/detail', { title: 'Roaster Detail', roaster: results.roaster } );
     });
 
 };
@@ -251,7 +255,7 @@ exports.Roaster_create_get = function(req, res, next) {
         }
     }, function(err, results) {
         if (err) { return next(err); }
-        res.render('roaster_form', { title: 'Create Roaster', roaster: results.name, address: results.address, phone: results.phone } );
+        res.render('roaster/form', { title: 'Create Roaster', roaster: results.name, address: results.address, phone: results.phone } );
     });
 };
 
@@ -284,7 +288,7 @@ exports.Roaster_create_post = [
           },
         }, function(err, results) {
                 if (err) { return next(err); }
-    res.render('roaster_form', {
+    res.render('roaster/form', {
       title: 'Create Roaster',
       roaster: results.name,
       address: results.address,
@@ -316,7 +320,7 @@ exports.Roaster_delete_get = function(req, res, next) {
           // console.log(results.roaster.name)
 
           // Successful, so render.
-          res.render('roaster_delete', { title: 'Delete Roaster', name: results.roaster.name, id: results.roaster.id} );
+          res.render('roaster/delete', { title: 'Delete Roaster', name: results.roaster.name, id: results.roaster.id} );
       });
 };
 
@@ -331,7 +335,7 @@ exports.Roaster_delete_post = function(req, res, next) {
       }, function(err, results) {
           if (err) { return next(err); }
           if (results.roaster.length > 0) {
-              res.render('roaster_delete', { title: 'Delete Roaster', roaster: results.name, address: results.address, phone: results.phone } );
+              res.render('roaster/delete', { title: 'Delete Roaster', roaster: results.name, address: results.address, phone: results.phone } );
               return;
           } else {
             // nothing

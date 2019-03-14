@@ -1,12 +1,12 @@
 extends ../layout
 
 block content
-  h1= title
+  h1 #{title}
 
 
   form(method='POST' action=`` )
         div.form-group
-          input#deleteList.form-control(type='hidden',name='roasterlist', required='true', value=id )
+          input#deleteList.form-control(type='hidden',name='roasterlist', required='true', value='id' )
           button#delete(type='submit') Delete List
 
 
@@ -15,7 +15,7 @@ block content
     if(roaster_list)
       each roaster in roaster_list
         li
-          a#listHeader(href= `/catalog/roasters/`+ roaster.id ) #{roaster.name}
+          a#listHeader(href= '/' ) #{roaster.name}
         ul#bizListInfo
           li #[strong Address:] #{roaster.address}
           li #[strong Phone:] #{roaster.phone}
