@@ -1,6 +1,6 @@
-#Chaff Map
+# Chaff Map
 
-A place for people to find and share byproducts, so they can make amazing projects on the cheap!
+*A place for people to find and share byproducts, so they can make amazing projects on the cheap!*
 
 Built using Express, Node, MongoDB, Pug & Markdown.
 
