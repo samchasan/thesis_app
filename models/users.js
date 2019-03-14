@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
+// const crypto = require('crypto');
+// const jwt = require('jsonwebtoken');
 
 var UserSchema = new mongoose.Schema({
   email: {
@@ -20,10 +20,6 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  passwordConf: {
-    type: String,
-    required: true,
-  },
   salt: String,
   hash: String,
   isAdmin: {type: Boolean, default: false}
@@ -31,8 +27,8 @@ var UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', function (next) {
   var user = this;
-  // bcrypt.genSalt(10, function (err), salt){
-  bcrypt.gen(user.password, 10, function (err, hash){
+  bcrypt.genSalt(10, function (err, salt){
+  bcrypt.hash(user.password, 10, function (err, hash){
     if (err) {
       return next(err);
     }
@@ -40,11 +36,13 @@ UserSchema.pre('save', function (next) {
     next();
     });
   });
-// });
+});
 
-// userSchema.methods.compare = function (pw){
-//   returbcrypt.compareSync(pw, this.password)
-// }
+
+
+UserSchema.methods.compare = function (pw){
+  return bcrypt.compareSync(pw, this.password)
+}
 
 // //authenticate input against database
 // UserSchema.statics.authenticate = function (email, password, callback) {

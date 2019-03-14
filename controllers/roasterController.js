@@ -12,6 +12,9 @@ var phoneParser = require('libphonenumber-js');
 var rawPhone = "0000000000"
 const uuid = require('uuid/v4')
 const uniqueID = uuid()
+const passport = require('passport');
+
+
 console.log('roaster controller: ' + uniqueID)
 // timeout in milliseconds
 const timeout = 2 * 60 * 1000
@@ -52,7 +55,13 @@ exports.data = function(req, res, next) {
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 exports.index = function(req, res) {
-  // console.log(req.sessionID)
+  if(passport.userLoggedIn){
+    currentUser = user
+  }else{
+    currentUser = null
+  }
+
+  console.log(currentUser)
   async.series({
     roaster_count: function(callback) {
       Roaster.countDocuments({'userID': uniqueID}, callback);
@@ -62,6 +71,7 @@ exports.index = function(req, res) {
     res.render('index', {
       title: 'Home',
       error: err,
+      user: 'blank',
       data: results
     });
   });

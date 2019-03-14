@@ -1,0 +1,7 @@
+extends ../layout
+
+block content
+  p #{title}
+  if (currentUser)
+  h3 #[strong #{currentUser}]
+  //- p [strong Email:]  #{currentUser.email}

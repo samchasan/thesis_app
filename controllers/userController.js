@@ -1,22 +1,27 @@
 const {body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const mongoose = require('mongoose');
-var passport = require("passport");
 var User = require('../models/users');
-var Project = require("../models/projects");
-var Roaster = require("../models/roasters");
+var Project = require('../models/projects');
+var Roaster = require('../models/roasters');
+const passport = require('passport');
 
 var bodyParser = require('body-parser');
 
 exports.profile_get = function(req, res) {
-  // User.find({})
-  res.render('user_profile', {
+  console.log(req.body)
+  res.render('user/profile', {
     title: 'Welcome back'
 
   })
 }
 
 exports.profile_post = function(req, res) {
+  if (loggedIn){
+
+  }else{
+
+  }
   // User.find({})
   // res.render('user_profile', {
   //   title: 'Welcome back'
@@ -25,47 +30,40 @@ exports.profile_post = function(req, res) {
 }
 
 exports.login_get = function(req, res) {
-  res.render('user_login', {
+  res.render('user/login', {
     title: 'Login'
   })
 }
 
 exports.login_post = function(req, res) {
-  User.findOne({username: req.body.username}, function (err, user){
-      if(err) return response.render('error', {error: 'no user' + req.body.username, title: 'error'})
-  })
+currentUser = req.body
+// console.log(currentUser)
+      res.render('index', {
+        currentUser: currentUser
+      })
 
-    // if user.compare(req.body.password){
-    //
-    // }
-    // {
-    //     successRedirect: "catalog",
-    //     failureRedirect: "user_login",
-    //     failureFlash: true,
-    //     successFlash: 'Welcome to ChaffMap!'
-    // )
 }
 
 exports.create_get = function(req, res) {
-  res.render('user_create', {
+  console.log(req.body)
+  res.render('user/create', {
     title: 'Create User'
   })
 }
 
-
 exports.create_post = function(req, res) {
+
+  // console.log(req.body)
 
   if (req.body.email &&
   req.body.username &&
-  req.body.password &&
-  req.body.passwordConf) {
-    if(req.body.password == req.body.passwordConf){
+  req.body.password
+  ){
 
   var userData = {
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
-    passwordConf: req.body.passwordConf,
   }
 
   if(req.body.adminCode === 'secretcode123'){
@@ -75,43 +73,26 @@ exports.create_post = function(req, res) {
   User.create(userData, function (err, user) {
     if (err) {
       console.log(err)
-      return res.render("user_create", {error: err.message});
+      return res.render('user/create', {error: err.message});
     } else {
       console.log(user)
-      passport.authenticate("local")(req, res, function(){
-           // req.flash("success", "Successfully Signed Up! Nice to meet you " + req.body.username);
-           res.render("index", {currentUser: user});
-            })
-        }
-      });
-    }else{
-      console.log('Passwords must match!')
-    }
-  }
-}
+      // passport.authenticate('local')(req, res, function(){
+           // req.flash('success', 'Successfully Signed Up! Nice to meet you ' + req.body.username);
+      return res.render('user/profile',
+        { title: `Welcome ${user.username}`,
+          currentUser: user
+        });
+            }
+        })
+      }
+    }    
+
+
+
+
 
 exports.logout = function(req, res){
    req.logout();
-   req.flash("success", "See you later!");
-   res.redirect("/catalog");
+   // req.flash('success', 'See you later!');
+   res.redirect('/catalog');
 };
-
-exports.profile = function (req,res){
-  User.findById(req.params.id, function(err, foundUser) {
-    if(err) {
-      req.flash("error", "Something went wrong.");
-      return res.redirect("/");
-    }
-    // Campground.find().where('author.id').equals(foundUser._id).exec(function(err, campgrounds) {
-    //   if(err) {
-    //     req.flash("error", "Something went wrong.");
-    //     return res.redirect("/");
-    //   }
-      res.render("user_profile",
-      {
-        user: foundUser
-        // campgrounds: campgrounds
-      });
-    // })
-  });
-}

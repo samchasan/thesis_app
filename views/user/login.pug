@@ -1,25 +1,16 @@
-extends layout
+extends ../layout
 
 block content
   h1 #{title}
 
-  form(method='POST' action='user_create')
+  form(method='POST' action='login')
     div.form-group
       label(for='username') Username:
       input#username.form-control(type='text', placeholder='madDasher' name='username' value=(undefined===user ? '' : user.username))
     div
     div.form-group
-      label(for='email') E-mail:
-      input#email.form-control(type='text', placeholder='madDasher@gmail.com' name='email' value=(undefined===user ? '' : user.email))
-    div
-    div.form-group
       label(for='password') Password:
       input#password.form-control(type='text', placeholder='********' name='password' value=(undefined===user ? '' : user.password))
-    div
-    div.form-group
-      label(for='adminCode') Admin Code:
-      input#adminCode.form-control(type='text', placeholder='secret' name='adminCode' value=(undefined===user ? '' : user.passwordConf))
-
 
     button.btn.btn-primary(type='submit') Submit
 

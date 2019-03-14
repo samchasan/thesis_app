@@ -8,8 +8,6 @@ html(lang='en')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOlt3Oe5zfpFaNrtUDQ-dGe0_JZ_9yUI")
-    script(src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js')
-    link(rel='stylesheet', href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='/javascripts/form.js')
 
@@ -22,19 +20,21 @@ html(lang='en')
               li
                 a(href='/catalog') Home
               li
-                a(href='/catalog/roasters') Roasters
+                a(href='/catalog/roaster/list') Roasters
               li
-                a(href='/catalog/project_list') Projects
+                a(href='/catalog/project/list') Projects
               li
                 a(href='/catalog/about') About
               if (!currentUser)  
                 li
-                  a(href='/catalog/user_login') Login
-                  a(href='/catalog/user_create') Register
+                  a(href='/catalog/user/login') Login
+                li
+                  a(href='/catalog/user/create') Register
               if (currentUser)
                 li Signed in as 
-                  a(href = '#') #{currentUser.username}
-                  a(href = '/catalog/user_logout') Logout
+                  a(href = '/catalog/user/profile') #{currentUser.username}
+                li  
+                  a(href = '/catalog/user/logout') Logout
                   
               
 
