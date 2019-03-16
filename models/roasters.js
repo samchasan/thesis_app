@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 //Define a schema
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var Roaster = new Schema({
+const Roaster = new Schema({
   userID: {type: String},
   name: {type: String},
   address: {type: String},
@@ -31,9 +31,4 @@ Roaster
 });
 
 //Export model
-module.exports = mongoose.model('Roasters', Roaster);
-//
-// Roaster.save(function (err) {
-//   if (err) return handleError(err);
-//   // saved!
-// });
+module.exports = mongoose.model('Roaster', Roaster);

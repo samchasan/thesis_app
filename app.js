@@ -1,40 +1,41 @@
-var createError = require('http-errors');
-var express = require('express');
-var app = express();
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+require('dotenv').config();
+const createError = require('http-errors');
+const express = require('express');
+const app = express();
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const session = require('express-session')
-var logger = require('morgan');
-var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(session);
-var indexRouter = require('./routes/index');
-var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
-var dataRouter = require('./routes/data');  //Import routes for "catalog" area of site
-var compression = require('compression');
-const yelp = require('yelp-fusion');
-const apiKey = 'wGqzd3D0HanzPEzCzsL6564joQ193ruYklVwN3si1zfkH6tQfsUnYHyOaMSmF4Qlz3kcnweFNGRcukXCcuvaJ_9MOw-1PfHc2Ql1BR-hXXv5cevs43CgmZVgiTpxXHYx';
+const logger = require('morgan');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
+const indexRouter = require('./routes/index');
+const catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
+const dataRouter = require('./routes/data');  //Import routes for "catalog" area of site
+const compression = require('compression');
 const uuid = require('uuid/v4')
 const uniqueID = uuid()
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var User = require('./models/users');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/users');
+const React = require('react')
+
 
 
 // timeout in seconds
 const timeout = 2 * 60
 
 
-// setTimeout(function(){
+// setTimeout((){
 //   db.dropDatabase(uniqueID)
 // }, timeout)
 
-var configDB = require('./config/database.js');
+const configDB = require('./config/database.js');
 mongoose.connect(configDB.url);
 
 mongoose.Promise = global.Promise;
 
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
@@ -66,12 +67,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport');
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done)=>  {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
+passport.deserializeUser((id, done)=>  {
+  User.findById(id, (err, user) => {
     done(err, user);
   });
 });
@@ -81,12 +82,12 @@ app.use('/catalog', catalogRouter);
 app.use('/data', dataRouter);
 
 
-app.use(function(req, res, next) {
+app.use((req, res, next)=>  {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next)=>  {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -1,44 +1,65 @@
 const {body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const mongoose = require('mongoose');
-var User = require('../models/users');
-var Project = require('../models/projects');
-var Roaster = require('../models/roasters');
+const User = require('../models/users');
+const Project = require('../models/projects');
+const Roaster = require('../models/roasters');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 
-var bodyParser = require('body-parser');
 
-exports.profile_get = function(req, res) {
+exports.profile_get = (req, res) => {
   console.log(req.body)
+
+
+  if(req.user){
   res.render('user/profile', {
-    title: 'Welcome back'
-
+    title: 'Welcome back',
+    currentUser: user
   })
 }
 
-exports.profile_post = function(req, res) {
-  if (loggedIn){
+exports.AvatarUpload('/addavatar', (req, res, next) => {
+  let uploadFile = req.files.file
+  const fileName = req.files.file.name
+  uploadFile.mv(
+    `${__dirname}/public/img/${fileName}`,
+    function (err) {
+      if (err) {
+        return res.status(500).send(err)
+      }
 
-  }else{
+      res.json({
+        file: `public/img/${req.files.file.name}`,
+      })
+    },
+  )
+})
 
-  }
-  // User.find({})
-  // res.render('user_profile', {
-  //   title: 'Welcome back'
-  //
-  // })
 }
 
-exports.login_get = function(req, res) {
-  res.render('user/login', {
-    title: 'Login'
-  })
+exports.profile_post = (req, res) => {
+
 }
 
-exports.login_post = function(req, res) {
+exports.login_get = (req, res) => {
+  // if(!req.user){
+  //   res.render('user/login', {
+  //     title: 'Login',
+  //     currentUser: null
+  //   })
+  // }else{
+    res.render('user/login', {
+      title: 'Login'
+    })
+  // }
+
+}
+
+exports.login_post = (req, res) => {
 user = req.body
 // console.log(user)
-User.findOne({username: user.username}, function(err, user){
+User.findOne({username: user.username}, (err, user) => {
       if(err){
           res.render('login', {
             title: 'Error, try again'
@@ -53,21 +74,21 @@ User.findOne({username: user.username}, function(err, user){
       })
 }
 
-exports.create_get = function(req, res) {
+exports.create_get = (req, res) => {
   console.log(req.body)
   res.render('user/create', {
     title: 'Create User'
   })
 }
 
-exports.create_post = function(req, res) {
+exports.create_post = (req, res) => {
 
   if (req.body.email &&
   req.body.username &&
   req.body.password
   ){
 
-  var userData = {
+  const userData = {
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
@@ -77,7 +98,7 @@ exports.create_post = function(req, res) {
     userData.isAdmin = true;
   }
 
-  User.create(userData, function (err, user) {
+  User.create(userData, (err, user) => {
     if (err) {
       console.log(err)
       return res.render('user/create', {error: err.message});
@@ -96,7 +117,7 @@ exports.create_post = function(req, res) {
 
 
 
-exports.logout = function(req, res){
+exports.logout = (req, res) => {
    req.logout();
    // req.flash('success', 'See you later!');
    res.redirect('/catalog');

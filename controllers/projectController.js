@@ -6,30 +6,44 @@ const {
   sanitizeBody
 } = require('express-validator/filter');
 const async = require('async')
-var Project = require('../models/projects');
+const Project = require('../models/projects');
 const mongoose = require('mongoose');
-var S = require('string');
+const S = require('string');
 const fs = require('fs-extra')
-var MarkdownIt = require('markdown-it'),
+const MarkdownIt = require('markdown-it'),
     md = new MarkdownIt();
-var md2pug = new (require('markdown-to-pug'))();
+const md2pug = new (require('markdown-to-pug'))();
 
 
 
-exports.project_list = function(req, res) {
+exports.project_list = (req, res) =>{
+  if(req.user){
+    user = req.user
   res.render('project/list', {
-    title: 'Projects'
+    title: 'Projects',
+    currentUser: user
+  })
+} else{
+  res.render('project/list', {
+    title: 'Projects',
   })
 }
+}
+let user
 
-exports.project_detail = function(req, res) {
-
+exports.project_detail = (req, res) => {
+  if(req.user){
+    user = req.user
+  } else {
+    user = null
+  }
   async.parallel({
     project: function(callback) {
-      var input = req.params.id.toString()
-      // console.log(input)
-      var shortened = S(input).chompRight('.html').s; //'bar'
-      var title = S(shortened).capitalize().s; //'Jon'
+
+      const input = req.params.id.toString()
+      // //console.log(input)
+      const shortened = S(input).chompRight('.html').s; //'bar'
+      const title = S(shortened).capitalize().s; //'Jon'
       switch (title) {
         case 'Cattle_feed':
           title = 'Cattle Feed'
@@ -42,7 +56,7 @@ exports.project_detail = function(req, res) {
           break;
       }
 
-      console.log(title)
+      // //console.log(title)
 
       Project.find({
           title: title
@@ -50,23 +64,23 @@ exports.project_detail = function(req, res) {
         .exec(callback)
     },
   }, function(err, results) {
-    console.log(results)
+    console.log(user)
     if (err) {
-      console.log(err);
+      //console.log(err);
     }
     if (results.project == null) { // No results.
-      var err = new Error('Project not found');
+      let err = new Error('Project not found');
       err.status = 404;
       // return next(err);
     }
-    var description
-    var title = results.project[0].title
+    let description
+    const title = results.project[0].title
 
     getCase(title, description => {
-      console.log(description)
+      // //console.log(description)
       fs.writeFile('views/description.pug', description, (err) => {
         if (err) throw err;
-        console.log('The file has been saved!');
+        // //console.log('The file has been saved!');
         render(description, msg =>{
       });
     })
@@ -74,7 +88,7 @@ exports.project_detail = function(req, res) {
 
   function readMd(filePath,callback){
     const fileText = fs.readFileSync(`./public/projects/${filePath}.md`, "utf8")
-    var mdText = md.render(fileText);
+    const mdText = md.render(fileText);
     description = md2pug.render(fileText);
     callback(description)
 
@@ -84,28 +98,28 @@ exports.project_detail = function(req, res) {
       function getCase (phrase, callback){
         switch (phrase) {
           case 'Mushrooms':
-            console.log('on the mushrooms page')
+            //console.log('on the mushrooms page')
             // description = $.get('/public/mushrooms.txt')
             readMd('mushrooms',callback)
           break;
           case 'Composting':
-            console.log('on the composting page')
+            //console.log('on the composting page')
             readMd('compost',callback)
             break;
           case 'Mulching':
-            console.log('on the Mmlching page')
+            //console.log('on the Mmlching page')
             readMd('mulch',callback)
             break;
           case 'Cattle Feed':
-            console.log('on the Cattle Feed page')
+            //console.log('on the Cattle Feed page')
             readMd('cattle_feed',callback)
             break;
           case 'Poultry Bedding':
-            console.log('on the Poultry Bedding page')
+            //console.log('on the Poultry Bedding page')
             readMd('poultry_bedding',callback)
             break;
           case 'Eco-Bricks':
-            console.log('on the Eco-Bricks page')
+            //console.log('on the Eco-Bricks page')
             readMd('eco-bricks',callback)
             break;
       }
@@ -113,8 +127,8 @@ exports.project_detail = function(req, res) {
 
     }
 
-    function render (description, callback){
-      console.log('in render')
+    function render (description, callback) {
+      //console.log('in render')
     // Successful, so render
       res.render('project/detail', {
       title: results.project[0].title,
@@ -123,7 +137,8 @@ exports.project_detail = function(req, res) {
       expense: results.project[0].expense,
       tags: S([results.project[0].tags]).toCSV().s,
       headline: results.project[0].headline,
-      description: description
+      description: description,
+      currentUser: user
     })
     callback('successful')
   }

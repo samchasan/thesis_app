@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h4= title
+  h4 #{title}
   
   if currentUser && currentUser.isAdmin
     h3 you're an admin!
@@ -15,6 +15,9 @@ block content
   | things with chaff!
 
   hr
+  
+  div#likeButtonContainer
+    script(src='/js/likeButton.js')
 
   h2 Search for roasters
   form(method='post', action='')
@@ -24,4 +27,4 @@ block content
   hr
 
   div#map
-  script(src='/javascripts/map.js')
+  script(src='/js/map.js')

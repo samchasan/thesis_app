@@ -1,8 +1,8 @@
 
 // Bear models lives here
-var express = require('express');
-var router = express.Router();
-var roaster_controller = require('../controllers/roasterController');
+const express = require('express');
+const router = express.Router();
+const roaster_controller = require('../controllers/roasterController');
 
 
 // ROUTES FOR OUR API

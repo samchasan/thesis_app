@@ -1,18 +1,24 @@
+require('dotenv').config();
 const {body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const async = require('async')
-var debug = require('debug')('roaster');
-var Roaster = require('../models/roasters');
-var bodyParser = require('body-parser');
+const debug = require('debug')('roaster');
+const Roaster = require('../models/roasters');
+const bodyParser = require('body-parser');
 const yelp = require('yelp-fusion');
-const apiKey = 'wGqzd3D0HanzPEzCzsL6564joQ193ruYklVwN3si1zfkH6tQfsUnYHyOaMSmF4Qlz3kcnweFNGRcukXCcuvaJ_9MOw-1PfHc2Ql1BR-hXXv5cevs43CgmZVgiTpxXHYx';
+const yelpToken = process.env.Yelp;
+const googI = process.env.GoogleToken;
+const googleToken = 'https://maps.googleapis.com/maps/api/js?key=' + googI;
 const mongoose = require('mongoose');
 const math = require('mathjs');
-var phoneParser = require('libphonenumber-js');
-var rawPhone = "0000000000"
+const phoneParser = require('libphonenumber-js');
+let rawPhone = "0000000000"
 const uuid = require('uuid/v4')
 const uniqueID = uuid()
 const passport = require('passport');
+const session = require('express-session')
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 
 
 console.log('roaster controller: ' + uniqueID)
@@ -21,16 +27,16 @@ const timeout = 2 * 60 * 1000
 let dataArray;
 
 // Display list of all Roasters.
-exports.data = function(req, res, next) {
+exports.data = (req, res, next)=>  {
     Roaster.find({ 'userID': uniqueID})
       // .sort([['name', 'ascending']])
-      .exec(function(err, list_roasters) {
+      .exec((err, list_roasters)=>  {
       if (err) { return next(err) }
 
-      list_roasters.forEach(function(roaster){
+      list_roasters.forEach((roaster)=> {
         console.log(roaster.id)
         // console.log(roaster._id)
-        const entry = {   id: roaster._id,
+        const entry = {   id: roaster.id,
                           name: roaster.name,
                           address: roaster.address,
                           coordinates: roaster.coordinates,
@@ -40,7 +46,7 @@ exports.data = function(req, res, next) {
           // console.log(entry)
           dataArray.push(entry)
         })
-// console.log(dataArray)
+console.log(dataArray)
       res.json({
         title: 'Roaster List',
         data: dataArray
@@ -48,14 +54,14 @@ exports.data = function(req, res, next) {
   });
 }
 
-
-// const uuid = require('uuid/v4')
-// const session = require('express-session')
-
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-exports.index = function(req, res) {
+exports.index = (req, res)=>  {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
   // if(passport.userLoggedIn){
+  console.log(googleToken)
   //   currentUser = user
   // }else{
   //   currentUser = null
@@ -63,14 +69,16 @@ exports.index = function(req, res) {
   //
   // console.log(currentUser)
   async.series({
-    roaster_count: function(callback) {
+    roaster_count: (callback)=>  {
       Roaster.countDocuments({'userID': uniqueID}, callback);
       // console.log(callback)
     }
-  }, function(err, results) {
+  }, (err, results) => {
     console.log(results)
     res.render('index', {
       title: 'Home',
+      googleKey: googleToken,
+      currentUser: user,
       error: err,
       user: 'blank',
       data: results
@@ -79,12 +87,17 @@ exports.index = function(req, res) {
 };
 
 
-exports.search = function(req, res, next) {
-  Roaster.deleteMany({ 'userID': uniqueID}, function (err, roaster) {})
+exports.search = (req, res, next)=>  {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
+  Roaster.deleteMany({ 'userID': uniqueID},  (err, roaster)=>  {})
 
   dataArray = []
-  setTimeout(function(){
-    Roaster.deleteMany({ 'userID': uniqueID}, function (err, roaster) {
+  setTimeout(()=>{
+    Roaster.deleteMany({ 'userID': uniqueID},  (err, roaster)=>  {
     if (err){console.log(err)}
     // console.log(`${roaster}`)
     // console.log(`roasters with userID = "${uniqueID}" deleted`)
@@ -99,14 +112,14 @@ exports.search = function(req, res, next) {
     limit: 15
   };
 
-    const client = yelp.client(apiKey);
+    const client = yelp.client(yelpToken);
     let result = {};
     let results = [];
 
     client.search(searchRequest).then(response => {
       const keys = Object.keys(response.jsonBody.businesses)
 console.log(keys)
-        for (var i = 0; i < keys.length; i++){
+        for (let i = 0; i < keys.length; i++){
         const name = response.jsonBody.businesses[i].name;
         const isPhone = response.jsonBody.businesses[i].phone
         if(isPhone){
@@ -138,23 +151,23 @@ console.log(keys)
         // console.log(`from search ${result.coords}`)
 
         async.series({
-            input: function(callback){
+            input: (callback)=> {
               callback(null,result)
             },
-            search: function(callback) {
-                Roaster.findOne({name:result.name}, function(err, obj){
+            search: (callback)=>  {
+                Roaster.findOne({name:result.name}, (err, obj)=> {
                   callback(null, obj)
                 })
                   // .exec(callback)
 
             }
-        }, function(err, result) {
+        }, (err, result)=>  {
             if (err) { return next(err); }
-            var search = result.search
-            // var input = result.input
+            let search = result.search
+            // let input = result.input
             // console.log(input)
             if (search < 1){
-              var roaster = new Roaster({
+              let roaster = new Roaster({
                   userID: result.input.userID,
                   name: result.input.name,
                   address: result.input.loc,
@@ -163,7 +176,7 @@ console.log(keys)
                   distance: result.input.dist
                 });
                 // console.log(`adding ${roaster}`)
-                roaster.save(function(err) {
+                roaster.save((err)=>  {
                       if (err) {  return next(err); }
                     })
             } else {
@@ -173,49 +186,59 @@ console.log(keys)
         }
       })
       // console.log(dataArray.length)
-  res.redirect('/catalog')
+  res.render('index',{
+    currentUser: user,
+    googleKey: googleToken
+  })
 };
 
 // Display list of all Roasters.
-exports.Roaster_list_get = function(req, res, next) {
+exports.Roaster_list_get = (req, res, next)=>  {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
 
     console.log(req.body)
 
     Roaster.find({ 'userID': uniqueID})
       .sort([['name', 'ascending']])
-      .exec(function(err, list_roasters) {
+      .exec((err, list_roasters) => {
 
 // console.log(list_roasters)
 
-list_roasters.forEach(function(roaster){
+list_roasters.forEach((roaster)=> {
   lat = roaster.coordinates.lat
   long = roaster.coordinates.lat
   roaster.coordinates = `lat: ${lat}, long: ${long}`
 })
-console.log(list_roasters)
 
-        // lat = list_roasters.coordinates.lat
-        // long = list_roasters.coordinates.lat
-
-        // list_roasters.coordinatess = `lat: ${lat}, long: ${long}`
       if (err) { return next(err) }
       res.render('roaster/list', {
         title: 'Roaster List',
-        roaster_list: list_roasters
+        roaster_list: list_roasters,
+        currentUser: user
       });
     });
 };
 
 // Delete Roasters.
-exports.Roaster_list_post = function(req, res, next) {
+exports.Roaster_list_post = (req, res, next)=>  {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
   Roaster.deleteMany({})
   // Roaster.deleteMany()
 
       // .populate('roaster')
-      .exec(function(err) {
+      .exec((err)=> {
       if (err) { return next(err) }
       res.render('roaster/list', {
         title: 'Roaster List',
+        currentUser: user
         // roaster_list: list_roasters
       });
     })
@@ -224,22 +247,30 @@ exports.Roaster_list_post = function(req, res, next) {
 
 
 // Display detail page for a specific Roaster.
-exports.Roaster_detail = function(req, res, next) {
-
+exports.Roaster_detail = (req, res, next)=>  {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
     async.parallel({
-        roaster: function(callback) {
+        roaster: (callback)=>  {
             Roaster.findById(req.params.id)
               .exec(callback)
         },
-    }, function(err, results) {
+    }, (err, results)=>  {
         if (err) { return next(err); }
         if (results.roaster==null) { // No results.
-            var err = new Error('Roaster not found');
+            let err = new Error('Roaster not found');
             err.status = 404;
             return next(err);
         }
         // Successful, so render
-        res.render('roaster/detail', { title: 'Roaster Detail', roaster: results.roaster } );
+        res.render('roaster/detail', {
+          title: 'Roaster Detail',
+          roaster: results.roaster,
+          currentUser: user
+        } );
     });
 
 };
@@ -248,12 +279,17 @@ exports.Roaster_detail = function(req, res, next) {
 
 
 // Display Roaster create form on GET.
-exports.Roaster_create_get = function(req, res, next) {
+exports.Roaster_create_get = (req, res, next)=>  {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
     async.parallel({
-        roaster: function(callback) {
+        roaster: (callback) => {
             Roaster.find(callback);
         }
-    }, function(err, results) {
+    }, (err, results) => {
         if (err) { return next(err); }
         res.render('roaster/form', { title: 'Create Roaster', roaster: results.name, address: results.address, phone: results.phone } );
     });
@@ -272,32 +308,37 @@ exports.Roaster_create_post = [
   sanitizeBody('Phone').trim().escape(),
   // Process request after validation and sanitization.
   (req, res, next) => {
-
+    if (req.user){
+      user = req.user
+    }else{
+      user = null
+    }
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
-    var roaster = new Roaster({
+    let roaster = new Roaster({
       name: req.body.Name,
       address: req.body.Address,
       phone: req.body.Phone
     });
     if (!errors.isEmpty()) {
       async.parallel({
-          roaster: function(callback) {
+          roaster: (callback) => {
               Roaster.find(callback);
           },
-        }, function(err, results) {
+        }, (err, results) => {
                 if (err) { return next(err); }
     res.render('roaster/form', {
       title: 'Create Roaster',
       roaster: results.name,
       address: results.address,
       phone: results.phone,
+      currentUser: user,
       errors: errors.array() });
   });
     return;
     } else {
-      roaster.save(function(err) {
+      roaster.save((err)=>  {
         if (err) {  return next(err); }
         res.redirect(`${roaster.id}`);
       });
@@ -309,33 +350,52 @@ exports.Roaster_create_post = [
 
 
 // Display Roaster delete form on GET.
-exports.Roaster_delete_get = function(req, res, next) {
-
+exports.Roaster_delete_get = (req, res, next) => {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
   async.parallel({
-          roaster: function(callback) {
+          roaster: (callback) => {
               Roaster.findById(req.params.id).exec(callback)
           },
-      }, function(err, results) {
+      }, (err, results) => {
           if (err) { return next(err); }
           // console.log(results.roaster.name)
 
           // Successful, so render.
-          res.render('roaster/delete', { title: 'Delete Roaster', name: results.roaster.name, id: results.roaster.id} );
+          res.render('roaster/delete', {
+            title: 'Delete Roaster',
+            name: results.roaster.name,
+            id: results.roaster.id,
+            currentUser: user
+          } );
       });
 };
 
 
 // delete roaster
-exports.Roaster_delete_post = function(req, res, next) {
-
+exports.Roaster_delete_post = (req, res, next) => {
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
       async.parallel({
-          roaster: function(callback) {
+          roaster: (callback) => {
             Roaster.find(callback)
           },
-      }, function(err, results) {
+      }, (err, results) => {
           if (err) { return next(err); }
           if (results.roaster.length > 0) {
-              res.render('roaster/delete', { title: 'Delete Roaster', roaster: results.name, address: results.address, phone: results.phone } );
+              res.render('roaster/delete', {
+                title: 'Delete Roaster',
+                roaster: results.name,
+                address: results.address,
+                phone: results.phone,
+                currentUser: user
+              } );
               return;
           } else {
             // nothing
@@ -343,19 +403,19 @@ exports.Roaster_delete_post = function(req, res, next) {
       });};
 
 // Display Roaster update form on GET.
-// exports.Roaster_update_get = function(req, resnext) {
+// exports.Roaster_update_get = (req, resnext) {
 //
 //   // Get roaster, authors and genres for form.
 //   async.parallel({
-//     roaster: function(callback) {
+//     roaster: (callback) {
 //       Roaster.findById(req.params.id).exec(callback)
 //     },
-//   }, function(err, results) {
+//   }, (err, results) {
 //     if (err) {
 //       return next(err);
 //     }
 //     if (results.roaster == null) { // No results.
-//       var err = new Error('Roaster not found');
+//       let err = new Error('Roaster not found');
 //       err.status = 404;
 //       return next(err);
 //     }
@@ -397,7 +457,7 @@ exports.Roaster_delete_post = function(req, res, next) {
 //     const errors = validationResult(req);
 //
 //     // Create a roaster object with escaped/trimmed data and old id.
-//     var roaster = new Roaster({
+//     let roaster = new Roaster({
 //       name: req.body.Name,
 //       address: req.body.Address,
 //       phone: req.body.Phone,
@@ -406,11 +466,11 @@ exports.Roaster_delete_post = function(req, res, next) {
 //
 //       // Get all authors and genres for form.
 //       async.parallel({
-//         roaster: function(callback) {
+//         roaster: (callback) {
 //           Roaster.find(callback);
 //         }
 //
-//       }, function(err, results) {
+//       }, (err, results) {
 //         if (err) {
 //           return next(err);
 //         }
@@ -425,7 +485,7 @@ exports.Roaster_delete_post = function(req, res, next) {
 //       return;
 //     } else {
 //       // Data from form is valid. Update the record.
-//       Roaster.findByIdAndUpdate(req.params.id, roaster, {}, function(err, theroaster) {
+//       Roaster.findByIdAndUpdate(req.params.id, roaster, {}, (err, theroaster) {
 //         if (err) {
 //           return next(err);
 //         }

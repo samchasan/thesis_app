@@ -1,13 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 // Require controller modules.
-var roaster = require('../controllers/roasterController');
-var project = require('../controllers/projectController');
-var about = require('../controllers/aboutController');
-var user = require('../controllers/userController');
+const roaster = require('../controllers/roasterController');
+const project = require('../controllers/projectController');
+const about = require('../controllers/aboutController');
+const user = require('../controllers/userController');
 
-var passport = require("passport");
+const passport = require("passport");
 
 
 /// roaster ROUTES ///

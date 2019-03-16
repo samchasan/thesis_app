@@ -6,11 +6,11 @@ block content
   form(method='POST' action='login')
     div.form-group
       label(for='username') Username:
-      input#username.form-control(type='text', placeholder='madDasher' name='username' value=(undefined===user ? '' : user.username))
+      input#username.form-control(type='text', placeholder='madDasher' name='username' )
     div
     div.form-group
       label(for='password') Password:
-      input#password.form-control(type='text', placeholder='********' name='password' value=(undefined===user ? '' : user.password))
+      input#password.form-control(type='text', placeholder='********' name='password' )
 
     button.btn.btn-primary(type='submit') Submit
 
