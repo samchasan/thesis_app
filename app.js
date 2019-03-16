@@ -18,8 +18,6 @@ const uniqueID = uuid()
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/users');
-const React = require('react')
-
 
 
 // timeout in seconds
@@ -43,6 +41,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+// serve everything in "dist" from "js" folder
+app.use('/js', express.static(path.join(__dirname, 'dist')));
 app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(express.json());

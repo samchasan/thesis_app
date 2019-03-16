@@ -1,4 +1,4 @@
-'use strict'
+import axios from 'axios'
 
 const e = React.createElement;
 
@@ -15,12 +15,12 @@ class Container extends React.Component {
 
 
   render(){
-    return React.createElement(
-          'div', { id: 'avatarWrapper' },
-            'input', {type:"file", onChange: this.showOpenFileDlg}
-        )
+    return (
+      <div id='avatarWrapper'>
+        <input type="file" onChange={this.showOpenFileDlg} />
+      </div>
+    );
   }
-
 }
 
 
