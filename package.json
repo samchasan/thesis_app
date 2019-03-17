@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "start-dev": "concurrently 'npm run start-client' 'npm run devstart'",
     "start-client": "parcel serve client/*.js*",
     "build-client": "parcel build client/*.js*",
     "devstart": "nodemon ./bin/www"
@@ -54,6 +55,7 @@
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "clang-format": "^1.2.4",
     "create-react-app": "^2.1.8",
     "nodemon": "^1.18.10",
     "parcel": "^1.12.2"

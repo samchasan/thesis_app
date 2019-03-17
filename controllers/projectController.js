@@ -16,7 +16,7 @@ const md2pug = new (require('markdown-to-pug'))();
 
 
 
-exports.project_list = (req, res) =>{
+exports.projectList = (req, res) =>{
   if(req.user){
     user = req.user
   res.render('project/list', {
@@ -31,7 +31,7 @@ exports.project_list = (req, res) =>{
 }
 let user
 
-exports.project_detail = (req, res) => {
+exports.projectDetail = (req, res) => {
   if(req.user){
     user = req.user
   } else {

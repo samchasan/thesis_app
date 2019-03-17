@@ -193,7 +193,7 @@ console.log(keys)
 };
 
 // Display list of all Roasters.
-exports.Roaster_list_get = (req, res, next)=>  {
+exports.RoasterListGet = (req, res, next)=>  {
   if (req.user){
     user = req.user
   }else{
@@ -217,14 +217,14 @@ list_roasters.forEach((roaster)=> {
       if (err) { return next(err) }
       res.render('roaster/list', {
         title: 'Roaster List',
-        roaster_list: list_roasters,
+        roasterList: list_roasters,
         currentUser: user
       });
     });
 };
 
 // Delete Roasters.
-exports.Roaster_list_post = (req, res, next)=>  {
+exports.RoasterListPost = (req, res, next)=>  {
   if (req.user){
     user = req.user
   }else{
@@ -239,7 +239,7 @@ exports.Roaster_list_post = (req, res, next)=>  {
       res.render('roaster/list', {
         title: 'Roaster List',
         currentUser: user
-        // roaster_list: list_roasters
+        // roasterList: list_roasters
       });
     })
 
@@ -247,7 +247,7 @@ exports.Roaster_list_post = (req, res, next)=>  {
 
 
 // Display detail page for a specific Roaster.
-exports.Roaster_detail = (req, res, next)=>  {
+exports.RoasterDetail = (req, res, next)=>  {
   if (req.user){
     user = req.user
   }else{
@@ -279,7 +279,7 @@ exports.Roaster_detail = (req, res, next)=>  {
 
 
 // Display Roaster create form on GET.
-exports.Roaster_create_get = (req, res, next)=>  {
+exports.RoasterCreateGet = (req, res, next)=>  {
   if (req.user){
     user = req.user
   }else{
@@ -297,7 +297,7 @@ exports.Roaster_create_get = (req, res, next)=>  {
 
 
 // Handle Roaster create on POST.
-exports.Roaster_create_post = [
+exports.RoasterCreatePost = [
   // Validate that the name field is not empty.
   body('Name','Title must not be empty.').isLength({ min: 1 }).trim(),
   body('Address','Address must not be empty.').isLength({ min: 1 }).trim(),
@@ -350,7 +350,7 @@ exports.Roaster_create_post = [
 
 
 // Display Roaster delete form on GET.
-exports.Roaster_delete_get = (req, res, next) => {
+exports.RoasterDeleteGet = (req, res, next) => {
   if (req.user){
     user = req.user
   }else{
@@ -376,7 +376,7 @@ exports.Roaster_delete_get = (req, res, next) => {
 
 
 // delete roaster
-exports.Roaster_delete_post = (req, res, next) => {
+exports.RoasterDeletePost = (req, res, next) => {
   if (req.user){
     user = req.user
   }else{
@@ -403,7 +403,7 @@ exports.Roaster_delete_post = (req, res, next) => {
       });};
 
 // Display Roaster update form on GET.
-// exports.Roaster_update_get = (req, resnext) {
+// exports.Roaster_updateGet = (req, resnext) {
 //
 //   // Get roaster, authors and genres for form.
 //   async.parallel({
@@ -432,7 +432,7 @@ exports.Roaster_delete_post = (req, res, next) => {
 //
 //
 // // Handle roaster update on POST.
-// exports.Roaster_update_post = [
+// exports.Roaster_updatePost = [
 //
 //   // Validate fields.
 //   body('Name', 'Name must not be empty.').isLength({

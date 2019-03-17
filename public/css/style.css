@@ -23,14 +23,26 @@ body {
   font-size: 12px;
 }
 
-#avatarWrapper{
-  width: 100px;
+#avatar{
+  width: 300px;
+  height: 100px;
+  background-color: red;
+  margin: 10px;
+  overflow: hidden;
+  border: 2px solid black;
+}
+
+#fileInput{
+  width: 300px;
+}
+/* #avatarContent{
+    width: 300px;
     height: 100px;
     background-color: red;
     margin: 10px;
     overflow: hidden;
     border: 2px solid black;
-}
+} */
 
 
 #avatarWrapper img{
@@ -91,12 +103,6 @@ h3{
   color: #389898;
   font-size: 18pt;
 }
-
-#avatar{
-  width: 200px;
-  color: black;
-}
-
 
 #likeButtonContainer{
 

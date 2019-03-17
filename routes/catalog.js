@@ -20,43 +20,46 @@ router.post('/', roaster.search);
 router.get('/about', about.about);
 
 // create user page
-router.get('/user/create', user.create_get);
-router.post('/user/create', user.create_post);
+router.get('/user/create', user.createGet);
+router.post('/user/create', user.createPost);
 
 // user logout
 router.get('/user/logout',user.logout);
 
 // user profile page
-router.get('/user/profile', user.profile_get);
-router.post('/user/profile', user.profile_post);
+router.get('/user/profile', user.profileGet);
+
+router.post('/user/avatar', user.avatarUpload);
+
+
 
 // user login page
-router.get('/user/login', user.login_get);
-router.post('/user/login', passport.authenticate('local'), user.login_post);
+router.get('/user/login', user.loginGet);
+router.post('/user/login', passport.authenticate('local'), user.loginPost);
 
 
 // GET project page.
-router.get('/project/list', project.project_list);
+router.get('/project/list', project.projectList);
 
 // GET project detail page.
-router.get('/project/list/:id', project.project_detail);
+router.get('/project/list/:id', project.projectDetail);
 
 // router.post('/', roaster.search);
 
 
 // GET/POST create a roaster
-router.get('/roaster/create', roaster.Roaster_create_get);
-router.post('/roaster/create', roaster.Roaster_create_post);
+router.get('/roaster/create', roaster.RoasterCreateGet);
+router.post('/roaster/create', roaster.RoasterCreatePost);
 
 // GET/POST delete a roaster
-router.get('/roaster/:id/delete', roaster.Roaster_delete_get);
-router.post('/roaster/:id/delete', roaster.Roaster_delete_post);
+router.get('/roaster/:id/delete', roaster.RoasterDeleteGet);
+router.post('/roaster/:id/delete', roaster.RoasterDeletePost);
 
 // GET request show a roaster
-router.get('/roaster/:id', roaster.Roaster_detail);
+router.get('/roaster/:id', roaster.RoasterDetail);
 
 // GET/POST show all roaster
-router.get('/roaster/details', roaster.Roaster_list_get);
-router.post('/roaster/details', roaster.Roaster_list_post);
+router.get('/roaster/details', roaster.RoasterListGet);
+router.post('/roaster/details', roaster.RoasterListPost);
 
 module.exports = router;

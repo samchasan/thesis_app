@@ -1,7 +1,7 @@
 
 $("#submitSearch").submit(function (event) {
   $.post('', $("#Search").serialize(), function (data) {
- 	console.log(data) //data is the response from the backend
+ 	  console.log(data) //data is the response from the backend
   });
   event.preventDefault();
 });
@@ -9,7 +9,7 @@ $("#submitSearch").submit(function (event) {
 
 $("#deleteList").submit(function (event) {
   $.post('', $("#delete").serialize(), function (data) {
- 	console.log(data) //data is the response from the backend
+ 	  console.log(data) //data is the response from the backend
   });
   event.preventDefault();
 });

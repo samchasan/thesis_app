@@ -8,7 +8,7 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 
 
-exports.profile_get = (req, res) => {
+exports.profileGet = (req, res) => {
   console.log(req.body)
 
 
@@ -18,8 +18,9 @@ exports.profile_get = (req, res) => {
     currentUser: user
   })
 }
+}
 
-exports.AvatarUpload('/addavatar', (req, res, next) => {
+exports.avatarUpload = (req, res, next) => {
   let uploadFile = req.files.file
   const fileName = req.files.file.name
   uploadFile.mv(
@@ -34,29 +35,18 @@ exports.AvatarUpload('/addavatar', (req, res, next) => {
       })
     },
   )
-})
-
 }
 
-exports.profile_post = (req, res) => {
 
-}
+exports.loginGet = (req, res) => {
 
-exports.login_get = (req, res) => {
-  // if(!req.user){
-  //   res.render('user/login', {
-  //     title: 'Login',
-  //     currentUser: null
-  //   })
-  // }else{
     res.render('user/login', {
       title: 'Login'
     })
-  // }
 
 }
 
-exports.login_post = (req, res) => {
+exports.loginPost = (req, res) => {
 user = req.body
 // console.log(user)
 User.findOne({username: user.username}, (err, user) => {
@@ -74,14 +64,14 @@ User.findOne({username: user.username}, (err, user) => {
       })
 }
 
-exports.create_get = (req, res) => {
+exports.createGet = (req, res) => {
   console.log(req.body)
   res.render('user/create', {
     title: 'Create User'
   })
 }
 
-exports.create_post = (req, res) => {
+exports.createPost = (req, res) => {
 
   if (req.body.email &&
   req.body.username &&
@@ -92,11 +82,10 @@ exports.create_post = (req, res) => {
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
+    avatar: req.body.avatar
   }
 
-  if(req.body.adminCode === 'secretcode123'){
-    userData.isAdmin = true;
-  }
+
 
   User.create(userData, (err, user) => {
     if (err) {
