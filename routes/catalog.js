@@ -7,7 +7,7 @@ const project = require('../controllers/projectController');
 const about = require('../controllers/aboutController');
 const user = require('../controllers/userController');
 
-const passport = require("passport");
+const passport = require('passport');
 
 
 /// roaster ROUTES ///
@@ -24,14 +24,14 @@ router.get('/user/create', user.createGet);
 router.post('/user/create', user.createPost);
 
 // user logout
-router.get('/user/logout',user.logout);
+router.get('/user/logout', user.logout);
 
 // user profile page
 router.get('/user/profile', user.profileGet);
 
-router.post('/user/avatar', user.avatarUpload);
 
-
+router.get('/user/avatar', user.getFile);
+router.post('/user/avatar', user.postFile);
 
 // user login page
 router.get('/user/login', user.loginGet);
