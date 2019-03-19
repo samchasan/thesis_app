@@ -22,18 +22,19 @@ class FileInput extends React.Component {
     const file = event.target.files[0];
 
     if (file) {
-      // console.log(file)
-      cloudinary.openUploadWidget({ cloud_name: 'dra7vrduw', upload_preset: 'PRESET', tags:['xmas']},
-            function(error, result) {
-                console.log(result);
-                this.setState({
-                  loading: false,
-                  uploaded: true,
-                  // value: {file}
-                });
-            });
-    
-      
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await axios.post('upload_file', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      this.setState({
+        loading: false,
+        uploaded: true
+      });
       
     }
   }
@@ -56,8 +57,8 @@ class FileInput extends React.Component {
           <input type='file'
             name='file'
             class='cloudinary-fileupload'
-            data-form-data={ 'upload_preset: "user_upload1", 
-            'callback': "https://www.example.com/cloudinary_cors.html"}
+            // data-form-data={ 'upload_preset: "user_upload1", 
+            // 'callback': "https://www.example.com/cloudinary_cors.html"}
             onChange={this.uploadFile} />
             </div>
             <button type='submit' className='btn'>Submit</button>

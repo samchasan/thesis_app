@@ -1,4 +1,5 @@
 const express = require('express');
+var multer = require('multer')
 const router = express.Router();
 
 // Require controller modules.
@@ -8,6 +9,13 @@ const about = require('../controllers/aboutController');
 const user = require('../controllers/userController');
 
 const passport = require('passport');
+
+const upload = multer({
+  dest: 'public/uploads/',
+  rename: function (fieldname, filename) {
+    return filename;
+  }
+})
 
 
 /// roaster ROUTES ///
@@ -29,9 +37,7 @@ router.get('/user/logout', user.logout);
 // user profile page
 router.get('/user/profile', user.profileGet);
 
-
-router.get('/user/avatar', user.getFile);
-router.post('/user/avatar', user.postFile);
+router.post('/user/avatar', upload.single('file'), user.postFile);
 
 // user login page
 router.get('/user/login', user.loginGet);
