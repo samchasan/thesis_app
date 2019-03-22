@@ -1,20 +1,18 @@
 import axios from 'axios';
 import { assertTSPropertySignature } from 'babel-types';
 import FormData from 'form-data'
-let data = new FormData();
 
 class FileInput extends React.Component {
   constructor(props) {
     super(props)
-    this.uploadFile = this.uploadFile.bind(this);
+    this.makeAvatar = this.makeAvatar.bind(this);
 
     this.state = {
       loading: false,
-      // value: ''
     };
   }
 
-  async uploadFile(event) {
+  async makeAvatar(event) {
     this.setState({
       loading:true
     });
@@ -25,7 +23,7 @@ class FileInput extends React.Component {
       const formData = new FormData();
       formData.append('file', file);
 
-      await axios.post('upload_file', formData, {
+      await axios.post('makeAvatar', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -52,16 +50,13 @@ class FileInput extends React.Component {
         <span>
             <div>
               {indicatorText}
-          <form action='/catalog/user/avatar' method='POST' encType='multipart/form-data'>
+          <form action='/catalog/user/postAvatar' method='POST' encType='multipart/form-data'>
           <div>
           <input type='file'
             name='file'
-            class='cloudinary-fileupload'
-            // data-form-data={ 'upload_preset: "user_upload1", 
-            // 'callback': "https://www.example.com/cloudinary_cors.html"}
-            onChange={this.uploadFile} />
+            onChange={this.makeAvatar} />
             </div>
-            <button type='submit' className='btn'>Submit</button>
+            <button type='submit' className='addBtn'>Submit</button>
             </form>
             </div>
 

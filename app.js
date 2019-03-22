@@ -11,10 +11,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const indexRouter = require('./routes/index');
-const catalogRouter =
-    require('./routes/catalog');  // Import routes for "catalog" area of site
-const dataRouter =
-    require('./routes/data');  // Import routes for "catalog" area of site
+const catalogRouter = require('./routes/catalog');  // Import routes for "catalog" area of site
+const dataRouter = require('./routes/data');  // Import routes for "catalog" area of site
 const compression = require('compression');
 const uuid = require('uuid/v4')
 const uniqueID = uuid()
@@ -25,24 +23,9 @@ const fileUpload = require('express-fileupload');
 
 // timeout in seconds
 const timeout = 2 * 60
-
-
-// app.use(multer({
-//           dest: 'public/uploads/',
-//           rename: function(fieldname, filename) {
-//             return filename;
-//           },
-//         }).single('file'));
-
-// setTimeout((){
-//   db.dropDatabase(uniqueID)
-// }, timeout)
-
 const configDB = require('./config/database.js');
 mongoose.connect(configDB.url);
-
 mongoose.Promise = global.Promise;
-
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -55,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/js', express.static(path.join(__dirname, 'dist')));
 app.use(cookieParser())
 // app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(fileUpload());
@@ -67,11 +50,11 @@ app.use(session({
   secret: 'aflhufiuladjioasklasd',
   saveUninitialized: true,
   resave: true,
-  store: new MongoStore({mongooseConnection: mongoose.connection, ttl: timeout})
+  store: new MongoStore({ mongooseConnection: mongoose.connection, ttl: timeout })
 }))
 app.use(require('flash')());
 
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 
 app.use(passport.initialize());
@@ -103,8 +86,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
   res.setHeader(
-      'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
 })
 
 // error handler
@@ -118,9 +101,7 @@ app.use((err, req, res, next) => {
   res.render('error');
 
   const sessionID = req.session
-  // console.log(sessionID)
-  // console.log("===================");
-  // console.log(req.user);
+
   next();
 });
 

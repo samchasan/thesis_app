@@ -11,43 +11,58 @@ const axios = require('axios');
 // const multer = require('multer');
 const path = require('path');
 const fs = require('file-system')
+let newPhoto;
 
-
-exports.postFile =
+exports.makeAvatar =
   (req, res) => {
-    console.log(req.files.file)
-    var newPhoto = new Photo();
-    newPhoto.data = req.files.file.data;
-    newPhoto.contentType = req.files.file.mimetype;
+    newPhoto = new Photo();
+    newPhoto.img.data = req.files.file.data;
+    newPhoto.img.contentType = req.files.file.mimetype;
     newPhoto.name = req.files.file.name;
     newPhoto.userId = req.user.id;
-    newPhoto.save();
 
     res.render('user/profile', {
-      title: 'File Uploaded!',
-      // file: `uploads/${file.name}`,
+      title: 'File Added!',
       currentUser: req.user
     })
   }
 
-exports.profileGet =
+exports.postAvatar =
   (req, res) => {
+    newPhoto.save();
+    res.render('user/profile', {
+      title: 'File Uploaded!',
+      currentUser: req.user
+    })
+  }
+
+
+exports.avatarJSON =
+  (req, res, next) => {
     // console.log(req.user._id)
     const id = req.user._id.toString()
-    console.log(id)
-
-    User.find({ username: 'p' }).exec((err, user) => {
-      if (err) {
-        res.render('profile')
+    Photo.find({ userId: id }).exec((err, photo) => {
+      if (err) return next(err);
+      if (photo) {
+        // res.contentType(photo.img.contentType);
+        // res.send(photo.img.data);
+        res.json({ img: photo })
       }
-      console.log(user)
     })
 
-    Photo.find({ userId: id }).exec((err, results) => {
-      if (err) {
-        res.render('profile')
+  }
+
+exports.profileGet =
+  (req, res, next) => {
+    // console.log(req.user._id)
+    const id = req.user._id.toString()
+    Photo.find({ userId: id }).exec((err, photo) => {
+      if (err) return next(err);
+      if (photo) {
+        // res.contentType(photo.img.contentType);
+        // res.send(photo.img.data);
+        res.json({ img: photo })
       }
-      console.log(results)
     })
 
   }

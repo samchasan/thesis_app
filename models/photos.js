@@ -5,8 +5,10 @@ const Schema = mongoose.Schema;
 const photoSchema = new Schema(
   {
     name: { type: String },
-    data: { type: Buffer },
-    contentType: { type: String },
+    img: {
+      data: { type: Buffer },
+      contentType: { type: String }
+    },
     userId: { type: String }
   });
 

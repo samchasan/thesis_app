@@ -11,34 +11,34 @@ const mongoose = require('mongoose');
 const S = require('string');
 const fs = require('fs-extra')
 const MarkdownIt = require('markdown-it'),
-    md = new MarkdownIt();
+  md = new MarkdownIt();
 const md2pug = new (require('markdown-to-pug'))();
 
 
 
-exports.projectList = (req, res) =>{
-  if(req.user){
+exports.list = (req, res) => {
+  if (req.user) {
     user = req.user
-  res.render('project/list', {
-    title: 'Projects',
-    currentUser: user
-  })
-} else{
-  res.render('project/list', {
-    title: 'Projects',
-  })
-}
+    res.render('project/list', {
+      title: 'Projects',
+      currentUser: user
+    })
+  } else {
+    res.render('project/list', {
+      title: 'Projects',
+    })
+  }
 }
 let user
 
-exports.projectDetail = (req, res) => {
-  if(req.user){
+exports.detail = (req, res) => {
+  if (req.user) {
     user = req.user
   } else {
     user = null
   }
   async.parallel({
-    project: function(callback) {
+    project: function (callback) {
 
       const input = req.params.id.toString()
       // //console.log(input)
@@ -59,17 +59,17 @@ exports.projectDetail = (req, res) => {
       // //console.log(title)
 
       Project.find({
-          title: title
-        })
+        title: title
+      })
         .exec(callback)
     },
-  }, function(err, results) {
+  }, function (err, results) {
     console.log(user)
     if (err) {
       //console.log(err);
     }
     if (results.project == null) { // No results.
-      let err = new Error('Project not found');
+      const err = new Error('Project not found');
       err.status = 404;
       // return next(err);
     }
@@ -81,67 +81,67 @@ exports.projectDetail = (req, res) => {
       fs.writeFile('views/description.pug', description, (err) => {
         if (err) throw err;
         // //console.log('The file has been saved!');
-        render(description, msg =>{
-      });
+        render(description, msg => {
+        });
+      })
     })
-  })
 
-  function readMd(filePath,callback){
-    const fileText = fs.readFileSync(`./public/projects/${filePath}.md`, "utf8")
-    const mdText = md.render(fileText);
-    description = md2pug.render(fileText);
-    callback(description)
+    function readMd(filePath, callback) {
+      const fileText = fs.readFileSync(`./public/projects/${filePath}.md`, "utf8")
+      const mdText = md.render(fileText);
+      description = md2pug.render(fileText);
+      callback(description)
 
-  }
+    }
 
     // async.series (
-      function getCase (phrase, callback){
-        switch (phrase) {
-          case 'Mushrooms':
-            //console.log('on the mushrooms page')
-            // description = $.get('/public/mushrooms.txt')
-            readMd('mushrooms',callback)
+    function getCase(phrase, callback) {
+      switch (phrase) {
+        case 'Mushrooms':
+          //console.log('on the mushrooms page')
+          // description = $.get('/public/mushrooms.txt')
+          readMd('mushrooms', callback)
           break;
-          case 'Composting':
-            //console.log('on the composting page')
-            readMd('compost',callback)
-            break;
-          case 'Mulching':
-            //console.log('on the Mmlching page')
-            readMd('mulch',callback)
-            break;
-          case 'Cattle Feed':
-            //console.log('on the Cattle Feed page')
-            readMd('cattle_feed',callback)
-            break;
-          case 'Poultry Bedding':
-            //console.log('on the Poultry Bedding page')
-            readMd('poultry_bedding',callback)
-            break;
-          case 'Eco-Bricks':
-            //console.log('on the Eco-Bricks page')
-            readMd('eco-bricks',callback)
-            break;
+        case 'Composting':
+          //console.log('on the composting page')
+          readMd('compost', callback)
+          break;
+        case 'Mulching':
+          //console.log('on the Mmlching page')
+          readMd('mulch', callback)
+          break;
+        case 'Cattle Feed':
+          //console.log('on the Cattle Feed page')
+          readMd('cattle_feed', callback)
+          break;
+        case 'Poultry Bedding':
+          //console.log('on the Poultry Bedding page')
+          readMd('poultry_bedding', callback)
+          break;
+        case 'Eco-Bricks':
+          //console.log('on the Eco-Bricks page')
+          readMd('eco-bricks', callback)
+          break;
       }
 
 
     }
 
-    function render (description, callback) {
+    function render(description, callback) {
       //console.log('in render')
-    // Successful, so render
+      // Successful, so render
       res.render('project/detail', {
-      title: results.project[0].title,
-      materials: S([results.project[0].materials]).toCSV().s, //'"a","b","c"',
-      complexity: results.project[0].complexity,
-      expense: results.project[0].expense,
-      tags: S([results.project[0].tags]).toCSV().s,
-      headline: results.project[0].headline,
-      description: description,
-      currentUser: user
-    })
-    callback('successful')
-  }
+        title: results.project[0].title,
+        materials: S([results.project[0].materials]).toCSV().s, //'"a","b","c"',
+        complexity: results.project[0].complexity,
+        expense: results.project[0].expense,
+        tags: S([results.project[0].tags]).toCSV().s,
+        headline: results.project[0].headline,
+        description: description,
+        currentUser: user
+      })
+      callback('successful')
+    }
 
 
 

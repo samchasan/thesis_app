@@ -1,5 +1,5 @@
 const express = require('express');
-var multer = require('multer')
+const multer = require('multer')
 const router = express.Router();
 
 // Require controller modules.
@@ -37,7 +37,10 @@ router.get('/user/logout', user.logout);
 // user profile page
 router.get('/user/profile', user.profileGet);
 
-router.post('/user/avatar', upload.single('file'), user.postFile);
+router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
+router.post('/user/postAvatar', user.postAvatar)
+
+router.get('/user/avatarJSON', user.avatarJSON)
 
 // user login page
 router.get('/user/login', user.loginGet);
@@ -45,27 +48,27 @@ router.post('/user/login', passport.authenticate('local'), user.loginPost);
 
 
 // GET project page.
-router.get('/project/list', project.projectList);
+router.get('/project/list', project.list);
 
 // GET project detail page.
-router.get('/project/list/:id', project.projectDetail);
+router.get('/project/list/:id', project.detail);
 
 // router.post('/', roaster.search);
 
 
 // GET/POST create a roaster
-router.get('/roaster/create', roaster.RoasterCreateGet);
-router.post('/roaster/create', roaster.RoasterCreatePost);
+router.get('/roaster/create', roaster.createGet);
+router.post('/roaster/create', roaster.createPost);
 
 // GET/POST delete a roaster
-router.get('/roaster/:id/delete', roaster.RoasterDeleteGet);
-router.post('/roaster/:id/delete', roaster.RoasterDeletePost);
+router.get('/roaster/:id/delete', roaster.deleteGet);
+router.post('/roaster/:id/delete', roaster.deletePost);
 
 // GET request show a roaster
-router.get('/roaster/:id', roaster.RoasterDetail);
+router.get('/roaster/:id', roaster.detail);
 
 // GET/POST show all roaster
-router.get('/roaster/details', roaster.RoasterListGet);
-router.post('/roaster/details', roaster.RoasterListPost);
+router.get('/roaster/details', roaster.listGet);
+router.post('/roaster/details', roaster.listPost);
 
 module.exports = router;
