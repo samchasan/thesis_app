@@ -29,11 +29,23 @@ exports.makeAvatar =
 
 exports.postAvatar =
   (req, res) => {
-    newPhoto.save();
-    res.render('user/profile', {
-      title: 'File Uploaded!',
-      currentUser: req.user
-    })
+    const id = req.user._id.toString()
+    console.log(id)
+
+    deletePhotos()
+
+    async function deletePhotos() {
+      await Photo.deleteMany({ 'userId': id })
+      showNewPhoto()
+    }
+
+    function showNewPhoto() {
+      newPhoto.save();
+      res.render('user/profile', {
+        title: 'File Uploaded!',
+        currentUser: req.user
+      })
+    }
   }
 
 
@@ -46,7 +58,7 @@ exports.avatarJSON =
       if (photo) {
         // res.contentType(photo.img.contentType);
         // res.send(photo.img.data);
-        res.json({ img: photo })
+        res.json({ photo })
       }
     })
 
@@ -59,12 +71,15 @@ exports.profileGet =
     Photo.find({ userId: id }).exec((err, photo) => {
       if (err) return next(err);
       if (photo) {
-        // res.contentType(photo.img.contentType);
-        // res.send(photo.img.data);
-        res.json({ img: photo })
+
+        res.render('user/profile', {
+          title: 'File Uploaded!',
+          currentUser: req.user
+
+        })
+
       }
     })
-
   }
 
 

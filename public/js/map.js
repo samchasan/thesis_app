@@ -4,11 +4,9 @@ let center = { lng: -73.97332, lat: 40.685787 };
 let roasters = [];
 let markerList = [];
 
-// $(window).load(() => {
 makeMap('map', () => {
   console.log('making map')
 })
-// })
 
 async function doStuff() {
   console.log('doing stuff')

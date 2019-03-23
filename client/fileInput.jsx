@@ -50,7 +50,7 @@ class FileInput extends React.Component {
         <span>
             <div>
               {indicatorText}
-          <form action='/catalog/user/postAvatar' method='POST' encType='multipart/form-data'>
+          <form action='postAvatar' method='POST' encType='multipart/form-data'>
           <div>
           <input type='file'
             name='file'

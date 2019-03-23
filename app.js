@@ -45,12 +45,11 @@ app.use(fileUpload());
 app.use(compression());  // Compress all routes
 app.use(logger('dev'))
 
-
 app.use(session({
   secret: 'aflhufiuladjioasklasd',
   saveUninitialized: true,
   resave: true,
-  store: new MongoStore({ mongooseConnection: mongoose.connection, ttl: timeout })
+  store: new MongoStore({ mongooseConnection: mongoose.connection, ttl: timeout, useNewUrlParser: true })
 }))
 app.use(require('flash')());
 
