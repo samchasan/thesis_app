@@ -3,19 +3,26 @@ const { sanitizeBody } = require('express-validator/filter');
 const passport = require('passport');
 
 
-exports.about = function(req, res) {
+exports.about = (req, res) => {
+  // console.log(req.user)
+  if (req.user){
+    user = req.user
+  }else{
+    user = null
+  }
   // hope to have user here
 
 // console.log(req.user)
 // let user = req
 // console.log(req.user)
-  // passport.authenticate('local', function(err, user, info) {
+  // passport.authenticate('local', (err, user, info)=>  {
   //     if (err) { return next(err); }
   //     if (!user) { return res.redirect('user/login'); }
-  //     req.logIn(user, function(err) {
+  //     req.logIn(user, (err) {
   //       if (err) { return next(err); }
         res.render('about', {
             title: 'About',
+            currentUser: user
             // user: req.user.username
             })
   //   })(req, res, next);
@@ -24,7 +31,7 @@ exports.about = function(req, res) {
 
 //
 //   if(req.isAuthenticated){
-//   console.log('in about function')
+//   console.log('in about ')
 //   res.render('about', {
 //     title: 'About',
 //     // user: req.user.username

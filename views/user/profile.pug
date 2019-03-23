@@ -2,6 +2,15 @@ extends ../layout
 
 block content
   p #{title}:
+  
+  div#avatar
+    script(src='/js/avatar.js')
+    
+  div#fileInput
+    script(src='/js/fileInput.js')  
+
   if (currentUser)
   h3 #[strong] #{currentUser.username}
   p  #[strong Email:] #{currentUser.email}
+
+  

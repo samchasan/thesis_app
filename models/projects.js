@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 //Define a schema
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var Project = new Schema({
+const Project = new Schema({
   // userID: {type: String},
   title: {type: String},
   materials: {type: Array},

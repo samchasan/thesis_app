@@ -1,0 +1,20 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "dist/": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "editor.rulers": [
+    80
+  ],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "clang-format.style": "Google",
+  "files.insertFinalNewline": true,
+  "editor.detectIndentation": false,
+  "editor.wrappingIndent": "none",
+  "clang-format.executable": "${workspaceRoot}/node_modules/.bin/clang-format"
+}

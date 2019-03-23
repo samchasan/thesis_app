@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 // const crypto = require('crypto');
 // const jwt = require('jsonwebtoken');
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
@@ -26,7 +26,7 @@ var UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', function (next) {
-  var user = this;
+  const user = this;
   bcrypt.genSalt(10, function (err, salt){
   bcrypt.hash(user.password, 10, function (err, hash){
     if (err) {
@@ -51,7 +51,7 @@ UserSchema.methods.compare = function (pw){
 //       if (err) {
 //         return callback(err)
 //       } else if (!user) {
-//         var err = new Error('User not found.');
+//         const err = new Error('User not found.');
 //         err.status = 401;
 //         return callback(err);
 //       }
@@ -98,5 +98,5 @@ UserSchema.methods.compare = function (pw){
 
 // UserSchema.plugin(passportLocalMongoose)
 
-var User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
 module.exports = User;

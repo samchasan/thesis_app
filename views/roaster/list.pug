@@ -6,7 +6,7 @@ block content
 
   form(method='POST' action=`` )
         div.form-group
-          input#deleteList.form-control(type='hidden',name='roasterlist', required='true', value='id' )
+          input#deleteList.form-control(type='hidden',name='roasterlist', required='true', value='_id' )
           button#delete(type='submit') Delete List
 
 
@@ -21,6 +21,6 @@ block content
           li #[strong Phone:] #{roaster.phone}
           li #[strong Coordinates:] #{roaster.coordinates}
           li #[strong Distance:] #{roaster.distance}
-
+          
     else
       li There are no Roasters.
