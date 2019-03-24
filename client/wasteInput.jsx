@@ -2,17 +2,17 @@ import axios from 'axios';
 import { assertTSPropertySignature } from 'babel-types';
 import FormData from 'form-data'
 
-class FileInput extends React.Component {
+class WasteInput extends React.Component {
   constructor(props) {
     super(props)
-    this.makeAvatar = this.makeAvatar.bind(this);
+    this.makeWaste = this.makeWaste.bind(this);
 
     this.state = {
       loading: false,
     };
   }
 
-  async makeAvatar(event) {
+  async makeWaste(event) {
     this.setState({
       loading:true
     });
@@ -23,7 +23,7 @@ class FileInput extends React.Component {
       const formData = new FormData();
       formData.append('file', file);
 
-      await axios.post('makeAvatar', formData, {
+      await axios.post('makeWaste', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -50,11 +50,11 @@ class FileInput extends React.Component {
         <span>
             <div>
               {indicatorText}
-          <form action='postAvatar' method='POST' encType='multipart/form-data'>
+          <form action='postWaste' method='POST' encType='multipart/form-data'>
           <div>
           <input type='file'
             name='file'
-            onChange={this.makeAvatar} />
+            onChange={this.makeWaste} />
             </div>
             <button type='submit' className='addBtn'>Submit</button>
             </form>
@@ -66,4 +66,4 @@ class FileInput extends React.Component {
   }
 
 
-ReactDOM.render(<FileInput />, document.getElementById('fileInput'));
+ReactDOM.render(<WasteInput />, document.getElementById('wasteInput'));

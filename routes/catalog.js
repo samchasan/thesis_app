@@ -37,8 +37,17 @@ router.get('/user/logout', user.logout);
 // user profile page
 router.get('/user/profile', user.profileGet);
 
+// user make and upload files
 router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
 router.post('/user/postAvatar', user.postAvatar)
+
+router.post('/user/makeWaste', upload.single('file'), user.makeWaste);
+router.post('/user/postWaste', user.postWaste)
+
+router.post('/user/makeProject', upload.single('file'), user.makeProject);
+router.post('/user/postProject', user.postProject)
+
+
 
 router.get('/user/avatarJSON', user.avatarJSON)
 

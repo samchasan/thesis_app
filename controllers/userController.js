@@ -11,21 +11,65 @@ const axios = require('axios');
 // const multer = require('multer');
 const path = require('path');
 const fs = require('file-system')
-let newPhoto;
+let newAvatar;
+let newWaste;
+let newProject;
+
+
+
+const makeNewPhoto = (newPhoto, photoAdded, parentName, childName) => {
+  newPhoto.img.data = photoAdded.data;
+  newPhoto.img.contentType = photoAdded.mimetype;
+  newPhoto.category.parent = parentName
+  newPhoto.category.child = childName
+  newPhoto.name = photoAdded.name;
+  newPhoto.userId = req.user.id;
+  console.log('made a photo')
+}
+
 
 exports.makeAvatar =
   (req, res) => {
-    newPhoto = new Photo();
-    newPhoto.img.data = req.files.file.data;
-    newPhoto.img.contentType = req.files.file.mimetype;
-    newPhoto.name = req.files.file.name;
-    newPhoto.userId = req.user.id;
+    console.log('in make avatar')
+    const photoToAdd = req.files.file
+    newAvatar = new Photo();
+
+    makeNewPhoto(newAvatar, photoToAdd, 'avatar', null)
 
     res.render('user/profile', {
-      title: 'File Added!',
+      title: 'New avatar ready',
+      currentUser: req.user
+    })
+
+  }
+
+exports.makeWaste =
+  (req, res) => {
+    const photoToAdd = req.files.file
+    newWaste = new Photo();
+
+    makeNewPhoto(newWaste, photoToAdd, 'waste', 'paper')
+
+    res.render('user/profile', {
+      title: 'Waste ready to dump!',
       currentUser: req.user
     })
   }
+
+
+exports.makeProject =
+  (req, res) => {
+    const photoToAdd = req.files.file
+    newProject = new Photo();
+
+    makeNewPhoto(newProject, photoToAdd, 'project', 'mushrooms')
+
+    res.render('user/profile', {
+      title: 'Project ready to be made!',
+      currentUser: req.user
+    })
+  }
+
 
 exports.postAvatar =
   (req, res) => {
@@ -35,50 +79,86 @@ exports.postAvatar =
     deletePhotos()
 
     async function deletePhotos() {
-      await Photo.deleteMany({ 'userId': id })
+      await Photo.deleteMany({ 'userId': id, category: { parent: 'avatar' } })
       showNewPhoto()
     }
 
     function showNewPhoto() {
-      newPhoto.save();
+      newAvatar.save();
       res.render('user/profile', {
-        title: 'File Uploaded!',
+        title: 'Wow groovy new profile pic',
         currentUser: req.user
       })
     }
   }
 
+exports.postWaste =
+  (req, res) => {
+    const id = req.user._id.toString()
+    console.log(id)
+    newWaste.save();
+    res.render('user/profile', {
+      title: 'good lookin gold there',
+      currentUser: req.user
+    })
+  }
+
+exports.postProject =
+  (req, res) => {
+    const id = req.user._id.toString()
+    console.log(id)
+    newProject.save();
+    res.render('user/profile', {
+      title: 'cool project!',
+      currentUser: req.user
+    })
+  }
+
+
+
+
 
 exports.avatarJSON =
   (req, res, next) => {
-    // console.log(req.user._id)
     const id = req.user._id.toString()
-    Photo.find({ userId: id }).exec((err, photo) => {
+    console.log('in avatarJSON')
+
+    Photo.find({ userId: id, category: { parent: 'avatar' } }).exec((err, photo) => {
+      console.log('photo found' + photo)
       if (err) return next(err);
       if (photo) {
-        // res.contentType(photo.img.contentType);
-        // res.send(photo.img.data);
         res.json({ photo })
       }
     })
+  }
 
+exports.projectJSON =
+  (req, res, next) => {
+    const id = req.user._id.toString()
+    Photo.find({ userId: id, category: { parent: 'project' } }).exec((err, photos) => {
+      if (err) return next(err);
+      if (photos) {
+        res.json({ photo })
+      }
+    })
+  }
+
+exports.wasteJSON =
+  (req, res, next) => {
+    const id = req.user._id.toString()
+    Photo.find({ userId: id, category: { parent: 'waste' } }).exec((err, photos) => {
+      if (err) return next(err);
+      if (photos) {
+        res.json({ photo })
+      }
+    })
   }
 
 exports.profileGet =
-  (req, res, next) => {
-    // console.log(req.user._id)
-    const id = req.user._id.toString()
-    Photo.find({ userId: id }).exec((err, photo) => {
-      if (err) return next(err);
-      if (photo) {
-
-        res.render('user/profile', {
-          title: 'File Uploaded!',
-          currentUser: req.user
-
-        })
-
-      }
+  (req, res) => {
+    res.render('user/profile', {
+      title: 'Welcome Back',
+      currentUser: req.user
     })
   }
 
@@ -93,12 +173,10 @@ exports.loginGet =
 exports.loginPost =
   (req, res) => {
     user = req.body
-    // console.log(user)
     User.findOne({ username: user.username }, (err, user) => {
       if (err) {
         res.render('login', { title: 'Error, try again' })
       } else {
-        // res.redirect('profile')
         res.render(
           'user/profile',
           { title: 'Welcome Back', currentUser: user })
@@ -123,9 +201,6 @@ exports.createPost =
         password: req.body.password,
         avatar: req.body.avatar
       }
-
-
-
       User.create(userData, (err, user) => {
         if (err) {
           console.log(err)
@@ -147,6 +222,5 @@ exports.createPost =
 
 exports.logout = (req, res) => {
   req.logout();
-  // req.flash('success', 'See you later!');
   res.redirect('/catalog');
 };
