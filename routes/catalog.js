@@ -38,18 +38,28 @@ router.get('/user/logout', user.logout);
 router.get('/user/profile', user.profileGet);
 
 // user make and upload files
-router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
+// router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
 router.post('/user/postAvatar', user.postAvatar)
 
-router.post('/user/makeWaste', upload.single('file'), user.makeWaste);
-router.post('/user/postWaste', user.postWaste)
-
-router.post('/user/makeProject', upload.single('file'), user.makeProject);
-router.post('/user/postProject', user.postProject)
+// router.post('/user/makeWaste', upload.single('file'), user.makeWaste);
+// router.post('/user/postWaste', user.postWaste)
 
 
+router.post('/user/addProject', user.addProjectPost)
+router.get('/user/addProject', user.addProjectGet)
 
+router.post('/user/addWaste', user.addWastePost)
+router.get('/user/addWaste', user.addWasteGet)
+
+router.post('/user/projectJSON', user.projectJSON)
+router.get('/user/projectJSON', user.projectJSON)
+
+router.post('/user/avatarJSON', user.avatarJSON)
 router.get('/user/avatarJSON', user.avatarJSON)
+
+router.post('/user/wasteJSON', user.wasteJSON)
+router.get('/user/wasteJSON', user.wasteJSON)
+
 
 // user login page
 router.get('/user/login', user.loginGet);

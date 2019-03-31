@@ -8,7 +8,7 @@ class Image extends React.Component {
   
   async componentDidMount() {
       console.log('doing stuff')
-      await axios.post('avatarJSON')
+      await axios.get('avatarJSON')
       console.log('posted')
       const photo = this.getSomeAsyncData('avatarJSON')
       if (photo) {
@@ -40,9 +40,10 @@ class Image extends React.Component {
     getData(path, callback) {
       console.log('getting data')
     
-      fetch(path)
+      fetch(path, { credentials: 'include' })
         .then((res) => res.json())
         .then((res) => {
+          if(res.ok){
           const base64Flag = 'data:image/jpeg;base64,';
           const photoBuffer = res.photo
           console.log(photoBuffer)
@@ -57,6 +58,9 @@ class Image extends React.Component {
           }
 
           callback('done')
+        } else {
+          throw Error(`Request rejected with status ${res.status}`);
+        }
 
         })
     }

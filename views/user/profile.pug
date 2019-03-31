@@ -3,9 +3,13 @@ extends ../layout
 block content
   p #{title}:
   
-  div#avatar
-    script(src='/js/avatar.js')
-    
+  div#avatarJSON
+    script(src='/js/avatarJSON.js')
+  div#projectJSON
+    script(src='/js/projectJSON.js')
+  div#wasteJSON
+    script(src='/js/wasteJSON.js')
+
   div#avatarInput
     script(src='/js/avatarInput.js')  
 
@@ -13,14 +17,22 @@ block content
   h3 #[strong] #{currentUser.username}
   p  #[strong Email:] #{currentUser.email}
 
+  div#addButtons
+    div#addProjectButton
+      script(src='/js/addProjectButton.js')  
+
+    div#addWasteButton
+      script(src='/js/addWasteButton.js')  
+      
+  h2 Projects:
+  div.columns
+    div#profileBody
+      script(src='/js/profileBody.js')  
   //- div#wasteInput
   //-   script(src='/js/wasteInput.js')    
 
   //- div#wasteGallery
-  //-   script(src='/js/wasteGallery.js')   
-
-  //- div#projectInput
-  //-   script(src='/js/projectInput.js')    
+  //-   script(src='/js/wasteGallery.js')      
 
   //- div#projectGallery
   //-   script(src='/js/projectGallery.js')   

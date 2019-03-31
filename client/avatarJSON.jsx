@@ -1,4 +1,6 @@
 import axios from 'axios';
+import React from 'react';
+
 
 class AvatarJSON extends React.Component {
   constructor(props) {
@@ -6,8 +8,9 @@ class AvatarJSON extends React.Component {
   }
 
   componentDidMount() {
+    console.log('posting avatar')
     axios.post('avatarJSON')
-    console.log('posted')
+    console.log('avatar posted')
   }
 
   render(){
