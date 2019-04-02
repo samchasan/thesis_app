@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 
 //Define a schema
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var Project = new Schema({
-  // userID: {type: String},
+const Project = new Schema({
+  userID: {type: String},
+  username: {type: String},
   title: {type: String},
   materials: {type: Array},
+  location: {type: String},
+  photo: {
+    bucket: {type:String},
+    key: {type:String},
+    url: {type: String},
+  },
   complexity: {type: String},
   expense: {type: String},
   tags: {type: Array},
@@ -33,8 +40,3 @@ Project
 
 //Export model
 module.exports = mongoose.model('Projects', Project);
-//
-// Roaster.save(function (err) {
-//   if (err) return handleError(err);
-//   // saved!
-// });

@@ -1,15 +1,20 @@
 doctype html
 html(lang='en')
   head
-    title= title
+    title #{title}
     meta(charset='utf-8')
-    meta(name='viewport', content='initial-scale=1,maximum-scale=1,user-scalable=no')
+    meta(name='viewport', content='initial-scale=1,maximum-scale=1,user-scalable=no, width=device-width')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    script(src='http://code.jquery.com/jquery-3.3.1.js', integrity='sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=', crossorigin='anonymous')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOlt3Oe5zfpFaNrtUDQ-dGe0_JZ_9yUI")
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='/javascripts/form.js')
+    script(src=googleKey)
+    script(src='https://use.fontawesome.com/releases/v5.3.1/js/all.js')
+    script(src='https://unpkg.com/react@16/umd/react.development.js', crossorigin) 
+    script(src='https://unpkg.com/react-dom@16/umd/react-dom.development.js', crossorigin) 
+    script(src='https://unpkg.com/axios/dist/axios.min.js')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css')
+
 
   body
     div(class='container-fluid')
@@ -22,7 +27,9 @@ html(lang='en')
               li
                 a(href='/catalog/roaster/list') Roasters
               li
-                a(href='/catalog/project/list') Projects
+                a(href='/catalog/projects') Projects
+              li
+                a(href='/catalog/wastes') Waste
               li
                 a(href='/catalog/about') About
               if (!currentUser)  
