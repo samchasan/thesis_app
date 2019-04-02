@@ -5,6 +5,7 @@ const router = express.Router();
 // Require controller modules.
 const roaster = require('../controllers/roasterController');
 const project = require('../controllers/projectController');
+const waste = require('../controllers/wasteController');
 const about = require('../controllers/aboutController');
 const user = require('../controllers/userController');
 
@@ -27,6 +28,18 @@ router.post('/', roaster.search);
 // about page
 router.get('/about', about.about);
 
+// project page
+router.get('/projects', project.projects);
+
+router.post('/projectsJSON', project.projectsJSON)
+router.get('/projectsJSON', project.projectsJSON)
+
+// project page
+router.get('/wastes', waste.wastes);
+
+router.post('/wastesJSON', waste.wastesJSON)
+router.get('/wastesJSON', waste.wastesJSON)
+
 // create user page
 router.get('/user/create', user.createGet);
 router.post('/user/create', user.createPost);
@@ -37,10 +50,25 @@ router.get('/user/logout', user.logout);
 // user profile page
 router.get('/user/profile', user.profileGet);
 
-router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
+// user make and upload avatar
+// router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
 router.post('/user/postAvatar', user.postAvatar)
 
+router.post('/user/addProject', user.addProjectPost)
+router.get('/user/addProject', user.addProjectGet)
+
+router.post('/user/addWaste', user.addWastePost)
+router.get('/user/addWaste', user.addWasteGet)
+
+router.post('/user/projectJSON', user.projectJSON)
+router.get('/user/projectJSON', user.projectJSON)
+
+router.post('/user/avatarJSON', user.avatarJSON)
 router.get('/user/avatarJSON', user.avatarJSON)
+
+router.post('/user/wasteJSON', user.wasteJSON)
+router.get('/user/wasteJSON', user.wasteJSON)
+
 
 // user login page
 router.get('/user/login', user.loginGet);

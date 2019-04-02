@@ -37,8 +37,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve everything in "dist" from "js" folder
 app.use('/js', express.static(path.join(__dirname, 'dist')));
 app.use(cookieParser())
-// app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(express.bodyParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(fileUpload());

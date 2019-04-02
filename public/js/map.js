@@ -4,7 +4,7 @@ let center = { lng: -73.97332, lat: 40.685787 };
 let roasters = [];
 let markerList = [];
 
-makeMap('map', () => {
+makeMap('googleMap', () => {
   console.log('making map')
 })
 
@@ -12,8 +12,8 @@ async function doStuff() {
   console.log('doing stuff')
   const roasters = await getSomeAsyncData('/data')
   console.log(roasters)
-  addMarkers(roasters, () => {
-  }).catch(e => {
+  await addMarkers(roasters, () => {
+  }).catch((e) => {
     console.log(e)
   });
 }
@@ -35,7 +35,7 @@ async function getSomeAsyncData(value) {
 
 
 function closeBoxes() {
-  for (const i = 0; i < ibArray.length; i++) {
+  for (let i = 0; i < ibArray.length; i++) {
     ibArray[i].close();
   }
 }

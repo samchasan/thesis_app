@@ -16,6 +16,26 @@ const md2pug = new (require('markdown-to-pug'))();
 
 
 
+exports.projectsJSON =
+  (req, res, next) => {
+    Project.find().exec((err, projects) => {
+      if (err) return next(err);
+      if (projects) {
+        // console.log('projects found: ' + projects)
+        res.json({ projects })
+      }
+    })
+  }
+
+exports.projects =
+  (req, res) => {
+    res.render('projects', {
+      title: 'Projects',
+      currentUser: req.user
+    })
+  }
+
+
 exports.list = (req, res) => {
   if (req.user) {
     user = req.user

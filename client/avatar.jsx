@@ -1,74 +1,43 @@
-class Image extends React.Component {
+import React from 'react';
+import axios from 'axios';
+
+
+class Avatar extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-          img: ''
-      };
-  };
-  
-  componentDidMount() {
-      console.log('doing stuff')
-      const photo = this.getSomeAsyncData('avatarJSON')
-      if (photo) {
-        console.log(photo)
-      }
-    }
-    
-    arrayBufferToBase64(buffer) {
-      var binary = '';
-      var bytes = [].slice.call(new Uint8Array(buffer));
-      bytes.forEach((b) => binary += String.fromCharCode(b));
-      return window.btoa(binary);
+    super(props)
+    this.componentDidMount = this.componentDidMount.bind(this)
+    this.state = {
+      loading: false,
+      file: null,
+      url: 'img/blank-user-avatar'
     };
-    
-    fetchTheData(someValue) {
-      return new Promise((resolve, reject) => {
-        this.getData(someValue, (result) => {
-          resolve(result);
-        })
-      });
-    }
-    
-
-    getSomeAsyncData(value) {
-      const result = this.fetchTheData(value);
-      return result;
-    }
-    
-    getData(path, callback) {
-      console.log('getting data')
-    
-      fetch(path)
-        .then((res) => res.json())
-        .then((res) => {
-          const base64Flag = 'data:image/jpeg;base64,';
-          const photoBuffer = res.photo[0].img.data.data
-          const base64 = this.arrayBufferToBase64(photoBuffer)
-          const photo = base64Flag + base64
-          
-          this.setState({
-            img: photo
-          })
-
-          callback('done')
-
-        })
-    }
-  
-
-  render() {
-      const {img} = this.state;
-      return (
-        <span>
-          <div>
-          <img
-              src={img}
-              alt='Avatar'/>
-              </div>
-              </span>
-      )
   }
 
-}
+  componentDidMount() {
+    let currentComponent = this;
+    console.log('getting avatar')
+    axios.get('avatarJSON')
+    .then((res) => {
+      const data = JSON.parse(res.data)
+            console.log(data)
+      currentComponent.setState({
+        url: data.url
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
 
-ReactDOM.render(<Image />, document.getElementById('avatar'));
+  render() {
+
+    let url = this.state.url
+    console.log(url)
+      return ( 
+            <img src={url}/>
+        );
+    }
+  }
+
+
+ReactDOM.render(<Avatar/>, document.getElementById('avatar'));
