@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const Waste = new Schema({
   userID: { type: String },
+  username: { type: String },
   title: { type: String },
   material: { type: Array },
   // location: { type: String },

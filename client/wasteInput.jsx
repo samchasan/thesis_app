@@ -69,6 +69,10 @@ class WasteInput extends React.Component {
         }
       });
     })
+    .then(function (response) {
+          console.log(response)
+          window.location = 'profile'
+  })
     .catch ( (err) => {
       alert(err)
     })
@@ -161,7 +165,7 @@ class WasteInput extends React.Component {
             <input type='file' name='file' onChange={this.addPhoto} />
             </label>
             </div>
-            <button type='submit' className='addWasteBtn'>Submit</button>
+            <button type='submit' id='addWasteBtn'>Submit</button>
             </form>
             </div>
 

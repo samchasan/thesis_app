@@ -77,6 +77,10 @@ class ProjectInput extends React.Component {
         }
       });
     })
+    .then(function (response) {
+      console.log(response)
+      window.location = 'profile'
+    })
     .catch ( (err) => {
       alert(err)
     })

@@ -22,29 +22,11 @@ class AvatarInput extends React.Component {
     super(props)
     this.postAvatar = this.postAvatar.bind(this)
     this.makeAvatar = this.makeAvatar.bind(this)
-    this.componentDidMount = this.componentDidMount.bind(this)
     this.state = {
       loading: false,
       file: null,
       url: 'http://www.clker.com/cliparts/3/m/v/Y/E/V/small-red-apple-hi.png'
     };
-  }
-
-  componentDidMount() {
-    let currentComponent = this;
-    console.log('getting avatar')
-    axios.get('avatarJSON')
-    .then((res) => {
-      const data = JSON.parse(res.data)
-            console.log(data)
-
-      currentComponent.setState({
-        url: data.url
-      })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
   }
 
   async postAvatar() {
@@ -94,7 +76,6 @@ class AvatarInput extends React.Component {
   
   render() {
     let indicatorText;
-
     if (this.state.loading) {
       indicatorText = 'Uploading file...'
     } else if (this.state.uploaded) {
@@ -106,21 +87,15 @@ class AvatarInput extends React.Component {
     let url = this.state.url
     console.log(url)
       return ( 
-        <span>
-          <div id='avatar'>
-            <img src={url}></img>
-          </div>
-            <div id='uploadAvatarBlock'>
+        <div id='uploadAvatarBlock'>
               {indicatorText}
           <form onSubmit={this.postAvatar} method='POST' encType='multipart/form-data'>
-          <div>
-          <input type='file' name='file' onChange={this.makeAvatar} />
+            <div>
+              <input type='file' name='file' onChange={this.makeAvatar} />
             </div>
             <button type='submit' className='addBtn'>Submit</button>
-            </form>
-            </div>
-
-        </span>
+          </form>
+        </div>
       );
     }
   }

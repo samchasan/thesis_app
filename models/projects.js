@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const Project = new Schema({
   userID: {type: String},
+  username: {type: String},
   title: {type: String},
   materials: {type: Array},
   location: {type: String},

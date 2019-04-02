@@ -10,29 +10,31 @@ block content
   div#wasteJSON
     script(src='/js/wasteJSON.js')
 
-  div#avatarInput
-    script(src='/js/avatarInput.js')  
+  div#coverArea
+    div.columns
+      div#avatar
+        script(src='/js/avatar.js')
 
-  if (currentUser)
-  h3 #[strong] #{currentUser.username}
-  p  #[strong Email:] #{currentUser.email}
+      div#userInfo
+        if (currentUser)
+        h3 #[strong] #{currentUser.username}
+        p  #[strong Email:] #{currentUser.email}
+        div#avatarInput  
+          script(src='/js/avatarInput.js')  
 
-  div#addButtons
-    div#addProjectButton
-      script(src='/js/addProjectButton.js')  
-
-    div#addWasteButton
-      script(src='/js/addWasteButton.js')  
+      div#addButtons
+        div#addProjectButton
+          script(src='/js/addProjectButton.js')  
+        div#addWasteButton
+          script(src='/js/addWasteButton.js')  
       
   h2 Projects:
   div.columns
-    div#profileBody
-      script(src='/js/profileBody.js')  
-  //- div#wasteInput
-  //-   script(src='/js/wasteInput.js')    
+    div#projects
+      script(src='/js/projectGallery.js')  
 
-  //- div#wasteGallery
-  //-   script(src='/js/wasteGallery.js')      
+  h2 Waste:
+  div.columns
+    div#waste
+      script(src='/js/wasteGallery.js')      
 
-  //- div#projectGallery
-  //-   script(src='/js/projectGallery.js')   

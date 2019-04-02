@@ -62,12 +62,14 @@ exports.addProjectPost =
     const photoUrl = req.body.photo.location.toString()
     const category = 'project'
     const userID = req.user.id
+    const username = req.user.username
     const name = req.body.text.name
     const materials = req.body.text.materials
     const location = req.body.text.location
 
     const newProject = new Project({
       'userID': userID,
+      'username': username,
       'title': name,
       'materials': materials,
       'location': location,
@@ -89,12 +91,13 @@ exports.addProjectPost =
 
 
 exports.addWastePost =
-  (req, res) => {
+  (req, res, next) => {
     console.log(req.body)
     const photoName = req.body.photo.key.toString()
     const photoUrl = req.body.photo.location.toString()
     const category = 'waste'
     const userID = req.user.id
+    const username = req.user.username
     const frequency = req.body.text.frequency
     const name = req.body.text.name
     const material = req.body.text.material
@@ -102,6 +105,7 @@ exports.addWastePost =
 
     const newWaste = new Waste({
       'userID': userID,
+      'username': username,
       'title': name,
       'material': material,
       'frequency': frequency,
@@ -114,13 +118,20 @@ exports.addWastePost =
       }
     })
 
-    newWaste.save()
-    console.log(newWaste)
-
-    res.render('user/profile', {
-      title: 'Welcome Back',
-      currentUser: req.user
+    newWaste.save(function (err) {
+      if (err) return handleError(err);
+      // saved!
+      // res.setHeader('Location', 'profile')
+      return res.redirect(301, 'profile')
+      // console.log(newWaste)
     })
+
+    return (next)
+
+    // res.render('user/profile', {
+    //   title: 'Welcome Back',
+    //   currentUser: req.user
+    // })
 
   }
 
