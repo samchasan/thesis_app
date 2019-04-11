@@ -12,4 +12,4 @@ A platform for businesses to post by-products, and to share projects made from s
 
 
 ### **run in development mode**
-`npm run dev-start`
+`npm run start-dev`
