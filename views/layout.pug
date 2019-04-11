@@ -34,14 +34,14 @@ html(lang='en')
                 a(href='/catalog/about') About
               if (!currentUser)  
                 li
-                  a(href='/catalog/user/login') Login
+                  a(href='/catalog/login') Login
                 li
-                  a(href='/catalog/user/create') Register
+                  a(href='/catalog/register') Register
               if (currentUser)
                 li Signed in as 
                   a(href = '/catalog/user/profile') #{currentUser.username}
                 li  
-                  a(href = '/catalog/user/logout') Logout
+                  a(href = '/catalog/logout') Logout
                   
               
 

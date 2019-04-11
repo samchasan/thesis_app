@@ -162,6 +162,19 @@ exports.projectJSON =
     })
   }
 
+exports.userJSON =
+  (req, res, next) => {
+    const id = req.user._id.toString()
+    // User.findOne({ userID: id }).exec((err, user) => {
+    //   if (err) return next(err);
+    //   if (user) {
+    //     // console.log('projects found: ' + projects)
+    //     res.json({ user })
+    //   }
+    // })
+  }
+
+
 exports.wasteJSON =
   (req, res, next) => {
     const id = req.user.id
@@ -178,17 +191,28 @@ exports.wasteJSON =
   }
 
 exports.profileGet =
-  (req, res) => {
-    res.render('user/profile', {
-      title: 'Welcome Back',
-      currentUser: req.user
+  async (req, res) => {
+    // await User.find({id: req.user.id})
+    const user = req.user
+    console.log('user = ' + user)
+    const body = req.body
+    console.log('body = ' + body)
+    User.findOne({ username: user.username }, (err, user) => {
+      if (err) {
+        res.render('login', { title: 'Error, try again' })
+      } else {
+        res.render('user/profile', {
+          title: 'Welcome Back',
+          currentUser: user
+        })
+      }
     })
   }
 
 exports.addProjectGet =
   (req, res) => {
     res.render('user/addProject', {
-      title: 'Welcome Back',
+      title: 'Add a Project',
       currentUser: req.user
     })
   }
@@ -196,7 +220,7 @@ exports.addProjectGet =
 exports.addWasteGet =
   (req, res) => {
     res.render('user/addWaste', {
-      title: 'Welcome Back',
+      title: 'Add Waste',
       currentUser: req.user
     })
   }
@@ -204,7 +228,7 @@ exports.addWasteGet =
 
 exports.loginGet =
   (req, res) => {
-    res.render('user/login', { title: 'Login' })
+    res.render('login', { title: 'Login' })
   }
 
 exports.loginPost =
@@ -214,42 +238,37 @@ exports.loginPost =
       if (err) {
         res.render('login', { title: 'Error, try again' })
       } else {
-        res.render(
-          'user/profile',
-          { title: 'Welcome Back', currentUser: user })
+        res.redirect('user/profile')
       }
     })
   }
 
-exports.createGet =
+exports.registerGet =
   (req, res) => {
-    console.log(req.body)
-    res.render('user/create', { title: 'Create User' })
+    // console.log(req.body)
+    res.render('register', { title: 'Create User' })
   }
 
-exports.createPost =
+exports.registerPost =
   (req, res) => {
+
+    console.log(req.body)
+
     if (req.body.email && req.body.username &&
       req.body.password) {
-      const userData =
-      {
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        avatar: req.body.avatar
-      }
-      User.create(userData, (err, user) => {
+      const newUser = new User(
+        {
+          'email': req.body.email,
+          'username': req.body.username,
+          'password': req.body.password,
+          // avatar: req.body.avatar
+        })
+      console.log('new user: ' + newUser)
+      newUser.save(function (err) {
         if (err) {
-          console.log(err)
-          return res.render(
-            'user/create',
-            { error: err.message });
+          res.render('register', { title: 'Error, try again' })
         } else {
-          console.log(user)
-          return res.render('user/profile', {
-            title: `Welcome ${user.username}`,
-            currentUser: user
-          });
+          res.redirect('/')
         }
       })
     }

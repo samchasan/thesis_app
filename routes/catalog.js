@@ -40,12 +40,15 @@ router.get('/wastes', waste.wastes);
 router.post('/wastesJSON', waste.wastesJSON)
 router.get('/wastesJSON', waste.wastesJSON)
 
-// create user page
-router.get('/user/create', user.createGet);
-router.post('/user/create', user.createPost);
+// register user page
+router.get('/register', user.registerGet);
+router.post('/register', user.registerPost);
+
+router.post('/user/userJSON', user.userJSON)
+router.get('/user/userJSON', user.userJSON)
 
 // user logout
-router.get('/user/logout', user.logout);
+router.get('/logout', user.logout);
 
 // user profile page
 router.get('/user/profile', user.profileGet);
@@ -71,8 +74,8 @@ router.get('/user/wasteJSON', user.wasteJSON)
 
 
 // user login page
-router.get('/user/login', user.loginGet);
-router.post('/user/login', passport.authenticate('local'), user.loginPost);
+router.get('/login', user.loginGet);
+router.post('/login', passport.authenticate('local'), user.loginPost);
 
 
 // GET project page.
@@ -84,7 +87,7 @@ router.get('/project/list/:id', project.detail);
 // router.post('/', roaster.search);
 
 
-// GET/POST create a roaster
+// GET/POST register a roaster
 router.get('/roaster/create', roaster.createGet);
 router.post('/roaster/create', roaster.createPost);
 

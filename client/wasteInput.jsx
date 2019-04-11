@@ -1,13 +1,10 @@
 import React from 'react';
 import ReactS3 from 'react-s3';
 import axios from 'axios';
-import { assertTSPropertySignature } from 'babel-types';
-import FormData from 'form-data'
 // import {aws} from './keys'
 const akid = process.env.AWSAccessKeyId
 const asak = process.env.AWSSecretKey
 const s3Bucket = 'chaffmap'
-let photoData;
 
 const config = {
   bucketName: s3Bucket,
@@ -15,7 +12,6 @@ const config = {
   accessKeyId: akid,
   secretAccessKey: asak
 }
-
 
 class WasteInput extends React.Component {
   constructor(props) {
