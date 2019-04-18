@@ -10,12 +10,14 @@ class Projects extends React.Component {
     this.state = {
       projects: [],
       projectsLoaded: false,
+      path: window.location.pathname
     }
   }
 
   componentDidMount() {
     console.log('getting projects')
-    axios.get('projectJSON')
+    const user = this.state.path.replace('/catalog/user/profile/', '')
+    axios.get(`${user}/projectJSON`)
     .then((res) => {      
       res.data.projects.forEach((project) => { 
       this.state.projects.push(project)
@@ -28,18 +30,20 @@ class Projects extends React.Component {
     })
     .catch((err) => {
       console.log(err);
-    })
-    
+    })   
   }
 
   
   render() {
 
     const projects = this.state.projects.map((project,key)=>
-      <div className='projectThumbs'>
+
+    
+
+    <div className='projectThumbs'>
       <img src={project.photo.url} key={key} ></img>
       <div className='projectText'>
-      <h2><a href='projectId'> {project.title} </a> </h2>
+      <h2><a href={`${project.username}/${project._id}`}> {project.title} </a> </h2>
       <p> Materials:{project.materials} </p>
       <p> Found:{project.location} </p>
       </div>

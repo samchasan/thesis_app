@@ -1,0 +1,30 @@
+block content
+
+  p #{title}:
+  
+  div#avatarJSON
+    script(src='../../../js/avatarJSON.js')
+  div#projectJSON
+    script(src='../../../js/projectJSON.js')
+  div#wasteJSON
+    script(src='../../../js/wasteJSON.js')
+  div#userJSON
+    script(src='../../../js/userJSON.js')
+
+  div#coverArea
+    div.columns
+      div#avatar
+        script(src='../../../js/avatar.js')
+
+      div#userInfo
+        if (user)
+        h3 #[strong] #{user.username}
+        p  #[strong Email:] #{user.email}
+        div#avatarInput  
+          script(src='../../../js/avatarInput.js')  
+
+      div#addButtons
+        div#addProjectButton
+          script(src='../../../js/addProjectButton.js')  
+        div#addWasteButton
+          script(src='../../../js/addWasteButton.js')

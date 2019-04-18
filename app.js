@@ -11,8 +11,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const indexRouter = require('./routes/index');
-const catalogRouter = require('./routes/catalog');  // Import routes for "catalog" area of site
-const dataRouter = require('./routes/data');  // Import routes for "catalog" area of site
+const catalogRouter = require('./routes/catalog');  // Import routes for 'catalog' area of site
+const dataRouter = require('./routes/data');  // Import routes for 'catalog' area of site
 const compression = require('compression');
 const uuid = require('uuid/v4')
 const uniqueID = uuid()
@@ -34,7 +34,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-// serve everything in "dist" from "js" folder
+// serve everything in 'dist' from 'js' folder
 app.use('/js', express.static(path.join(__dirname, 'dist')));
 app.use(cookieParser())
 // app.use(express.bodyParser());
@@ -75,6 +75,11 @@ app.use('/', indexRouter);
 app.use('/catalog', catalogRouter);
 app.use('/data', dataRouter);
 
+// app.get('/user/profile/:id', (req, res) => {
+//   console.log(req.params);
+//   // Look up the car make with the id of req.params.makeId in the database
+//   // res.send(that car make);
+// })
 
 app.use((req, res, next) => {
   next(createError(404));

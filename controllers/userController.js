@@ -26,13 +26,14 @@ const s3Bucket = 'chaffmap'
 
 
 
-const makeNewPhoto = (name, url, category, userID) => {
+const makeNewPhoto = (name, url, category, userID, username) => {
   console.log(url + ' / ' + category)
   const newPhoto = new Photo({
     'name': name,
     'category': category,
     'url': url,
     'userID': userID,
+    'username': username
   })
   console.log('made a photo')
   console.log(newPhoto)
@@ -45,11 +46,12 @@ exports.postAvatar = (req, res) => {
   const url = req.body.location.toString()
   const category = 'avatar'
   const userID = req.user.id
+  const username = req.user.username
 
   console.log(url + ' / ' + category)
 
-  makeNewPhoto(name, url, category, userID)
-  res.render('user/profile', {
+  makeNewPhoto(name, url, category, userID, username)
+  res.render('user/profile/:username', {
     title: 'Cool new avatar',
     currentUser: req.user,
   });
@@ -82,7 +84,7 @@ exports.addProjectPost =
 
     newProject.save()
 
-    res.render('user/profile', {
+    res.render('user/profile/:username', {
       title: 'Welcome Back',
       currentUser: req.user
     })
@@ -121,14 +123,14 @@ exports.addWastePost =
     newWaste.save(function (err) {
       if (err) return handleError(err);
       // saved!
-      // res.setHeader('Location', 'profile')
-      return res.redirect(301, 'profile')
+      // res.setHeader('Location', 'profile/:username')
+      return res.redirect(301, 'profile/:username')
       // console.log(newWaste)
     })
 
     return (next)
 
-    // res.render('user/profile', {
+    // res.render('user/profile/:username', {
     //   title: 'Welcome Back',
     //   currentUser: req.user
     // })
@@ -137,10 +139,10 @@ exports.addWastePost =
 
 exports.avatarJSON =
   (req, res, next) => {
-    const id = req.user.id
-    console.log('in avatarJSON')
-    console.log(id)
-    Photo.findOne({ userID: id }).exec((err, photo) => {
+    const user = req.params.user
+
+    console.log('in avatarJSON', user)
+    Photo.findOne({ username: user }).exec((err, photo) => {
       if (err) return next(err);
       if (photo) {
         const photoparsed = JSON.stringify(photo)
@@ -152,8 +154,10 @@ exports.avatarJSON =
 
 exports.projectJSON =
   (req, res, next) => {
-    const id = req.user._id.toString()
-    Project.find({ userID: id }).exec((err, projects) => {
+    const user = req.params.user
+    console.log(user)
+
+    Project.find({ username: user }).exec((err, projects) => {
       if (err) return next(err);
       if (projects) {
         // console.log('projects found: ' + projects)
@@ -164,23 +168,27 @@ exports.projectJSON =
 
 exports.userJSON =
   (req, res, next) => {
-    const id = req.user._id.toString()
-    // User.findOne({ userID: id }).exec((err, user) => {
-    //   if (err) return next(err);
-    //   if (user) {
-    //     // console.log('projects found: ' + projects)
-    //     res.json({ user })
-    //   }
-    // })
+    const user = req.params.user
+    console.log('IN USER JSON:', user)
+
+    User.findOne({ username: user }).exec((err, user) => {
+      if (err) return next(err);
+      if (user) {
+        console.log('user found ' + user)
+        res.json({ user })
+      }
+    })
   }
 
 
 exports.wasteJSON =
   (req, res, next) => {
-    const id = req.user.id
+    // const id = req.user.id
+    const user = req.params.user
+
     // console.log('in wasteJSON')
-    console.log(id)
-    Waste.find({ userID: id }).exec((err, waste) => {
+    // console.log(id)
+    Waste.find({ username: user }).exec((err, waste) => {
       if (err) return next(err);
       if (waste) {
         // const wasteparsed = JSON.stringify(waste)
@@ -190,20 +198,80 @@ exports.wasteJSON =
     })
   }
 
+exports.viewProject =
+  (req, res) => {
+    // const user = req.user
+    // console.log('view project user', user)
+    const projectId = req.params.project
+    console.log('Waste ID', projectId)
+    const username = req.params.user
+
+    Project.findById(projectId, (err, project) => {
+      if (err) {
+        console.log('project not found in view project')
+        res.render(`:user`, { title: 'Error, try again' })
+      } else {
+        console.log('project found', project)
+        // res.render(`user/profile/${user.username}/${projectId}`, {
+        res.render(`user/profile/user/:projectId`, {
+          title: 'Welcome Back',
+          projectOwner: username,
+          project: project
+        })
+      }
+    })
+  }
+
+
+exports.viewWaste =
+  (req, res) => {
+    // const user = req.user
+    // console.log('view waste user', user)
+
+    const username = req.params.user
+    console.log('username', username)
+
+    const wasteId = req.params.waste
+    console.log('Waste Id', wasteId)
+
+    Waste.findById(wasteId, (err, waste) => {
+      if (err) {
+        console.log('waste not found in view waste')
+        res.render(`:user`, { title: 'Error, try again' })
+      } else {
+        console.log('waste found', waste)
+        // res.render(`user/profile/${user.username}/${wasteId}`, {
+        res.render(`user/profile/user/waste/:wasteId`, {
+          title: 'Waste',
+          wasteOwner: username,
+          waste: waste
+        })
+      }
+    })
+
+  }
+
+
 exports.profileGet =
   async (req, res) => {
     // await User.find({id: req.user.id})
-    const user = req.user
-    console.log('user = ' + user)
-    const body = req.body
-    console.log('body = ' + body)
-    User.findOne({ username: user.username }, (err, user) => {
+    const user = req.params.user
+    console.log('user', user)
+    // const params = req.params
+    // console.log('params', params)
+
+    // res.send(req.params);
+
+    User.findOne({ username: user }, (err, user) => {
       if (err) {
+        console.log('user not found')
         res.render('login', { title: 'Error, try again' })
       } else {
-        res.render('user/profile', {
-          title: 'Welcome Back',
-          currentUser: user
+        console.log('user found in profile get')
+        res.render(`user/profile/:user`, {
+          title: 'Profile:',
+          user: user,
+          // username: user.username
         })
       }
     })
@@ -238,7 +306,8 @@ exports.loginPost =
       if (err) {
         res.render('login', { title: 'Error, try again' })
       } else {
-        res.redirect('user/profile')
+        console.log('found user in login post')
+        res.render('user/profile/:user')
       }
     })
   }
@@ -265,6 +334,7 @@ exports.registerPost =
         })
       console.log('new user: ' + newUser)
       newUser.save(function (err) {
+        console.log('new user save callback', err)
         if (err) {
           res.render('register', { title: 'Error, try again' })
         } else {

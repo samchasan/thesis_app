@@ -2,14 +2,20 @@ import axios from 'axios';
 import React from 'react';
 
 
-class userJSON extends React.Component {
+class UserJSON extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      path: window.location.pathname
+    }
   }
 
   componentDidMount() {
+    // console.log(this.state.path)
+    const user = this.state.path.replace('/catalog/user/profile/', '')
+    console.log(user)
     console.log('posting user')
-    axios.post('userJSON')
+    axios.post(`${user}/userJSON`)
     console.log('user posted')
   }
 
@@ -21,4 +27,4 @@ class userJSON extends React.Component {
   }
 }
 
-ReactDOM.render(<userJSON />, document.getElementById('userJSON'));
+ReactDOM.render(<UserJSON />, document.getElementById('userJSON'));

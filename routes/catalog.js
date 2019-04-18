@@ -44,33 +44,40 @@ router.get('/wastesJSON', waste.wastesJSON)
 router.get('/register', user.registerGet);
 router.post('/register', user.registerPost);
 
-router.post('/user/userJSON', user.userJSON)
-router.get('/user/userJSON', user.userJSON)
+router.post('/user/profile/:user/userJSON', user.userJSON)
+router.get('/user/profile/:user/userJSON', user.userJSON)
 
 // user logout
 router.get('/logout', user.logout);
 
 // user profile page
-router.get('/user/profile', user.profileGet);
+router.get('/user/profile/:user', user.profileGet);
 
 // user make and upload avatar
 // router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
-router.post('/user/postAvatar', user.postAvatar)
+router.post('/user/profile/:user/postAvatar', user.postAvatar)
 
-router.post('/user/addProject', user.addProjectPost)
-router.get('/user/addProject', user.addProjectGet)
+router.post('/user/profile/addProject', user.addProjectPost)
+router.get('/user/profile/addProject', user.addProjectGet)
 
-router.post('/user/addWaste', user.addWastePost)
-router.get('/user/addWaste', user.addWasteGet)
+router.post('/user/profile/addWaste', user.addWastePost)
+router.get('/user/profile/addWaste', user.addWasteGet)
 
-router.post('/user/projectJSON', user.projectJSON)
-router.get('/user/projectJSON', user.projectJSON)
+router.post('/user/profile/:user/projectJSON', user.projectJSON)
+router.get('/user/profile/:user/projectJSON', user.projectJSON)
 
-router.post('/user/avatarJSON', user.avatarJSON)
-router.get('/user/avatarJSON', user.avatarJSON)
+router.post('/user/profile/:user/avatarJSON', user.avatarJSON)
+router.get('/user/profile/:user/avatarJSON', user.avatarJSON)
 
-router.post('/user/wasteJSON', user.wasteJSON)
-router.get('/user/wasteJSON', user.wasteJSON)
+router.post('/user/profile/:user/wasteJSON', user.wasteJSON)
+router.get('/user/profile/:user/wasteJSON', user.wasteJSON)
+
+// router.post('/user/profile/:user/:project', user.editProject)
+router.get('/user/profile/:user/:project', user.viewProject)
+
+// router.post('/user/profile/:user/:waste', user.editWaste)
+router.get('/user/profile/:user/waste/:waste', user.viewWaste)
+
 
 
 // user login page

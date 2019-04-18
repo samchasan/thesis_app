@@ -30,7 +30,7 @@ exports.wastesJSON =
 exports.wastes =
   (req, res) => {
     res.render('wastes', {
-      title: 'Projects',
+      title: 'waste',
       currentUser: req.user
     })
   }

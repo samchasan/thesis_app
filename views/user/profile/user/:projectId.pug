@@ -1,0 +1,16 @@
+extends ../../../layout 
+
+block content
+
+    div#userInfo
+      h2 
+      a(href=`../${projectOwner}`) #[strong] #{projectOwner}'s project
+
+    br 
+    br
+
+    div#projectInfo
+      h2 #[strong]#{project.title}
+      h4 #[strong Found at:]#{project.location}
+      h4 #[strong Made with:]#{project.materials}
+      img(src=project.photo.url)

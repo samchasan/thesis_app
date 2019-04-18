@@ -39,7 +39,7 @@ class Projects extends React.Component {
       <div className='projectThumbs'>
       <img src={project.photo.url} key={key} ></img>
       <div className='projectText'>
-      <h2><a href='projectId'> {project.title} </a> </h2>
+      <h2><a href={`user/profile/${project.username}/${project._id}`}> {project.title} </a> </h2>
       <p>By:{project.username}</p>
       <p> Materials:{project.materials} </p>
       <p> Found:{project.location} </p>

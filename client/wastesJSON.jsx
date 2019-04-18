@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 
 
-class ProjectJSON extends React.Component {
+class WasteJSON extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -21,4 +21,4 @@ class ProjectJSON extends React.Component {
   }
 }
 
-ReactDOM.render(<ProjectJSON />, document.getElementById('wastesJSON'));
+ReactDOM.render(<WasteJSON />, document.getElementById('wastesJSON'));

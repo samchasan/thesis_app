@@ -9,14 +9,17 @@ class Avatar extends React.Component {
     this.state = {
       loading: false,
       file: null,
-      url: 'img/blank-user-avatar'
+      url: 'img/blank-user-avatar',
+      path: window.location.pathname
     };
   }
 
   componentDidMount() {
     let currentComponent = this;
+    const user = this.state.path.replace('/catalog/user/profile/', '')
+
     console.log('getting avatar')
-    axios.get('avatarJSON')
+    axios.get(`${user}/avatarJSON`)
     .then((res) => {
       const data = JSON.parse(res.data)
             console.log(data)

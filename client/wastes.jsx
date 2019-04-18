@@ -3,7 +3,7 @@ import React from 'react';
 
 
 
-class Projects extends React.Component {
+class Waste extends React.Component {
   constructor(props) {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this)
@@ -35,14 +35,16 @@ class Projects extends React.Component {
   
   render() {
 
+    const frequency = this.state.wastes.frequ
+
     const wastes = this.state.wastes.map((waste,key)=>
-      <div className='wasteThumbs'>
+      <div id={key} className='wasteThumbs'>
       <img src={waste.photo.url} key={key} ></img>
       <div className='wasteText'>
-      <h2><a href='wasteId'> {waste.title} </a> </h2>
-      <p>By:{waste.username}</p>
-      <p> Materials:{waste.materials} </p>
-      <p> Found:{waste.location} </p>
+      <h2><a href={`user/profile/${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
+      <p>Producer:{waste.username}</p>
+      <p>Amount:{waste.amount} </p>
+      <p>Frequency:{`${waste.frequency}`} </p>
       </div>
       </div>
     );
@@ -62,4 +64,4 @@ class Projects extends React.Component {
 
 const domContainer = document.querySelector('#wastes');
 
-ReactDOM.render(< Projects />, domContainer);
+ReactDOM.render(< Waste />, domContainer);

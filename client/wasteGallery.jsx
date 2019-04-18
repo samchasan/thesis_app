@@ -7,14 +7,18 @@ class Waste extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this)
     this.state = {
       waste: [],
-      wasteLoaded: false
+      wasteLoaded: false,
+      path: window.location.pathname
+
     }
   }
 
   componentDidMount() {
     
     console.log('getting waste')
-    axios.get('wasteJSON')
+    const user = this.state.path.replace('/catalog/user/profile/', '')
+
+    axios.get(`${user}/wasteJSON`)
     .then((res) => {      
       // console.log(res.data)
       res.data.waste.forEach((waste) => { 
@@ -38,7 +42,7 @@ class Waste extends React.Component {
       <div className='wasteThumbs'>
       <img src={waste.photo.url} key={key} ></img>
       <div className='wasteText'>
-      <h2><a href='wasteId'> {waste.title} </a> </h2>
+      <h2><a href={`${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
       <p> Amount:{waste.amount}lbs </p>
       {/* <p> Frequency:{waste.frequency} </p> */}
       </div>

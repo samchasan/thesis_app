@@ -39,7 +39,7 @@ html(lang='en')
                   a(href='/catalog/register') Register
               if (currentUser)
                 li Signed in as 
-                  a(href = '/catalog/user/profile') #{currentUser.username}
+                  a(href = '/catalog/user/profile/' + currentUser.username) #{currentUser.username}
                 li  
                   a(href = '/catalog/logout') Logout
                   

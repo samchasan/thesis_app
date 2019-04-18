@@ -15,19 +15,21 @@ class Login extends React.Component {
   }
 
   login() {
+    const username = this.state.username
+
     axios.post('login', this.state, {
       headers: {
         'Content-Type': 'application/json'
       }
-    }
+    })
     .then(function (response) {
-      console.log(response)
-      window.location = 'user/profile'
+      console.log('login response', response)
+      window.location = `user/profile/${username}`
       
-    }.catch ( function (err) {
+    }).catch ( function (err) {
         alert(err)
       })
-    ))
+    
   }
   setUsername(event){
     this.setState({username: event.target.value});
@@ -41,7 +43,7 @@ class Login extends React.Component {
 
   render() {
 return(
-      <form onSubmit={this.login} method='POST'>
+      <form >
         <div className='form-group'>
         <label htmlFor='username'> Username:</label>
         <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='madDasher' name='username'> 
@@ -52,7 +54,7 @@ return(
         <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='********' name='password' >
         </input>
         </div>
-      <button className='btn.btn-primary' type='submit'> Submit</button>
+      <button className='btn.btn-primary' type='button' onClick={this.login} > Submit</button>
       </form>
     )
   }
