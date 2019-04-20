@@ -12,5 +12,5 @@ block content
     div#wasteInfo
       h1 #[strong]#{waste.title}
       h3 #[strong Amount:] #{waste.amount} lbs
-      h3 #[strong Frequency:] #{waste.frequency}
+      h3 #[strong Frequency:] #{waste.frequency.category}, #{waste.frequency.moment}
       img(src=waste.photo.url)

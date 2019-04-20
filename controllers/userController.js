@@ -93,7 +93,7 @@ exports.addProjectPost =
 
 
 exports.addWastePost =
-  (req, res, next) => {
+  async (req, res, next) => {
     console.log(req.body)
     const photoName = req.body.photo.key.toString()
     const photoUrl = req.body.photo.location.toString()
@@ -112,25 +112,26 @@ exports.addWastePost =
       'material': material,
       'frequency': frequency,
       'amount': amount,
-      // 'location': location,
+      'location': location,
       'photo': {
         'bucket': category,
         'key': photoName,
         'url': photoUrl
       }
     })
+    console.log(newWaste)
 
     newWaste.save(function (err) {
       if (err) return handleError(err);
-      // saved!
-      // res.setHeader('Location', 'profile/:username')
-      return res.redirect(301, 'profile/:username')
-      // console.log(newWaste)
+      res.render('user/profile/:user', {
+        title: 'Welcome Back',
+        currentUser: req.user
+      })
     })
 
-    return (next)
+    // return (next)
 
-    // res.render('user/profile/:username', {
+    // res.render('user/profile/:user', {
     //   title: 'Welcome Back',
     //   currentUser: req.user
     // })
@@ -216,7 +217,8 @@ exports.viewProject =
         res.render(`user/profile/user/:projectId`, {
           title: 'Welcome Back',
           projectOwner: username,
-          project: project
+          project: project,
+          currentUser: req.user
         })
       }
     })
@@ -244,7 +246,8 @@ exports.viewWaste =
         res.render(`user/profile/user/waste/:wasteId`, {
           title: 'Waste',
           wasteOwner: username,
-          waste: waste
+          waste: waste,
+          currentUser: req.user
         })
       }
     })
@@ -271,7 +274,7 @@ exports.profileGet =
         res.render(`user/profile/:user`, {
           title: 'Profile:',
           user: user,
-          // username: user.username
+          currentUser: req.user
         })
       }
     })
@@ -279,17 +282,22 @@ exports.profileGet =
 
 exports.addProjectGet =
   (req, res) => {
-    res.render('user/addProject', {
+    const user = req.params.user
+
+    res.render('user/profile/user/addProject', {
       title: 'Add a Project',
+      user: user,
       currentUser: req.user
     })
   }
 
 exports.addWasteGet =
   (req, res) => {
-    res.render('user/addWaste', {
+    const user = req.params.user
+    res.render('user/profile/user/addWaste', {
       title: 'Add Waste',
-      currentUser: req.user
+      currentUser: req.user,
+      user: user
     })
   }
 
@@ -315,7 +323,10 @@ exports.loginPost =
 exports.registerGet =
   (req, res) => {
     // console.log(req.body)
-    res.render('register', { title: 'Create User' })
+    res.render('register', {
+      title: 'Create User',
+      currentUser: req.user
+    })
   }
 
 exports.registerPost =

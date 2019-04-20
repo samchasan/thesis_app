@@ -1,10 +1,19 @@
 import React from 'react';
 import ReactS3 from 'react-s3';
 import axios from 'axios';
+import DOMPurify from 'dompurify'
+
 // import {aws} from './keys'
 const akid = process.env.AWSAccessKeyId
 const asak = process.env.AWSSecretKey
 const s3Bucket = 'chaffmap'
+const times = ['12:00 am', '3:00 am', '6:00 am', '9:00 am', '12:00 pm', '3:00 pm', '6:00 pm', '9:00 pm']
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const daysOfMonth = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'react-bootstrap';
+
 
 const config = {
   bucketName: s3Bucket,
@@ -21,15 +30,21 @@ class WasteInput extends React.Component {
     this.setName = this.setName.bind(this)
     this.setMaterial = this.setMaterial.bind(this)
     this.setAmount = this.setAmount.bind(this)
-    this.setFrequency = this.setFrequency.bind(this)
-
+    this.setLocation = this.setLocation.bind(this)
+    this.setFrequencyCategory = this.setFrequencyCategory.bind(this)
+    this.setFrequencyMoment = this.setFrequencyMoment.bind(this)
     this.state = {
       loading: false,
       file: null,
       name: '',
       material: '',
+      location: '',
+      items: [],
       amount: '',
-      frequency: '',
+      frequency: {
+        category:'',
+        moment: ''
+      },
     };
   }
 
@@ -94,76 +109,192 @@ class WasteInput extends React.Component {
     this.setState({material: event.target.value});
     console.log(this.state.material)
   }
-  setFrequency(event){
+  setFrequencyCategory(event){
     switch(event.target.value){
       case 'daily':
-        this.setState({frequency: {daily: true}})
+        this.setState({frequency: {category: 'daily'}})
       break;
       case 'weekly':
-        this.setState({frequency: {weekly: true}})
+        this.setState({frequency: {category: 'weekly'}})
       break;
       case 'monthly':
-        this.setState({frequency: {monthly: true}})
+        this.setState({frequency: {category: 'monthly'}})
+      break;
+      case 'yearly':
+        this.setState({frequency: {category: 'yearly'}})
       break;
     }
-    // this.setState({frequency: event.target.value});
+    
     console.log(this.state.frequency)
   }
+  setFrequencyMoment(event){
+    this.setState({frequency: {
+      category: this.state.frequency.category,
+      moment: event.target.value}})
+    console.log('in frequency moment', this.state.frequency)
+  }
+
   setAmount(event){
     this.setState({amount: event.target.value});
     console.log(this.state.amount)
   }
+
+  setLocation(event){
+    this.setState({location: event.target.value});
+    console.log(this.state.location)
+  }
+
+  testFunction(){
+    return (
+      <h1 style={{ outline: '5px solid magenta' }}>halfjalewkjf</h1>
+    )
+  }
   
+  
+  renderFrequencyDropdown() {
+    console.log('frequency in renderFrequencyDropdown', this.state.frequency)
+    let items
+    switch(this.state.frequency.category){
+      case 'daily':
+        items = times.map(time => { return {value: time, display: time} })
+        return (
+          <div id='timeDropDown'> Time of Day<br></br>
+            <select name="time" onChange={this.setFrequencyMoment}>
+              {items.map((item) => {
+                return (
+                  <option  key={item.value} value={item.value}>
+                    {item.display}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+        )
+        break;
+      case 'weekly':
+        items = daysOfWeek.map(time => { return {value: time, display: time} })
+        return (
+          <div id='timeDropDown'> Day of Week<br></br>
+            <select name="time" onChange={this.setFrequencyMoment}> 
+              {items.map((item) => {
+                return (
+                  <option key={item.value} value={item.value}>
+                    {item.display}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+        )
+        break;
+      case 'monthly':
+        items = daysOfMonth.map(time => { return {value: time, display: time} })
+        return (
+          <div id='timeDropDown'> Day of Month <br></br>
+            <select name="time" onChange={this.setFrequencyMoment}>
+              {items.map((item) => {
+                return (
+                  <option key={item.value} value={item.value}>
+                    {item.display}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+        )
+      break;
+      case 'yearly':
+        items = months.map(time => { return {value: time, display: time} })
+          return (
+            <div id='timeDropDown'> Month <br></br>
+            {/* <label htmlFor='frequencyMoment'> */}
+              <select name="time" onChange={this.setFrequencyMoment}>
+                {items.map((item) => {
+                  return (
+                    <option key={item.value} value={item.value}>
+                      {item.display}
+                    </option>
+                  )
+                })}
+              </select>
+              {/* </label> */}
+            </div>
+          )
+      break;
+    }
+  }
 
   render() {
     let indicatorText;
-
+    
     if (this.state.loading) {
       indicatorText = 'Uploading file...'
     } else if (this.state.uploaded) {
       indicatorText = 'Uploaded'
     } else {
-      indicatorText = 'Share your waste'
+      indicatorText = 'Add a photo'
     }
 
-    let url = this.state.url
-    console.log(url)
+    // let url = this.state.url
+    // console.log(url)
       return ( 
         <span>
-          <div id='waste'>
-            <img src={url}></img>
-          </div>
+            <br></br>
             <div id='uploadWasteBlock'>
-              {indicatorText}
+             <h2> Share your byproducts!</h2> 
+             <br></br>
           <form onSubmit={this.postWaste} method='POST' encType='multipart/form-data'>
-          <label htmlFor='name'>
-            Name:
-          <input type='text' placeholder='Tarp scraps' defaultValue={this.state.name} onChange={this.setName} name='name' />
-          </label>
-          <label htmlFor='material'>
-            Material:
-          <input type='text' placeholder='Plastic' defaultValue={this.state.material} onChange={this.setMaterial} name='material' />
-          </label>
-          <div id='frequencyInput'>
-          <label htmlFor='frequency'>
-          <input type='radio' value='daily' onChange={this.setFrequency} name='frequency' /> Daily  <br></br>
-          <input type='radio' value='weekly' onChange={this.setFrequency} name='frequency' /> Weekly  <br></br>
-          <input type='radio' value='monthly' onChange={this.setFrequency} name='frequency' /> Monthly  <br></br>
-          </label>
-          </div>
-          <label htmlFor='amount'>
-            Amount (in lbs):
-          <input type='number' placeholder='10' defaultValue={this.state.amount} onChange={this.setAmount} name='amount' />
-          </label>
-          <div>
-            <label>
-            Photo:
-            <input type='file' name='file' onChange={this.addPhoto} />
-            </label>
-            </div>
-            <button type='submit' id='addWasteBtn'>Submit</button>
+                <label htmlFor='name'>
+                  {/* Name:&nbsp; */}
+                  <input type='text' placeholder='Name' defaultValue={this.state.name} onChange={this.setName} name='name' />
+                  <p> What is it? <i> Chaff, Pallets, Rope</i> </p>
+                </label>
+                <br></br>
+                  <label htmlFor='material'>
+                    {/* Material:&nbsp; */}
+                    <input type='text' placeholder='Material' defaultValue={this.state.material} onChange={this.setMaterial} name='material' />
+                    <p> What is it made from, or out of? <i> Coffee Husks, Wood, Polyester</i> </p>
+                  </label>
+                <br></br>
+                      <div id='frequencyInput'>
+                        <label htmlFor='frequency'>
+                          Frequency:
+                          </label>
+                          <br></br>
+                          <div class='columns'>
+                            <div id='radioInputs' class='column is-one-quarter'>
+                              <input type='radio' value='daily' onChange={this.setFrequencyCategory} name='frequency' /> Daily  <br></br>
+                              <input type='radio' value='weekly' onChange={this.setFrequencyCategory} name='frequency' /> Weekly  <br></br>
+                              <input type='radio' value='monthly' onChange={this.setFrequencyCategory} name='frequency' /> Monthly  <br></br>
+                              <input type='radio' value='yearly' onChange={this.setFrequencyCategory} name='frequency' /> Yearly  <br></br>
+                            </div>
+                            <div id='helptext' class='column'>
+                              <p> How often do you toss this?</p>
+                            </div>
+                          </div>
+                      </div>
+                    {this.renderFrequencyDropdown()}
+                <label id='amount' htmlFor='amount'>
+                  {/* Amount:&nbsp;  */}
+                  <input id='frequencyInputAmountInput' type='number' placeholder='10' defaultValue={this.state.amount} onChange={this.setAmount} name='amount' />
+                  &nbsp; lbs
+                  <p> How much do you toss at a time?</p>
+                </label>
+                <br></br>
+                  <label htmlFor='location'>
+                    {/* Location:&nbsp;  */}
+                    <input type='text' placeholder='Location' defaultValue={this.state.location} onChange={this.setLocation} name='location' />
+                    <p> Where is this located?</p>
+                  </label>
+                <br></br>
+                <div>
+                  <label>
+                    {indicatorText}&nbsp;<input type='file' id='addPhotoInput' name='file' onChange={this.addPhoto} />
+                  </label>
+                </div>
+              <a href='user/profile'> <button type='submit' id='addWasteBtn'>Submit</button></a>
             </form>
-            </div>
+          </div>
 
         </span>
       );

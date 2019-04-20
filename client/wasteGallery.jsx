@@ -38,13 +38,32 @@ class Waste extends React.Component {
   
   render() {
 
+    const capitalize = (s) => {
+      if (typeof s !== 'string') return ''
+      return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+
+    const insertText = (s) => {
+      switch (s){
+        case'daily':
+          return 'at'
+        break;
+        case'weekly' || 'monthly':
+          return 'on'
+        break;
+        case'yearly':
+          return 'in'
+        break;
+      } 
+    }
+
     const waste = this.state.waste.map((waste,key)=>
       <div className='wasteThumbs'>
       <img src={waste.photo.url} key={key} ></img>
       <div className='wasteText'>
       <h2><a href={`${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
-      <p> Amount:{waste.amount}lbs </p>
-      {/* <p> Frequency:{waste.frequency} </p> */}
+      <p>{`${waste.amount} lbs`}</p>
+      <p>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</p>
       </div>
       </div>
     );

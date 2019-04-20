@@ -57,11 +57,11 @@ router.get('/user/profile/:user', user.profileGet);
 // router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);
 router.post('/user/profile/:user/postAvatar', user.postAvatar)
 
-router.post('/user/profile/addProject', user.addProjectPost)
-router.get('/user/profile/addProject', user.addProjectGet)
+router.post('/user/profile/:user/addProject', user.addProjectPost)
+router.get('/user/profile/:user/addProject', user.addProjectGet)
 
-router.post('/user/profile/addWaste', user.addWastePost)
-router.get('/user/profile/addWaste', user.addWasteGet)
+router.post('/user/profile/:user/addWaste', user.addWastePost)
+router.get('/user/profile/:user/addWaste', user.addWasteGet)
 
 router.post('/user/profile/:user/projectJSON', user.projectJSON)
 router.get('/user/profile/:user/projectJSON', user.projectJSON)

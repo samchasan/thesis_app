@@ -29,6 +29,7 @@ exports.wastesJSON =
 
 exports.wastes =
   (req, res) => {
+    const user = req.params.user
     res.render('wastes', {
       title: 'waste',
       currentUser: req.user

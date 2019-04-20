@@ -36,16 +36,27 @@ class Projects extends React.Component {
   
   render() {
 
+
+    const insertText = (s) => {
+      switch (s){
+        case'street':
+          return 'on the'
+        break;
+        default:
+          return 'at'
+        break;
+      } 
+    }
+
     const projects = this.state.projects.map((project,key)=>
-
-    
-
     <div className='projectThumbs'>
       <img src={project.photo.url} key={key} ></img>
       <div className='projectText'>
       <h2><a href={`${project.username}/${project._id}`}> {project.title} </a> </h2>
-      <p> Materials:{project.materials} </p>
-      <p> Found:{project.location} </p>
+      <p>{`Made with ${project.materials}`}</p>
+      <p>{`Found ${insertText(project.location)} ${project.location}`}</p>
+      
+      
       </div>
       </div>
     );

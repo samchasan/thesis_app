@@ -55,6 +55,7 @@ body {
   margin: 10px;
 }
 
+
 .projectGallery{
   position: relative;
   display: inline-block;
@@ -72,15 +73,18 @@ body {
   float: none;
   position: absolute;
   padding-top: 10px;
+  width: 136px;
 }
 
 .projectText h2{
   font-size: 12pt;
   padding-bottom: 2pt;
+  width: 136px;
 }
 .projectText p{
   font-size: 9pt;
   margin-top: 2pt;
+  width: 136px;
 }
 
 .projectThumbs{
@@ -111,15 +115,18 @@ body {
   float: none;
   position: absolute;
   padding-top: 10px;
+  width: 136px;
 }
 
 .wasteText h2{
   font-size: 12pt;
   padding-bottom: 2pt;
+  width: 136px;
 }
 .wasteText p{
   font-size: 9pt;
   margin-top: 2pt;
+  width: 136px;
 }
 
 .wasteThumbs{
@@ -130,6 +137,93 @@ body {
   border: solid black;
   border-width: 2px;
   margin: 5px;
+}
+
+#frequencyInputAmountInput {
+ width: 50px;
+}
+
+#amount p {
+  width: 50px;
+  padding-left: 65px;
+ }
+ 
+
+#frequencyInput{
+  width: 700px;
+ }
+
+ #frequencyInput p {
+  font-size: 10px;
+  font-weight: 400;
+  color: gray;
+  margin-left: -3px;
+ }
+
+ .column{
+   padding:0.25rem;
+   margin-bottom: 5px;
+ }
+
+ .columns{
+   padding: 2px;
+ }
+
+#uploadWasteBlock label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  /* width: 700px; */
+}
+
+#uploadWasteBlock label p {
+  font-size: 10px;
+  color: gray;
+  font-weight: 400;
+  width: 350px;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px
+}
+
+
+
+#uploadWasteBlock input {
+  font-size: 0.7rem;
+  /* font-style: unset; */
+  font-weight: 700;
+}
+
+::placeholder{
+  color: #3273dc;
+}
+
+
+#addPhotoInput{
+  font-size: 12px;
+  color: transparent;
+}
+
+#addPhotoInput input {
+  font-size: 12px;
+  background:  #3273dc;
+}
+
+#radioInputs{
+  color: #3273dc;
+  font-weight: 500;
+  font-size: small;
+  width: 150px;
+}
+
+#timeDropDown{
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+#timeDropDown select{
+  color: #3273dc;
+  font-weight: 400;
 }
 
 .className{

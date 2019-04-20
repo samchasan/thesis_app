@@ -1,11 +1,16 @@
 class AddWasteButton extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      path: window.location.pathname
+    }
   }
 
   render() {
+    const user = this.state.path.replace('/catalog/user/profile/', '')
+
     return (
-      <button><a href='addWaste'>Add Waste</a></button>
+      <button><a href={`${user}/addWaste`}>Add Waste</a></button>
     );
   }
 }

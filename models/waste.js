@@ -8,19 +8,15 @@ const Waste = new Schema({
   username: { type: String },
   title: { type: String },
   material: { type: Array },
-  // location: { type: String },
+  location: { type: String },
   photo: {
     bucket: { type: String },
     key: { type: String },
     url: { type: String },
   },
   frequency: {
-    daily: { type: Boolean },
-    timeOfDay: { type: Number },
-    weekly: { type: Boolean },
-    dayOfWeek: { type: Array },
-    monthly: { type: Boolean },
-    monthOfYear: { type: String }
+    category: '',
+    moment: ''
   },
   amount: { type: Number },
   homogenous: { type: Boolean },
