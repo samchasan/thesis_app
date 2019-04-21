@@ -167,6 +167,20 @@ exports.projectJSON =
     })
   }
 
+// exports.singleProjectJSON =
+// (req, res, next) => {
+//   const project = req.params.user
+//   console.log(user)
+
+//   Project.findById({ username: user }).exec((err, projects) => {
+//     if (err) return next(err);
+//     if (projects) {
+//       // console.log('projects found: ' + projects)
+//       res.json({ projects })
+//     }
+//   })
+// }
+
 exports.userJSON =
   (req, res, next) => {
     const user = req.params.user
@@ -199,13 +213,12 @@ exports.wasteJSON =
     })
   }
 
-exports.viewProject =
+exports.singleProjectJSON =
   (req, res) => {
-    // const user = req.user
-    // console.log('view project user', user)
-    const projectId = req.params.project
-    console.log('Waste ID', projectId)
-    const username = req.params.user
+
+    const projectId = req.params.projectId
+    // console.log('params', req.params)
+    // const username = req.params.user
 
     Project.findById(projectId, (err, project) => {
       if (err) {
@@ -214,15 +227,14 @@ exports.viewProject =
       } else {
         console.log('project found', project)
         // res.render(`user/profile/${user.username}/${projectId}`, {
-        res.render(`user/profile/user/:projectId`, {
-          title: 'Welcome Back',
-          projectOwner: username,
+        res.json({
           project: project,
           currentUser: req.user
         })
       }
     })
   }
+
 
 
 exports.viewWaste =
@@ -257,14 +269,8 @@ exports.viewWaste =
 
 exports.profileGet =
   async (req, res) => {
-    // await User.find({id: req.user.id})
     const user = req.params.user
     console.log('user', user)
-    // const params = req.params
-    // console.log('params', params)
-
-    // res.send(req.params);
-
     User.findOne({ username: user }, (err, user) => {
       if (err) {
         console.log('user not found')
@@ -280,80 +286,134 @@ exports.profileGet =
     })
   }
 
-exports.addProjectGet =
-  (req, res) => {
-    const user = req.params.user
 
-    res.render('user/profile/user/addProject', {
-      title: 'Add a Project',
-      user: user,
-      currentUser: req.user
-    })
+exports.viewProject = (req, res) => {
+
+  const projectId = req.params.project
+  console.log('Waste ID', projectId)
+  // const username = req.params.user
+  res.render(`user/profile/user/:projectId`, {
+    title: 'project',
+    // projectOwner: username,
+    // project: project,
+    currentUser: req.user
+  })
+
+}
+
+exports.updateProject = async (req, res) => {
+  let project, data, photoName, photoURL, category, name, materials, location
+  project = req.params.project
+  data = req.body
+  console.log('in update project', project, data)
+
+  function getData(data) {
+
+    // const newPhotoUrl = data.photo.location
+    // const projectToUpdate = data.text.project.id
+
+    // console.log('getting new data', params, data)
+    photoName = data.photo.key.toString()
+    photoURL = data.photo.location.toString()
+    category = 'project'
+    name = data.text.name
+    materials = data.text.materials
+    location = data.text.location
   }
 
-exports.addWasteGet =
-  (req, res) => {
-    const user = req.params.user
-    res.render('user/profile/user/addWaste', {
-      title: 'Add Waste',
-      currentUser: req.user,
-      user: user
-    })
-  }
+  await getData(data)
+
+  await Project.findOneAndUpdate({ _id: project }, {
+    'title': name,
+    'materials': materials,
+    'location': location,
+    'photo': {
+      'bucket': category,
+      'key': photoName,
+      'url': photoURL
+    }
+  }, (err, project) => {
+
+    if (err) { console.log(err) }
+
+    console.log('updating project', project)
+
+  })
+
+  res.redirect(req.get('referer'));
+
+}
 
 
-exports.loginGet =
-  (req, res) => {
-    res.render('login', { title: 'Login' })
-  }
 
-exports.loginPost =
-  (req, res) => {
-    user = req.body
-    User.findOne({ username: user.username }, (err, user) => {
+exports.addProjectGet = (req, res) => {
+  const user = req.params.user
+
+  res.render('user/profile/user/addProject', {
+    title: 'Add a Project',
+    user: user,
+    currentUser: req.user
+  })
+}
+
+exports.addWasteGet = (req, res) => {
+  const user = req.params.user
+  res.render('user/profile/user/addWaste', {
+    title: 'Add Waste',
+    currentUser: req.user,
+    user: user
+  })
+}
+
+
+exports.loginGet = (req, res) => {
+  res.render('login', { title: 'Login' })
+}
+
+exports.loginPost = (req, res) => {
+  user = req.body
+  User.findOne({ username: user.username }, (err, user) => {
+    if (err) {
+      res.render('login', { title: 'Error, try again' })
+    } else {
+      console.log('found user in login post')
+      res.render('user/profile/:user')
+    }
+  })
+}
+
+exports.registerGet = (req, res) => {
+  // console.log(req.body)
+  res.render('register', {
+    title: 'Create User',
+    currentUser: req.user
+  })
+}
+
+exports.registerPost = (req, res) => {
+
+  console.log(req.body)
+
+  if (req.body.email && req.body.username &&
+    req.body.password) {
+    const newUser = new User(
+      {
+        'email': req.body.email,
+        'username': req.body.username,
+        'password': req.body.password,
+        // avatar: req.body.avatar
+      })
+    console.log('new user: ' + newUser)
+    newUser.save(function (err) {
+      console.log('new user save callback', err)
       if (err) {
-        res.render('login', { title: 'Error, try again' })
+        res.render('register', { title: 'Error, try again' })
       } else {
-        console.log('found user in login post')
-        res.render('user/profile/:user')
+        res.redirect('/')
       }
     })
   }
-
-exports.registerGet =
-  (req, res) => {
-    // console.log(req.body)
-    res.render('register', {
-      title: 'Create User',
-      currentUser: req.user
-    })
-  }
-
-exports.registerPost =
-  (req, res) => {
-
-    console.log(req.body)
-
-    if (req.body.email && req.body.username &&
-      req.body.password) {
-      const newUser = new User(
-        {
-          'email': req.body.email,
-          'username': req.body.username,
-          'password': req.body.password,
-          // avatar: req.body.avatar
-        })
-      console.log('new user: ' + newUser)
-      newUser.save(function (err) {
-        console.log('new user save callback', err)
-        if (err) {
-          res.render('register', { title: 'Error, try again' })
-        } else {
-          res.redirect('/')
-        }
-      })
-    }
-  }
+}
 
 
 

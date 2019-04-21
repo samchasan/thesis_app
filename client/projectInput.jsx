@@ -35,16 +35,6 @@ class ProjectInput extends React.Component {
     };
   }
 
-  // componentDidMount() {
-  //   console.log('getting projects')
-  //   axios.get('projectJSON')
-  //   .then((res) => {
-  //     console.log(res)
-  //   })
-  //   .catch((error) =>{
-  //     console.log(error);
-  //   })
-  // }
 
   async postProject() {
     event.preventDefault();
@@ -53,10 +43,7 @@ class ProjectInput extends React.Component {
       loading:true
     });
 
-    // console.log(this.state)
-
     const file = this.state.file;
-    // console.log(file)/
     ReactS3.uploadFile(file, config)
     .then( (data) => {
         console.log(data);
@@ -71,7 +58,6 @@ class ProjectInput extends React.Component {
         }
     var jsonse = JSON.stringify(formInput);
     var blob = new Blob([jsonse], {type: "application/json"});
-    // console.log(jsonse)
       axios.post('addProject', blob, {
         headers: {
           'Content-Type': 'application/json'
@@ -133,7 +119,6 @@ class ProjectInput extends React.Component {
             <div id='uploadProjectBlock'>
               {indicatorText}
           <form onSubmit={this.postProject} method='POST' encType='multipart/form-data'>
-
           <label htmlFor='name'>
             Name:
           <input type='text' placeholder='my fun project' defaultValue={this.state.name} onChange={this.setName} name='name' />

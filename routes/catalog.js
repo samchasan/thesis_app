@@ -66,13 +66,16 @@ router.get('/user/profile/:user/addWaste', user.addWasteGet)
 router.post('/user/profile/:user/projectJSON', user.projectJSON)
 router.get('/user/profile/:user/projectJSON', user.projectJSON)
 
+router.post('/user/profile/:user/:projectId/singleProjectJSON', user.singleProjectJSON)
+router.get('/user/profile/:user/:projectId/singleProjectJSON', user.singleProjectJSON)
+
 router.post('/user/profile/:user/avatarJSON', user.avatarJSON)
 router.get('/user/profile/:user/avatarJSON', user.avatarJSON)
 
 router.post('/user/profile/:user/wasteJSON', user.wasteJSON)
 router.get('/user/profile/:user/wasteJSON', user.wasteJSON)
 
-// router.post('/user/profile/:user/:project', user.editProject)
+router.post('/user/profile/:user/:project', user.updateProject)
 router.get('/user/profile/:user/:project', user.viewProject)
 
 // router.post('/user/profile/:user/:waste', user.editWaste)

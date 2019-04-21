@@ -55,6 +55,22 @@ body {
   margin: 10px;
 }
 
+#projectInfo{
+  display: inline-block;
+}
+
+#projectInfo p {
+  font-size: 12px;
+}
+
+#projectInfo h2 {
+  font-weight: bold;
+}
+
+#projectImage{
+  display: inline-block;
+  width: 400px;
+}
 
 .projectGallery{
   position: relative;
@@ -148,7 +164,6 @@ body {
   padding-left: 65px;
  }
  
-
 #frequencyInput{
   width: 700px;
  }
