@@ -22,10 +22,12 @@ class Project extends React.Component {
     super(props)
     this.postProject = this.postProject.bind(this)
     this.editProject = this.editProject.bind(this)
+    this.stopEditing = this.stopEditing.bind(this)
     this.uploadPhoto = this.uploadPhoto.bind(this)
     this.setName = this.setName.bind(this)
     this.setMaterials = this.setMaterials.bind(this)
     this.setLocation = this.setLocation.bind(this)
+    this.setDescription = this.setDescription.bind(this)
     this.componentDidMount = this.componentDidMount.bind(this)
 
     this.state = {
@@ -45,7 +47,8 @@ class Project extends React.Component {
         key: '',
         userID: '',
         username: '',
-        id: ''
+        id: '',
+        description: ''
       },
       isOwner: false,
       editing: false
@@ -72,6 +75,7 @@ class Project extends React.Component {
         userID: project.userID,
         username: project.username,
         id: project._id,
+        description: project.description
       }})
       console.log(currentComponent.state.project)
 
@@ -100,13 +104,9 @@ class Project extends React.Component {
       loading:true
     });
 
-    // const key = currentComponent.state.project.key;
-    // console.log(config)
-    // debugger
-    // ReactS3.deleteFile(key, config)
-    // .then((response) => console.log(response))
-    // .catch((err) => console.error(err))
+    console.log('getting component to post', currentComponent.state)
 
+    if(currentComponent.state.file){
     const file = currentComponent.state.file;
     ReactS3.uploadFile(file, config)
     .then( (data) => {
@@ -121,12 +121,8 @@ class Project extends React.Component {
           'photo': photoMeta,
           'text': currentComponent.state
         }
-    var jsonse = JSON.stringify(formInput);
-    var blob = new Blob([jsonse], {type: "application/json"});
-    // const project = this.state.path.replace(`/catalog/user/profile/${this.state.userID}`, '')
-
-      
-
+      const jsonse = JSON.stringify(formInput);
+      const blob = new Blob([jsonse], {type: "application/json"});
       axios.post(`${currentComponent.state.project.id}`, blob, {
         headers: {
           'Content-Type': 'application/json'
@@ -140,22 +136,47 @@ class Project extends React.Component {
     .catch ( (err) => {
       console.log(err)
     })
+    }else if (!currentComponent.state.file){
+      console.log('no file, posting without photo')
+      debugger
+      const jsonse = JSON.stringify({'text': currentComponent.state});
+      const blob = new Blob([jsonse], {type: "application/json"});
+      axios.post(`${currentComponent.state.project.id}`, blob, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    .then( () => {
+      window.location = currentComponent.state.project.id
+      console.log('window.location', window.location)
+    })
+    .catch ( (err) => {
+      console.log(err)
+    })
   }
+  }
+  
 
   async uploadPhoto(event) {
     await this.setState({
       loading:true,
       file: event.target.files[0]
     });
-
+    console.log(this.state.file.name)
     this.setState({
       loading: false,
       uploaded: true
     });
   }
 
-  editProject(event){
+  editProject(){
     this.setState({editing: true})
+    console.log(this.state.editing)
+  }
+
+  stopEditing(){
+    this.setState({editing: false})
+    console.log(this.state.editing)
   }
 
   setName(event){
@@ -170,6 +191,11 @@ class Project extends React.Component {
     this.setState({location: event.target.value});
     console.log(this.state.location)
   }
+  setDescription(event){
+    this.setState({description: event.target.value});
+    console.log(this.state.description)
+  }
+
 
   render() {
     let indicatorText;
@@ -178,9 +204,9 @@ class Project extends React.Component {
     if (this.state.loading) {
       indicatorText = 'Uploading file...'
     } else if (this.state.uploaded) {
-      indicatorText = 'Uploaded'
+      indicatorText = this.state.file.name
     } else {
-      indicatorText = 'Add a Project'
+      indicatorText = 'Update Photo'
     }
 
     const viewCheck = () => {
@@ -199,28 +225,53 @@ class Project extends React.Component {
     const editButton = () => {
       if(this.state.isOwner){ 
         return (
-          <button onClick={this.editProject}> Edit project</button>
+          <button class='button is-small is-link' onClick={this.editProject}> edit </button>
         )
       } else {
         return (
-          <p> <a href='../../../login'> login to edit </a> </p> 
+          <a class='button is-small is-link' href='../../../login'> login to edit </a> 
         )
       }
-  }
+    }
+
+    const checkDescription = () =>  {
+      if(this.state.project.description){ 
+        return (
+          <div>
+          Description: <br></br>
+          <p> {project.description} </p>        
+          </div>
+          )
+      } else {
+        return (
+          <div>
+          <p> <a onClick={this.editProject} > Add a description </a> </p> 
+          </div>
+
+        )
+      }
+    }
+
+
     const staticView = () => { 
       return (
-      <div className='columns' >
-        <div className='column is-one-quarter' id='projectInfo'>
-          <h2> {project.title}</h2>
-          <p>{`Made with ${project.materials}`}</p>
-          <p>{`Found ${insertText(project.location)} ${project.location}`}</p>
-          <p> By&nbsp; <a href={project.username}> {project.username} </a> </p>
-          <div id='editControls'> {editButton()}</div>
+        <div id='staticView'>
+          <div className='columns' id='projectInfoBox'>
+            <div className='column is-one-quarter' id='projectInfo'>
+                  <h2> {project.title}</h2>
+              <p>{`Made with ${project.materials}`}</p>
+              <p>{`Found ${insertText(project.location)} ${project.location}`}</p>
+              <p> By&nbsp; <a href={project.username}> {project.username} </a> </p>
+              <div className='column is-one-quarter' id='editControls'> {editButton()}</div>
+            </div>
+            <div className='column is-three-quarters' id='projectImage'>
+              <img src={project.photoURL}></img>
+            </div>
+          </div>
+          <div id='projectDescription'>
+             {checkDescription()}
+          </div>
         </div>
-        <div className='column is-three-quarters' id='projectImage'>
-          <img src={project.photoURL}></img>
-        </div>
-      </div>
     )}
 
     const editView = () => { 
@@ -228,21 +279,32 @@ class Project extends React.Component {
         <span>
           <div className='columns' >
             <div className='column is-one-quarter' id='projectInfo'>
-              <form onSubmit={this.postProject} method='POST' encType='multipart/form-data'>
+              <form method='POST' encType='multipart/form-data'>
                 <label htmlFor='title'>
+                  Title:
                   <input type='text' placeholder={this.state.project.title} defaultValue={this.state.project.title} onChange={this.setName} name='name' />
                 </label>
                 <label htmlFor='materials'>
+                  Made With:
                   <input type='text' placeholder={this.state.project.materials} defaultValue={this.state.project.materials} onChange={this.setMaterials} name='materials' />
                 </label>
                 <label htmlFor='location'>
+                  Found at:
                   <input type='text' placeholder={this.state.project.location} defaultValue={this.state.project.location} onChange={this.setLocation} name='location' />
                 </label>
-                <label>
-                  Update Photo:
-                  <input type='file' name='file' onChange={this.uploadPhoto} />
+                <label htmlFor='description'>
+                  Description:
+                  <textarea rows="10" cols="19" placeholder={this.state.project.description} defaultValue={this.state.project.description} onChange={this.setDescription} name='description' />
                 </label>
-                  <button type='submit' className='addProjectBtn'>Submit</button>
+                <label>
+                  {indicatorText}
+                  <div id='addPhotoInput'>
+                  <input type='file' name='file' onChange={this.uploadPhoto} />
+                  </div>
+                </label>
+                  <a type='button' class="button is-primary" onClick={this.postProject} >Update Project</a>
+                  <a type='button' class="button is-small is-danger" onClick={this.stopEditing}>Cancel</a>
+
               </form>
             </div>
             <div className='column is-three-quarters' id='projectImage'>

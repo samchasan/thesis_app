@@ -302,43 +302,84 @@ exports.viewProject = (req, res) => {
 }
 
 exports.updateProject = async (req, res) => {
-  let project, data, photoName, photoURL, category, name, materials, location
+  let project, data, photoName, photoURL, name, materials, location
   project = req.params.project
   data = req.body
   console.log('in update project', project, data)
-
-  function getData(data) {
-
-    // const newPhotoUrl = data.photo.location
-    // const projectToUpdate = data.text.project.id
-
-    // console.log('getting new data', params, data)
-    photoName = data.photo.key.toString()
-    photoURL = data.photo.location.toString()
-    category = 'project'
-    name = data.text.name
-    materials = data.text.materials
-    location = data.text.location
-  }
-
   await getData(data)
 
-  await Project.findOneAndUpdate({ _id: project }, {
-    'title': name,
-    'materials': materials,
-    'location': location,
-    'photo': {
-      'bucket': category,
-      'key': photoName,
-      'url': photoURL
+  function getData(data) {
+    if (data.photo) {
+      photoName = data.photo.key.toString()
+      photoURL = data.photo.location.toString()
+      const photo = {
+        'key': photoName,
+        'url': photoURL
+      }
+      updateProject('photo', photo)
     }
-  }, (err, project) => {
+    if (data.text.name) {
+      name = data.text.name
+      updateProject('name', name)
+    }
+    if (data.text.materials) {
+      materials = data.text.materials
+      updateProject('materials', materials)
+    }
+    if (data.text.location) {
+      location = data.text.location
+      updateProject('location', location)
+    }
+    if (data.text.description) {
+      description = data.text.description
+      updateProject('description', description)
+    }
+  }
 
-    if (err) { console.log(err) }
-
-    console.log('updating project', project)
-
-  })
+  function updateProject(property, data) {
+    switch (property) {
+      case 'photo':
+        Project.findOneAndUpdate({ _id: project }, {
+          'photo': data
+        }, (err, project) => {
+          if (err) { console.log(err) }
+          console.log('updating project', project)
+        })
+        break;
+      case 'name':
+        Project.findOneAndUpdate({ _id: project }, {
+          'name': data
+        }, (err, project) => {
+          if (err) { console.log(err) }
+          console.log('updating project', project)
+        })
+        break;
+      case 'materials':
+        Project.findOneAndUpdate({ _id: project }, {
+          'materials': data
+        }, (err, project) => {
+          if (err) { console.log(err) }
+          console.log('updating project', project)
+        })
+        break;
+      case 'location':
+        Project.findOneAndUpdate({ _id: project }, {
+          'location': data
+        }, (err, project) => {
+          if (err) { console.log(err) }
+          console.log('updating project', project)
+        })
+        break;
+      case 'description':
+        Project.findOneAndUpdate({ _id: project }, {
+          'description': data
+        }, (err, project) => {
+          if (err) { console.log(err) }
+          console.log('updating project', project)
+        })
+        break;
+    }
+  }
 
   res.redirect(req.get('referer'));
 

@@ -57,6 +57,7 @@ body {
 
 #projectInfo{
   display: inline-block;
+  width: 200px;
 }
 
 #projectInfo p {
@@ -220,7 +221,7 @@ body {
 
 #addPhotoInput input {
   font-size: 12px;
-  background:  #3273dc;
+  /* background:  #3273dc; */
 }
 
 #radioInputs{

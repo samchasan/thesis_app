@@ -17,7 +17,8 @@ const Project = new Schema({
   complexity: {type: String},
   expense: {type: String},
   tags: {type: Array},
-  headline: {type: String}
+  headline: {type: String},
+  description: {type: String}
 });
 
 Project
