@@ -6,12 +6,13 @@
   },
   "private": true,
   "scripts": {
-    "start": "npm run build-client && npm run start-client && npm run deploy-start",
+    "start": "npm run start-client && npm run deploy-start",
     "deploy-start": "node ./bin/www",
     "start-dev": "concurrently 'npm run start-client' 'npm run devstart'",
-    "start-client": "parcel serve client/*.js*",
+    "start-client": "parcel serve client/*.js* --no-source-maps",
     "build-client": "parcel build client/*.js* --no-source-maps",
-    "devstart": "nodemon ./bin/www"
+    "devstart": "nodemon ./bin/www",
+    "build": "npm build-client"
   },
   "dependencies": {
     "@babel/cli": "^7.1.0",
