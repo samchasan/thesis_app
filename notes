@@ -8,3 +8,4 @@ the operating system.
 Starts in context - process & environment (a set of configuration variables)
 Can add environment variables in command line WORD=VARIABLE for single program run
 Or you can have it run for any program run in the same window by exporting
+can view environment variables by typing env in terminal
