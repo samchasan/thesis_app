@@ -10,7 +10,7 @@
     "deploy-start": "node ./bin/www",
     "start-dev": "concurrently 'npm run start-client' 'npm run devstart'",
     "start-client": "parcel serve client/*.js*",
-    "build-client": "parcel build client/*.js*",
+    "build-client": "parcel build client/*.js* --no-source-maps",
     "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
