@@ -6,7 +6,7 @@
   },
   "private": true,
   "scripts": {
-    "start": "npm run start-client && npm run deploy-start",
+    "start": "npm run build-client && npm run start-client && npm run deploy-start",
     "deploy-start": "node ./bin/www",
     "start-dev": "concurrently 'npm run start-client' 'npm run devstart'",
     "start-client": "parcel serve client/*.js*",
