@@ -13,16 +13,15 @@ class Search extends React.Component {
   }
 
   search() {
-    const searchInput = this.state.searchInput
 
-    axios.post('search', this.state, {
+    axios.post('/', this.state.searchInput, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
     .then(function (response) {
       console.log('login response', response)
-      window.location = `user/profile/${searchInput}`
+      window.location = '/'
       
     }).catch ( function (err) {
         alert(err)
@@ -40,12 +39,12 @@ class Search extends React.Component {
 return(
       <form >
         <div className='form-group'>
-        <label htmlFor='searchInput'> Username:</label>
+        <label htmlFor='searchInput'></label>
         <input id='searchInput' onChange={this.setInput} className='form-control' type='text' placeholder='Seattle' name='searchInput'> 
         </input>
         </div>
      
-      <button class='button is-link' type='button' onClick={this.login} > Submit</button>
+      <button class='button is-link' type='button' onClick={this.login} > search </button>
       </form>
     )
   }
