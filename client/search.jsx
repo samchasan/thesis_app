@@ -7,7 +7,6 @@ class Search extends React.Component {
     super(props)
     this.search = this.search.bind(this)
     this.setInput = this.setInput.bind(this)
-    this.setPassword = this.setPassword.bind(this)
     this.state = {
       searchInput: '',
     }
