@@ -15,7 +15,7 @@ class Search extends React.Component {
   search() {
     const location = this.state.location
 
-    axios.post('catalog/search', location, {
+    axios.post('/', location, {
       headers: {
         'Content-Type': 'application/json'
       }
