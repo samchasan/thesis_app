@@ -13,9 +13,10 @@ async function doStuff() {
   const roasters = await getSomeAsyncData('/data')
   console.log(roasters)
   await addMarkers(roasters, () => {
-  }).catch((e) => {
-    console.log(e)
-  });
+  })
+  // .catch((e) => {
+  //   console.log(e)
+  // });
 }
 
 
