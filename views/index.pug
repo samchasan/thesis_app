@@ -1,14 +1,14 @@
 extends layout
 
 block content
-  h4 #{title}
+  //- h4 #{title}
   
-  if currentUser && currentUser.isAdmin
-    h3 you're an admin!
+  //- if currentUser && currentUser.isAdmin
+  //-   h3 you're an admin!
 
-  hr
+  //- hr
 
-  h2 Welcome to Chaff Map. Where you can find Chaff.
+  h1 Welcome to Chaff Map. Where you can find Chaff.
   p Coffee roasters produce Chaff as a by product. Often it is sent to landfills.
   | But there are a number of amazing uses for chaff. Here at Chaffmap, you can
   | find chaff near you, and projects to help you learn how to make amazing
@@ -16,13 +16,14 @@ block content
 
   hr
   
-  div#likeButtonContainer
-    script(src='../js/likeButton.js')
+  h1 Find Chaff
+  div#searchBox
+    script(src='../js/search.js') 
 
-  h2 Search for roasters
-  form(method='post', action='')
-    input#Search(type='text', name='textField')
-    button#submitSearch(type='submit') Submit
+  //- h2 Search for roasters
+  //- form(method='post', action='')
+  //-   input#Search(type='text', name='textField')
+  //-   button#submitSearch(type='submit') Submit
 
   hr
 
