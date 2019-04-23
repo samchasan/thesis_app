@@ -51,7 +51,7 @@ function setMap(coords) {
 function getData(path, callback) {
   console.log('getting data')
 
-  const jSON = $.getJSON(path, (roasterList) => {
+  const jSON = jquery.getJSON(path, (roasterList) => {
     dataPoints = roasterList.data
     if (dataPoints) {
       dataPoints.forEach(dataPoint => {
