@@ -112,8 +112,9 @@ exports.search = (req, res, next) => {
     location: inputContent,
     limit: 15
   };
-
+  console.log('yelp token', yelpToken)
   const client = yelp.client(yelpToken);
+  console.log('client', client)
   let result = {};
   let results = [];
 
