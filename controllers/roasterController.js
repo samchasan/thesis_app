@@ -94,7 +94,9 @@ exports.search = (req, res, next) => {
   } else {
     user = null
   }
-  Roaster.deleteMany({ 'userID': uniqueID }, (err, roaster) => { })
+  // Roaster.deleteMany({ 'userID': uniqueID }, (err, roaster) => { })
+
+  console.log('in search', req.body)
 
   dataArray = []
   setTimeout(() => {

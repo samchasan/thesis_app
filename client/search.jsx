@@ -6,32 +6,33 @@ class Search extends React.Component {
   constructor(props) {
     super(props)
     this.search = this.search.bind(this)
-    this.setlocation = this.setlocation.bind(this)
+    this.setInput = this.setInput.bind(this)
+    this.setPassword = this.setPassword.bind(this)
     this.state = {
-      location: '',
+      searchInput: '',
     }
   }
 
   search() {
-    const location = this.state.location
+    const searchInput = this.state.searchInput
 
-    axios.post('/', location, {
+    axios.post('search', this.state, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
     .then(function (response) {
-      console.log('search response', response)
-      window.location = '/'
+      console.log('login response', response)
+      window.location = `user/profile/${searchInput}`
       
     }).catch ( function (err) {
         alert(err)
       })
     
   }
-  setlocation(event){
-    this.setState({location: event.target.value});
-    console.log(this.state.location)
+  setInput(event){
+    this.setState({searchInput: event.target.value});
+    console.log(this.state.searchInput)
   }
   
 
@@ -40,11 +41,12 @@ class Search extends React.Component {
 return(
       <form >
         <div className='form-group'>
-        <label htmlFor='location'> location:</label>
-        <input id='location' onChange={this.setlocation} className='form-control' type='text' placeholder='Seattle' name='location'> 
+        <label htmlFor='searchInput'> Username:</label>
+        <input id='searchInput' onChange={this.setInput} className='form-control' type='text' placeholder='Seattle' name='searchInput'> 
         </input>
         </div>
-      <button class='button is-small is-link' type='button' onClick={this.search} > search </button>
+     
+      <button class='button is-link' type='button' onClick={this.login} > Submit</button>
       </form>
     )
   }
