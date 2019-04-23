@@ -44,7 +44,7 @@ return(
         </input>
         </div>
      
-      <button class='button is-link' type='button' onClick={this.login} > search </button>
+      <button class='button is-link' type='button' onClick={this.search} > search </button>
       </form>
     )
   }
