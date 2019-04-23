@@ -14,7 +14,7 @@ class Search extends React.Component {
 
   search() {
 
-    axios.post('/search', this.state.searchInput, {
+    axios.post('/search', this.state, {
       headers: {
         'Content-Type': 'application/json'
       }
