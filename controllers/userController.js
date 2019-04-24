@@ -93,14 +93,15 @@ exports.addProjectPost =
 
 
 exports.addWastePost =
-  async (req, res, next) => {
-    console.log(req.body)
+  async (req, res) => {
+    // console.log(req.body)
     const photoName = req.body.photo.key.toString()
     const photoUrl = req.body.photo.location.toString()
     const category = 'waste'
     const userID = req.user.id
     const username = req.user.username
     const frequency = req.body.text.frequency
+    const location = req.body.text.location
     const name = req.body.text.name
     const material = req.body.text.material
     const amount = req.body.text.amount
@@ -119,13 +120,23 @@ exports.addWastePost =
         'url': photoUrl
       }
     })
-    console.log(newWaste)
+    // console.log('newWaste', newWaste)
 
-    newWaste.save(function (err) {
-      if (err) return handleError(err);
-      res.render('user/profile/:user', {
+    await newWaste.save(function (err, waste) {
+      console.log('new waste', waste)
+      console.log('err', err)
+
+      // if (err) {
+      //   (err) => {
+      //     console.log('err', err)
+      //     return handleError(err);
+      //   }
+      // }
+      res.render('user/profile/:user/waste/:wasteId', {
         title: 'Welcome Back',
-        currentUser: req.user
+        currentUser: req.user,
+        wasteOwner: username,
+        waste: waste
       })
     })
 

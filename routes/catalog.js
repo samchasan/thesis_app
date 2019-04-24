@@ -28,6 +28,10 @@ router.post('/', roaster.search);
 // about page
 router.get('/about', about.about);
 
+router.get('/data', roaster.data);
+// router.post('/data', roaster.abdataout);
+
+
 // project page
 router.get('/projects', project.projects);
 

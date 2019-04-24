@@ -41,6 +41,7 @@ class WasteInput extends React.Component {
       location: '',
       items: [],
       amount: '',
+      path: window.location.pathname,
       frequency: {
         category:'',
         moment: ''
@@ -48,7 +49,15 @@ class WasteInput extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const user = this.state.path.replace('/catalog/user/profile/', '')
+console.log(user)
+  }
+
   async postWaste() {
+    const trimFront = this.state.path.replace('/catalog/user/profile/', '')
+    const user = trimFront.replace('/addWaste', '')
+
     event.preventDefault();
 
     await this.setState({
@@ -81,12 +90,14 @@ class WasteInput extends React.Component {
       });
     })
     .then(function (response) {
+          window.location = `../${user}`
           console.log(response)
-          window.location = 'profile'
-  })
+        })
     .catch ( (err) => {
       alert(err)
     })
+    console.log(user)
+
   }
 
   async addPhoto(event) {

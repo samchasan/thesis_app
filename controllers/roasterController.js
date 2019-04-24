@@ -96,7 +96,7 @@ exports.search = (req, res, next) => {
   }
   // Roaster.deleteMany({ 'userID': uniqueID }, (err, roaster) => { })
 
-  console.log('in search', req.body)
+  // console.log('in search', req.body)
 
   dataArray = []
   setTimeout(() => {
@@ -107,16 +107,16 @@ exports.search = (req, res, next) => {
     })
   }, timeout)
 
-  let inputContent = req.body.textField;
-  // console.log(inputContent);
+  let inputContent = req.body.searchInput;
+  console.log('inputContent', inputContent);
   const searchRequest = {
     term: 'Coffee Roasters',
     location: inputContent,
     limit: 15
   };
-  console.log('yelp token', yelpToken)
+  // console.log('yelp token', yelpToken)
   const client = yelp.client(yelpToken);
-  console.log('client', client)
+  // console.log('client', client)
   let result = {};
   let results = [];
 

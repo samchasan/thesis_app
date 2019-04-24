@@ -11,7 +11,7 @@
     "start-client": "parcel serve client/*.js*",
     "build-client": "parcel build client/*.js*",
     "devstart": "nodemon ./bin/www",
-    "heroku-postbuild": "npm run build-client" 
+    "heroku-postbuild": "npm run build-client"
   },
   "dependencies": {
     "@babel/cli": "^7.1.0",
@@ -27,6 +27,7 @@
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",
+    "call-me-maybe": "^1.0.1",
     "cloudinary-react": "^1.1.0",
     "compression": "^1.7.3",
     "concurrently": "^4.1.0",

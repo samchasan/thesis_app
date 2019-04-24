@@ -20,8 +20,8 @@ class Search extends React.Component {
       }
     })
     .then(function (response) {
+      window.location = '/'
       console.log('search response', response)
-      // window.location = '/'
       
     }).catch ( function (err) {
         alert(err)
