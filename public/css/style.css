@@ -42,6 +42,10 @@ body {
   padding: 10px
 }
 
+.subtitle.is-5{
+  margin: -20px 0px 5px
+}
+
 #addButtons{
   position: relative; 
   display: inline-block;
@@ -201,9 +205,30 @@ body {
   margin-left: 10px
 }
 
+#uploadProjectBlock input {
+  font-size: 0.7rem;
+  /* font-style: unset; */
+  font-weight: 700;
+}
 
 
-#uploadWasteBlock input {
+#uploadProjectBlock label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  /* width: 700px; */
+}
+
+#uploadProjectBlock label p {
+  font-size: 10px;
+  color: gray;
+  font-weight: 400;
+  width: 350px;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px
+}
+
+#uploadProjectBlock input {
   font-size: 0.7rem;
   /* font-style: unset; */
   font-weight: 700;

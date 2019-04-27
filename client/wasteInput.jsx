@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactS3 from 'react-s3';
 import axios from 'axios';
-import DOMPurify from 'dompurify'
 
 // import {aws} from './keys'
 const akid = process.env.AWSAccessKeyId
@@ -11,8 +10,6 @@ const times = ['12:00 am', '3:00 am', '6:00 am', '9:00 am', '12:00 pm', '3:00 pm
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const daysOfMonth = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'react-bootstrap';
 
 
 const config = {

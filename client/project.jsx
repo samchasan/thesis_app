@@ -23,6 +23,7 @@ class Project extends React.Component {
     this.postProject = this.postProject.bind(this)
     this.editProject = this.editProject.bind(this)
     this.stopEditing = this.stopEditing.bind(this)
+    this.delete = this.delete.bind(this)
     this.uploadPhoto = this.uploadPhoto.bind(this)
     this.setName = this.setName.bind(this)
     this.setMaterials = this.setMaterials.bind(this)
@@ -58,6 +59,7 @@ class Project extends React.Component {
 
   componentDidMount() {
     let currentComponent = this;
+    console.log(currentComponent.state)
 
     console.log('project js mounted')
     const url = `${this.state.path}/singleProjectJSON`
@@ -94,6 +96,7 @@ class Project extends React.Component {
       console.log(error);
     })
   }
+
 
   async postProject() {
     let currentComponent = this;
@@ -196,6 +199,22 @@ class Project extends React.Component {
     console.log(this.state.description)
   }
 
+  delete(){
+
+    console.log('deleting')
+
+    axios.post(`${this.state.path}/deleteProject`)
+    .then((res) => {     
+      console.log('res', res)
+      window.location = `../${this.state.project.username}`
+    })
+    .catch((err) => {
+      console.log(err);
+      window.location = `../${this.state.project.username}`
+    })  
+    
+  }
+
 
   render() {
     let indicatorText;
@@ -238,7 +257,6 @@ class Project extends React.Component {
       if(this.state.project.description){ 
         return (
           <div>
-          Description: <br></br>
           <p> {project.description} </p>        
           </div>
           )
@@ -252,6 +270,19 @@ class Project extends React.Component {
       }
     }
 
+    const deleteButton = () => {
+      if(this.state.isOwner === true){
+      return (
+        <button onClick={this.delete} class='button is-small is-danger'>
+        <span class="icon is-small">
+        <i class="fas fa-trash-alt">
+          </i>
+          </span>
+      </button>
+      )
+      }
+    }
+
 
     const staticView = () => { 
       return (
@@ -261,15 +292,19 @@ class Project extends React.Component {
                   <h2> {project.title}</h2>
               <p>{`Made with ${project.materials}`}</p>
               <p>{`Found ${insertText(project.location)} ${project.location}`}</p>
-              <p> By&nbsp; <a href={project.username}> {project.username} </a> </p>
-              <div className='column is-one-quarter' id='editControls'> {editButton()}</div>
+              <p> By&nbsp; <a href={`../${project.username}`}> {project.username} </a> </p>
+              <div className='columns'>
+                <div className='column is-two-quarters' id='editControls'> {editButton()}</div>
+                <div className='columns is-one-quarter' />
+                <div className='column is-one-quarter' id='deleteButton'>{deleteButton()}</div>
+              </div>
+              <div id='projectDescription'>
+                {checkDescription()}
+              </div>
             </div>
             <div className='column is-three-quarters' id='projectImage'>
               <img src={project.photoURL}></img>
             </div>
-          </div>
-          <div id='projectDescription'>
-             {checkDescription()}
           </div>
         </div>
     )}
@@ -299,12 +334,26 @@ class Project extends React.Component {
                 <label>
                   {indicatorText}
                   <div id='addPhotoInput'>
-                  <input type='file' name='file' onChange={this.uploadPhoto} />
+                    <input type='file' name='file' onChange={this.uploadPhoto} />
                   </div>
                 </label>
-                  <a type='button' class="button is-primary" onClick={this.postProject} >Update Project</a>
-                  <a type='button' class="button is-small is-danger" onClick={this.stopEditing}>Cancel</a>
+                 
 
+                <div className='columns'>
+                  <div className='column is-two-quarters' >
+                      <a type='button' class='button is-medium is-primary' 
+                      onClick={this.postProject}> Update Project
+                      </a>
+                  </div>
+                  <div className='columns is-one-quarter'> 
+                      <a type='button' class="button is-small is-danger" 
+                      onClick={this.stopEditing}> Cancel 
+                      </a>
+                  </div>
+                  <div className='column is-one-quarter' id='deleteButton'>
+                    {deleteButton()}
+                  </div>
+                </div>
               </form>
             </div>
             <div className='column is-three-quarters' id='projectImage'>

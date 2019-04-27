@@ -88,9 +88,7 @@ exports.addProjectPost =
       title: 'Welcome Back',
       currentUser: req.user
     })
-
   }
-
 
 exports.addWastePost =
   async (req, res) => {
@@ -178,20 +176,6 @@ exports.projectJSON =
     })
   }
 
-// exports.singleProjectJSON =
-// (req, res, next) => {
-//   const project = req.params.user
-//   console.log(user)
-
-//   Project.findById({ username: user }).exec((err, projects) => {
-//     if (err) return next(err);
-//     if (projects) {
-//       // console.log('projects found: ' + projects)
-//       res.json({ projects })
-//     }
-//   })
-// }
-
 exports.userJSON =
   (req, res, next) => {
     const user = req.params.user
@@ -219,25 +203,23 @@ exports.wasteJSON =
       if (waste) {
         // const wasteparsed = JSON.stringify(waste)
         // console.log('photo found' + photoparsed)
-        res.json({ waste })
+        res.json({
+          waste: waste,
+          currentUser: req.user
+        })
       }
     })
   }
 
 exports.singleProjectJSON =
   (req, res) => {
-
     const projectId = req.params.projectId
-    // console.log('params', req.params)
-    // const username = req.params.user
-
     Project.findById(projectId, (err, project) => {
       if (err) {
         console.log('project not found in view project')
         res.render(`:user`, { title: 'Error, try again' })
       } else {
         console.log('project found', project)
-        // res.render(`user/profile/${user.username}/${projectId}`, {
         res.json({
           project: project,
           currentUser: req.user
@@ -247,11 +229,31 @@ exports.singleProjectJSON =
   }
 
 
+exports.singleWasteJSON =
+  (req, res) => {
+    const wasteId = req.params.waste
+    console.log(wasteId)
+
+    Waste.findById(wasteId, (err, waste) => {
+      if (err) {
+        console.log('waste not found in view waste')
+        res.render(`:user`, { title: 'Error, try again' })
+      } else {
+        console.log('waste found in singleWasteJSON', waste)
+        res.json({
+          waste: waste,
+          currentUser: req.user
+        })
+      }
+    })
+  }
+
+
+
+
 
 exports.viewWaste =
   (req, res) => {
-    // const user = req.user
-    // console.log('view waste user', user)
 
     const username = req.params.user
     console.log('username', username)
@@ -264,7 +266,7 @@ exports.viewWaste =
         console.log('waste not found in view waste')
         res.render(`:user`, { title: 'Error, try again' })
       } else {
-        console.log('waste found', waste)
+        console.log('waste found view waste', waste)
         // res.render(`user/profile/${user.username}/${wasteId}`, {
         res.render(`user/profile/user/waste/:wasteId`, {
           title: 'Waste',
@@ -309,11 +311,41 @@ exports.viewProject = (req, res) => {
     // project: project,
     currentUser: req.user
   })
+}
+
+
+exports.deleteProject = (req, res) => {
+
+  const project = req.params.project
+  console.log('deleting project Id:', project)
+
+  Project.deleteOne({ _id: project }, function (err) {
+    if (err) console.log(err);
+
+    res.render(`user/profile/:user`, {
+      currentUser: req.user
+    })
+  })
+
+}
+exports.deleteWaste = (req, res) => {
+
+  const waste = req.params.waste
+  console.log('deleting project Id:', waste)
+
+  Waste.deleteOne({ _id: waste }, function (err) {
+    if (err) console.log(err);
+
+    res.render(`user/profile/:user`, {
+      currentUser: req.user
+    })
+  })
 
 }
 
+
 exports.updateProject = async (req, res) => {
-  let project, data, photoName, photoURL, name, materials, location
+  let project, data, photoName, photoURL, name, materials, location, description
   project = req.params.project
   data = req.body
   console.log('in update project', project, data)
@@ -397,6 +429,105 @@ exports.updateProject = async (req, res) => {
 }
 
 
+
+exports.updateWaste = async (req, res) => {
+  let waste, data, photoName, photoURL, title, material, location, description
+  waste = req.params.waste
+  data = req.body
+  console.log('in update waste, waste:', waste, 'data:', data)
+  await getData(data)
+
+  function getData(data) {
+    if (data.photo) {
+      photoName = data.photo.key.toString()
+      photoURL = data.photo.location.toString()
+      const photo = {
+        'key': photoName,
+        'url': photoURL
+      }
+      updateWaste('photo', photo)
+    }
+    if (data.text.title) {
+      title = data.text.title
+      console.log('updating title', title)
+      updateWaste('title', title)
+    }
+    if (data.text.material) {
+      material = data.text.material
+      console.log('updating material', material)
+      updateWaste('material', material)
+    }
+    if (data.text.frequency) {
+      frequency = data.text.frequency
+      console.log('updating frequency', frequency)
+      updateWaste('frequency', frequency)
+    }
+    if (data.text.location) {
+      location = data.text.location
+      updateWaste('location', location)
+    }
+    if (data.text.description) {
+      description = data.text.description
+      updateWaste('description', description)
+    }
+  }
+
+  function updateWaste(property, data) {
+    switch (property) {
+      case 'photo':
+        Waste.findOneAndUpdate({ _id: waste }, {
+          'photo': data
+        }, (err, waste) => {
+          if (err) { console.log(err) }
+          console.log('updating waste', waste)
+        })
+        break;
+      case 'title':
+        Waste.findOneAndUpdate({ _id: waste }, {
+          'title': data
+        }, (err, waste) => {
+          if (err) { console.log(err) }
+          console.log('updating waste', waste, 'in title with', data)
+        })
+        break;
+      case 'frequency':
+        Waste.findOneAndUpdate({ _id: waste }, {
+          'frequency': data
+        }, (err, waste) => {
+          if (err) { console.log(err) }
+          console.log('updating waste', waste, 'in frequency with', data)
+        })
+        break;
+      case 'material':
+        Waste.findOneAndUpdate({ _id: waste }, {
+          'material': data
+        }, (err, waste) => {
+          if (err) { console.log(err) }
+          console.log('updating waste', waste, 'in material with', data)
+        })
+        break;
+      case 'location':
+        Waste.findOneAndUpdate({ _id: waste }, {
+          'location': data
+        }, (err, waste) => {
+          if (err) { console.log(err) }
+          console.log('updating waste', waste)
+        })
+        break;
+      case 'description':
+        Waste.findOneAndUpdate({ _id: waste }, {
+          'description': data
+        }, (err, waste) => {
+          if (err) { console.log(err) }
+          console.log('updating waste', waste)
+        })
+        break;
+    }
+  }
+
+  res.redirect(req.get('referer'));
+
+}
 
 exports.addProjectGet = (req, res) => {
   const user = req.params.user

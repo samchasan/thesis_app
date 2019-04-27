@@ -7,25 +7,34 @@ class Waste extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this)
     this.state = {
       waste: [],
+      isOwner: false,
       wasteLoaded: false,
       path: window.location.pathname
+      
 
     }
   }
 
   componentDidMount() {
     
-    console.log('getting waste')
+    // console.log('getting waste')
     const user = this.state.path.replace('/catalog/user/profile/', '')
 
     axios.get(`${user}/wasteJSON`)
     .then((res) => {      
-      // console.log(res.data)
+      // console.log('res.data', res.data)
       res.data.waste.forEach((waste) => { 
       this.state.waste.push(waste)
-      // console.log(project)
+      if(res.data.currentUser){
+        const user = res.data.currentUser
+        // console.log('user found', user)
+        if (user._id === waste.userID){
+          this.setState({isOwner:true})
+          // console.log(this.state.isOwner)
+        }
+      }
     })
-      console.log(this.state.waste)
+      // console.log(this.state.waste)
       this.setState({
         wasteLoaded: true
       })
@@ -36,7 +45,27 @@ class Waste extends React.Component {
   }
 
   
+
+
+  
   render() {
+
+    console.log('in render' , this.state.isOwner)
+
+    const editButton = (waste) => {
+      if(this.state.isOwner === true){
+        console.log('making edit button')
+      return (
+        <a href={`${waste.username}/waste/${waste._id}`} 
+           class='button is-small is-link'>
+        <span class="icon is-small">
+        <i class="far fa-edit">
+            </i>
+          </span>
+      </a>
+      )
+      }
+    }
 
     const capitalize = (s) => {
       if (typeof s !== 'string') return ''
@@ -57,14 +86,24 @@ class Waste extends React.Component {
       } 
     }
 
+    const frequencyIndicator = (waste) => {
+      if(waste.frequency){
+        console.log('frequency indicator', waste)
+        return(
+          <p>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</p>
+        )
+      } 
+    }
+
     const waste = this.state.waste.map((waste,key)=>
       <div className='wasteThumbs'>
-      <img src={waste.photo.url} key={key} ></img>
-      <div className='wasteText'>
-      <h2><a href={`${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
-      <p>{`${waste.amount} lbs`}</p>
-      <p>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</p>
-      </div>
+        <img src={waste.photo.url} key={key} ></img>
+        <div className='wasteText'>
+          <h2><a href={`${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
+          <div>{editButton(waste)}</div>
+          <p>{`${waste.amount} lbs`}</p>
+            {frequencyIndicator(waste)}      
+        </div>
       </div>
     );
 

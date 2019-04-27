@@ -7,7 +7,7 @@ const Waste = new Schema({
   userID: { type: String },
   username: { type: String },
   title: { type: String },
-  material: { type: Array },
+  material: { type: String },
   location: { type: String },
   photo: {
     bucket: { type: String },
@@ -19,6 +19,7 @@ const Waste = new Schema({
     moment: ''
   },
   amount: { type: Number },
+  description: { type: String },
   homogenous: { type: Boolean },
   headline: { type: String }
 });
@@ -32,7 +33,7 @@ Waste
 Waste
   .virtual('details')
   .get(function () {
-    return `DETAILS: materials: ${this.materials}, complexity: ${this.complexity}, distance: ${this.expense}`;
+    return `DETAILS: material: ${this.material}, complexity: ${this.complexity}, distance: ${this.expense}`;
   });
 
 Waste
