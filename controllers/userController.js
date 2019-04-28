@@ -177,17 +177,57 @@ exports.projectJSON =
   }
 
 exports.userJSON =
-  (req, res, next) => {
+  async (req, res, next) => {
     const user = req.params.user
     console.log('IN USER JSON:', user)
+    let avatar, projects, waste
+
+    await Photo.findOne({ username: user }).exec((err, photo) => {
+      if (err) return next(err);
+      if (photo) {
+        const photoparsed = JSON.stringify(photo)
+        const av = JSON.parse(photoparsed)
+        // res.json(photoparsed)
+        avatar = av;
+      }
+    })
+
+    await Project.find({ username: user }).exec((err, projs) => {
+      if (err) return next(err);
+      if (projs) {
+        // console.log('projects found: ' + projects)
+        // res.json({ projects })
+        projects = projs
+      }
+    })
+
+    await Waste.find({ username: user }).exec((err, wastes) => {
+      if (err) return next(err);
+      if (wastes) {
+        // const wasteparsed = JSON.stringify(waste)
+        // console.log('photo found' + photoparsed)
+        // res.json({
+        //   waste: waste,
+        //   currentUser: req.user
+        // })
+        waste = wastes
+      }
+    })
 
     User.findOne({ username: user }).exec((err, user) => {
       if (err) return next(err);
       if (user) {
         console.log('user found ' + user)
-        res.json({ user })
+        res.json({
+          'user': user,
+          'avatar': avatar,
+          'projects': projects,
+          'waste': waste,
+          'currentUser': req.user
+        })
       }
     })
+
   }
 
 
@@ -313,6 +353,20 @@ exports.viewProject = (req, res) => {
   })
 }
 
+exports.deleteUser = (req, res) => {
+
+  const user = req.params.user
+  console.log('deleting user Id:', user)
+
+  User.deleteOne({ username: user }, function (err) {
+    if (err) console.log(err);
+
+    res.render(`../../`, {
+      currentUser: req.user
+    })
+  })
+
+}
 
 exports.deleteProject = (req, res) => {
 
@@ -342,6 +396,104 @@ exports.deleteWaste = (req, res) => {
   })
 
 }
+
+exports.updateUser =
+  async (req, res) => {
+
+    let user, data, photoName, photoURL, name, materials, location, description
+    user = req.params.user
+    data = req.body
+    console.log('in update user', user, data)
+    await getData(data)
+  
+    function getData(data) {
+      if (data.photo) {
+        photoName = data.photo.key.toString()
+        photoURL = data.photo.location.toString()
+        const photo = {
+          'key': photoName,
+          'url': photoURL
+        }
+        updateUser('photo', photo)
+      }
+      if (data.text.name) {
+        name = data.text.name
+        updateUser('name', name)
+      }
+      if (data.text.email) {
+        email = data.text.email
+        updateUser('email', email)
+      }
+      if (data.text.phone) {
+        phone = data.text.phone
+        updateUser('phone', phone)
+      }
+      if (data.text.location) {
+        address = data.text.location.address
+        updateUser('location', address)
+      }
+      if (data.text.description) {
+        description = data.text.description
+        updateUser('description', description)
+      }
+    }
+  
+
+    function updateUser(property, data) {
+      switch (property) {
+        case 'photo':
+          Photo.findOneAndUpdate({ _id: user }, {
+            photo: data
+          }, (err, user) => {
+            if (err) { console.log(err) }
+            console.log('updating user', user)
+          })
+          break;
+        case 'name':
+        User.findOneAndUpdate({ _id: user }, {
+            name: data
+          }, (err, user) => {
+            if (err) { console.log(err) }
+            console.log('updating user', user)
+          })
+          break;
+        case 'email':
+        User.findOneAndUpdate({ _id: user }, {
+            email: data
+          }, (err, user) => {
+            if (err) { console.log(err) }
+            console.log('updating user', user)
+          })
+          break;
+        case 'phone':
+        User.findOneAndUpdate({ _id: user }, {
+            phone: data
+          }, (err, user) => {
+            if (err) { console.log(err) }
+            console.log('updating user', user)
+          })
+          break;  
+        case 'location':
+        User.findOneAndUpdate({ _id: user }, { 
+            location: {address: data}
+          }, (err, user) => {
+            if (err) { console.log(err) }
+            console.log('updating user', user)
+          })
+          break;
+        case 'description':
+        User.findOneAndUpdate({ _id: user }, {
+            description : data
+          }, (err, user) => {
+            if (err) { console.log(err) }
+            console.log('updating user', user)
+          })
+          break;
+      }
+    }
+    res.redirect(req.get('referer'));
+
+  }
 
 
 exports.updateProject = async (req, res) => {
@@ -423,7 +575,6 @@ exports.updateProject = async (req, res) => {
         break;
     }
   }
-
   res.redirect(req.get('referer'));
 
 }
@@ -560,7 +711,10 @@ exports.loginPost = (req, res) => {
       res.render('login', { title: 'Error, try again' })
     } else {
       console.log('found user in login post')
-      res.render('user/profile/:user')
+      res.render('user/profile/:user', {
+        currentUser: req.user,
+        user: user
+      })
     }
   })
 }
@@ -568,7 +722,7 @@ exports.loginPost = (req, res) => {
 exports.registerGet = (req, res) => {
   // console.log(req.body)
   res.render('register', {
-    title: 'Create User',
+    title: 'Sign Up',
     currentUser: req.user
   })
 }

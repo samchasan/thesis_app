@@ -56,6 +56,9 @@ router.get('/logout', user.logout);
 
 // user profile page
 router.get('/user/profile/:user', user.profileGet);
+router.post('/user/profile/:user', user.updateUser);
+router.post('/user/profile/:user/deleteUser', user.deleteUser);
+
 
 // user make and upload avatar
 // router.post('/user/makeAvatar', upload.single('file'), user.makeAvatar);

@@ -30,8 +30,20 @@ body {
   display: inline-block;
 }
 
+#editButton{
+  position: relative; 
+  display: inline-block;
+  margin: 5px;
+  float: right;
+}
+
+#editButtons{
+  position: absolute;
+  right: 20px;
+}
+
 #userInfo{
-  width: 50%;
+  width: 150px;
   padding-top: 2em;
   padding-left: 10px;
   display: inline-block;
@@ -236,6 +248,10 @@ body {
 
 ::placeholder{
   color: #3273dc;
+}
+
+#updateSubmitButtons{
+  width: 250px
 }
 
 

@@ -10,11 +10,18 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  phone: {type: String},
+  description: {type: String},
   username: {
     type: String,
     unique: true,
     required: true,
     trim: true
+  },
+  location: {
+    address: {type: String},
+    coordinates: {type: Object},
+    hours: {type: Object}
   },
   password: {
     type: String,
@@ -22,7 +29,8 @@ const UserSchema = new mongoose.Schema({
   },
   salt: String,
   hash: String,
-  isAdmin: {type: Boolean, default: false}
+  isAdmin: {type: Boolean, default: false},
+  isBusiness:{type: Boolean, default: false, required: true,},
 });
 
 UserSchema.pre('save', function (next) {

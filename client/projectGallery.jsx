@@ -15,15 +15,15 @@ class Projects extends React.Component {
   }
 
   componentDidMount() {
-    console.log('getting projects')
+    // console.log('getting projects')
     const user = this.state.path.replace('/catalog/user/profile/', '')
-    axios.get(`${user}/projectJSON`)
+    axios.get(`${user}/userJSON`)
     .then((res) => {      
       res.data.projects.forEach((project) => { 
       this.state.projects.push(project)
       // console.log(project)
     })
-      console.log(this.state.projects)
+      // console.log(this.state.projects)
       this.setState({
         projectsLoaded: true
       })

@@ -2,7 +2,11 @@ extends ../../layout
 
 block content
   
-  include userheader
+  div#userJSON
+    script(src='../../../js/userJSON.js')
+
+  div#profile
+    script(src='../../../js/profile.js')    
 
     h2 Projects:
     div.columns

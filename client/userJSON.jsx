@@ -13,10 +13,10 @@ class UserJSON extends React.Component {
   componentDidMount() {
     // console.log(this.state.path)
     const user = this.state.path.replace('/catalog/user/profile/', '')
-    console.log(user)
-    console.log('posting user')
+    // console.log(user)
+    // console.log('posting user')
     axios.post(`${user}/userJSON`)
-    console.log('user posted')
+    console.log('user posted', user)
   }
 
   render(){

@@ -10,10 +10,12 @@ class Register extends React.Component {
     this.setUsername = this.setUsername.bind(this)
     this.setEmail = this.setEmail.bind(this)
     this.setPassword = this.setPassword.bind(this)
+    this.setBusinessYesNo = this.setBusinessYesNo.bind(this)
     this.state = {
       username: '',
       email:'',
-      password: '',
+      isBusiness: false,
+      password: ''
     }
   }
 
@@ -66,28 +68,46 @@ class Register extends React.Component {
     this.setState({password: event.target.value});
     console.log(this.state.password)
   }
+  async setBusinessYesNo(event){
+    if(event.target.value === 'yes'){
+    await this.setState({isBusiness: true});
+    console.log(this.state.isBusiness)
+    }
+  }
+  
 
 
   render() {
 return(
+  <div>
+<h3 class="title is-3">Sign Up</h3>
       <form>
         <div className='form-group'>
-          <label htmlFor='username'> Username:</label>
-            <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='madDasher' name='username'> 
+            <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='username' name='username'> 
           </input>
         </div>
         <div className='form-group'>
-          <label htmlFor='email'> E-mail:</label>
-            <input id='email' onChange={this.setEmail} className='form-control' type='text' placeholder='doug@gail.com' name='email' >
+            <input id='email' onChange={this.setEmail} className='form-control' type='text' placeholder='e-mail' name='email' >
           </input>
         </div>
         <div className='form-group'>
-          <label htmlFor='password'> Password:</label>
-            <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='********' name='password' >
+            <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='password' name='password' >
           </input>
         </div>
-      <button className='btn.btn-primary' type='button' onClick={this.register} > Submit</button>
+        <div id='businessYesNo'>
+          <label htmlFor='businessYesNo'>
+            Are you a business?
+          </label>
+            <br></br>
+          <div id='radioInputs' >
+            <input type='radio' value='yes' onChange={this.setBusinessYesNo} name='businessYesNo' /> Yes <br></br>
+            <input type='radio' value='no' onChange={this.setBusinessYesNo} name='businessYesNo' /> No <br></br>
+          </div>
+        </div>
+
+      <button className='button is-primary' type='button' onClick={this.register} > Register </button>
       </form>
+      </div>
     )
   }
 }

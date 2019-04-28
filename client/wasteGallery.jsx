@@ -20,7 +20,7 @@ class Waste extends React.Component {
     // console.log('getting waste')
     const user = this.state.path.replace('/catalog/user/profile/', '')
 
-    axios.get(`${user}/wasteJSON`)
+    axios.get(`${user}/userJSON`)
     .then((res) => {      
       // console.log('res.data', res.data)
       res.data.waste.forEach((waste) => { 
@@ -50,16 +50,16 @@ class Waste extends React.Component {
   
   render() {
 
-    console.log('in render' , this.state.isOwner)
+    // console.log('in render' , this.state.isOwner)
 
     const editButton = (waste) => {
       if(this.state.isOwner === true){
         console.log('making edit button')
       return (
         <a href={`${waste.username}/waste/${waste._id}`} 
-           class='button is-small is-link'>
-        <span class="icon is-small">
-        <i class="far fa-edit">
+           className='button is-small is-link'>
+        <span className="icon is-small">
+        <i className="far fa-edit">
             </i>
           </span>
       </a>
@@ -88,7 +88,7 @@ class Waste extends React.Component {
 
     const frequencyIndicator = (waste) => {
       if(waste.frequency){
-        console.log('frequency indicator', waste)
+        // console.log('frequency indicator', waste)
         return(
           <p>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</p>
         )
