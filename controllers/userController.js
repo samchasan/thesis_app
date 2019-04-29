@@ -41,7 +41,7 @@ exports.search = async (req, res, next) => {
 
 const makeNewPhoto = (name, url, category, userID, username) => {
   console.log(url + ' / ' + category)
-  
+
   const newPhoto = new Photo({
     'name': name,
     'category': category,
@@ -73,9 +73,9 @@ exports.postAvatar = (req, res) => {
 }
 
 function isUserLoggedIn(user) {
-  if(user){
+  if (user) {
     return user.username
-  }else{
+  } else {
     return null
   }
 }
@@ -108,7 +108,7 @@ exports.addProjectPost =
 
     newProject.save()
 
-  const currentuser = isUserLoggedIn(req.user)
+    const currentuser = isUserLoggedIn(req.user)
 
     res.render('user/profile/:username', {
       title: 'Welcome Back',
@@ -149,7 +149,7 @@ exports.addWastePost =
       console.log('new waste', waste)
       console.log('err', err)
 
-    const currentuser = isUserLoggedIn(req.user)
+      const currentuser = isUserLoggedIn(req.user)
 
 
       res.render('user/profile/:user/waste/:wasteId', {
@@ -214,7 +214,7 @@ exports.userJSON =
     await Project.find({ username: user }).exec((err, projs) => {
       if (err) return next(err);
       if (projs) {
-       
+
         projects = projs
       }
     })
@@ -741,7 +741,7 @@ exports.addProjectGet = (req, res) => {
 exports.addWasteGet = (req, res) => {
 
   // const user = req.params.user
-const currentuser = isUserLoggedIn(req.user)
+  const currentuser = isUserLoggedIn(req.user)
 
   res.render('user/profile/user/addWaste', {
     title: 'Add Waste',
@@ -752,7 +752,7 @@ const currentuser = isUserLoggedIn(req.user)
 
 
 exports.loginGet = (req, res) => {
-  
+
   res.render('login', { title: 'Login' })
 }
 
@@ -802,12 +802,12 @@ exports.registerPost = (req, res) => {
       const currentuser = isUserLoggedIn(req.user)
 
       if (err) {
-        res.render('register', { 
+        res.render('register', {
           title: 'Error, try again',
           currentUser: currentuser
         })
       } else {
-        res.redirect('/')
+        res.render('user/profile/:user')
       }
     })
   }

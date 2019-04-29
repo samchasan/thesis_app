@@ -28,7 +28,7 @@ class Register extends React.Component {
     })
     .then(function (response) {
       console.log('axios register post response' , response)
-      window.location = `user/profile/${username}`
+      // window.location = `user/profile/${username}`
       
     })
     .catch ( function (err) {
@@ -47,7 +47,7 @@ class Register extends React.Component {
   .then(function (response) {
     console.log('axios login post response' , response)
     // go to user id location
-    window.location = '/'
+    window.location = `user/profile/${username}`
     
   })
   .catch ( function (err) {
