@@ -1,33 +1,47 @@
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const mongoose = require('mongoose');
+const axios = require('axios')
 const User = require('../models/users');
 const Project = require('../models/projects');
 const Waste = require('../models/waste');
-const Roaster = require('../models/roasters');
 const Photo = require('../models/photos');
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-const multer = require('multer');
+const googleGeocode = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+const googleToken = '&key=' + process.env.GoogleToken;
 const akid = process.env.AWSAccessKeyId
 const asak = process.env.AWSSecretKey
-const path = require('path');
-const fs = require('file-system')
-const AWS = require('aws-sdk');
-// const fs = require('fs');
-const fileType = require('file-type');
-const bluebird = require('bluebird');
-const multiparty = require('multiparty');
-const multerS3 = require('multer-s3')
-let newPhoto;
-const s3Bucket = 'chaffmap'
+let coordinates = {}
 
 
+async function getCoords(inputContent) {
+  const locationInput = googleGeocode + inputContent + googleToken
+  let coords
+  await axios.get(locationInput)
+    .then(async (res) => {
+      const data = await JSON.stringify(res.data)
+      const parsedData = await JSON.parse(data)
+      coords = parsedData.results[0].geometry.location
+      // console.log('coordinates', coordinates)
+    })
+    .catch((err) => {
+      console.log(err)
+      return err
+    })
 
+  return coords
+}
+
+exports.search = async (req, res, next) => {
+  let inputContent = req.body.searchInput;
+  console.log('inputContent', inputContent);
+  const coords = await getCoords(inputContent)
+  console.log('coords', coords)
+  res.redirect(req.get('referer'));
+}
 
 const makeNewPhoto = (name, url, category, userID, username) => {
   console.log(url + ' / ' + category)
+  
   const newPhoto = new Photo({
     'name': name,
     'category': category,
@@ -49,17 +63,27 @@ exports.postAvatar = (req, res) => {
   const username = req.user.username
 
   console.log(url + ' / ' + category)
+  const currentuser = isUserLoggedIn(req.user)
 
   makeNewPhoto(name, url, category, userID, username)
   res.render('user/profile/:username', {
     title: 'Cool new avatar',
-    currentUser: req.user,
+    currentUser: currentuser,
   });
 }
 
+function isUserLoggedIn(user) {
+  if(user){
+    return user.username
+  }else{
+    return null
+  }
+}
 
 exports.addProjectPost =
   (req, res) => {
+
+
     const photoName = req.body.photo.key.toString()
     const photoUrl = req.body.photo.location.toString()
     const category = 'project'
@@ -84,9 +108,11 @@ exports.addProjectPost =
 
     newProject.save()
 
+  const currentuser = isUserLoggedIn(req.user)
+
     res.render('user/profile/:username', {
       title: 'Welcome Back',
-      currentUser: req.user
+      currentUser: currentuser
     })
   }
 
@@ -118,33 +144,27 @@ exports.addWastePost =
         'url': photoUrl
       }
     })
-    // console.log('newWaste', newWaste)
 
     await newWaste.save(function (err, waste) {
       console.log('new waste', waste)
       console.log('err', err)
 
-      // if (err) {
-      //   (err) => {
-      //     console.log('err', err)
-      //     return handleError(err);
-      //   }
-      // }
+    const currentuser = isUserLoggedIn(req.user)
+
+
       res.render('user/profile/:user/waste/:wasteId', {
         title: 'Welcome Back',
-        currentUser: req.user,
+        currentUser: currentuser,
         wasteOwner: username,
         waste: waste
       })
     })
+  }
 
-    // return (next)
-
-    // res.render('user/profile/:user', {
-    //   title: 'Welcome Back',
-    //   currentUser: req.user
-    // })
-
+exports.currentUserJSON =
+  (res, req) => {
+    console.log(req.body)
+    // res.json(req.body)
   }
 
 exports.avatarJSON =
@@ -187,7 +207,6 @@ exports.userJSON =
       if (photo) {
         const photoparsed = JSON.stringify(photo)
         const av = JSON.parse(photoparsed)
-        // res.json(photoparsed)
         avatar = av;
       }
     })
@@ -195,8 +214,7 @@ exports.userJSON =
     await Project.find({ username: user }).exec((err, projs) => {
       if (err) return next(err);
       if (projs) {
-        // console.log('projects found: ' + projects)
-        // res.json({ projects })
+       
         projects = projs
       }
     })
@@ -204,15 +222,10 @@ exports.userJSON =
     await Waste.find({ username: user }).exec((err, wastes) => {
       if (err) return next(err);
       if (wastes) {
-        // const wasteparsed = JSON.stringify(waste)
-        // console.log('photo found' + photoparsed)
-        // res.json({
-        //   waste: waste,
-        //   currentUser: req.user
-        // })
         waste = wastes
       }
     })
+    const currentuser = isUserLoggedIn(req.user)
 
     User.findOne({ username: user }).exec((err, user) => {
       if (err) return next(err);
@@ -223,7 +236,8 @@ exports.userJSON =
           'avatar': avatar,
           'projects': projects,
           'waste': waste,
-          'currentUser': req.user
+          'currentUser': currentuser,
+          'activeUser': req.user
         })
       }
     })
@@ -243,9 +257,10 @@ exports.wasteJSON =
       if (waste) {
         // const wasteparsed = JSON.stringify(waste)
         // console.log('photo found' + photoparsed)
+        const currentuser = isUserLoggedIn(req.user)
         res.json({
           waste: waste,
-          currentUser: req.user
+          currentUser: currentuser
         })
       }
     })
@@ -260,6 +275,7 @@ exports.singleProjectJSON =
         res.render(`:user`, { title: 'Error, try again' })
       } else {
         console.log('project found', project)
+        // const currentuser = isUserLoggedIn(req.user)
         res.json({
           project: project,
           currentUser: req.user
@@ -280,6 +296,8 @@ exports.singleWasteJSON =
         res.render(`:user`, { title: 'Error, try again' })
       } else {
         console.log('waste found in singleWasteJSON', waste)
+        // const currentuser = isUserLoggedIn(req.user)
+
         res.json({
           waste: waste,
           currentUser: req.user
@@ -307,12 +325,12 @@ exports.viewWaste =
         res.render(`:user`, { title: 'Error, try again' })
       } else {
         console.log('waste found view waste', waste)
-        // res.render(`user/profile/${user.username}/${wasteId}`, {
+        const currentuser = isUserLoggedIn(req.user)
         res.render(`user/profile/user/waste/:wasteId`, {
           title: 'Waste',
           wasteOwner: username,
           waste: waste,
-          currentUser: req.user
+          currentUser: currentuser
         })
       }
     })
@@ -330,10 +348,13 @@ exports.profileGet =
         res.render('login', { title: 'Error, try again' })
       } else {
         console.log('user found in profile get')
+        const currentuser = isUserLoggedIn(req.user)
+
         res.render(`user/profile/:user`, {
           title: 'Profile:',
           user: user,
-          currentUser: req.user
+          activeUser: req.user,
+          currentUser: currentuser
         })
       }
     })
@@ -344,12 +365,12 @@ exports.viewProject = (req, res) => {
 
   const projectId = req.params.project
   console.log('Waste ID', projectId)
-  // const username = req.params.user
+  const currentuser = isUserLoggedIn(req.user)
   res.render(`user/profile/user/:projectId`, {
     title: 'project',
     // projectOwner: username,
     // project: project,
-    currentUser: req.user
+    currentUser: currentuser
   })
 }
 
@@ -360,9 +381,10 @@ exports.deleteUser = (req, res) => {
 
   User.deleteOne({ username: user }, function (err) {
     if (err) console.log(err);
+    const currentuser = isUserLoggedIn(req.user)
 
     res.render(`../../`, {
-      currentUser: req.user
+      currentUser: currentuser
     })
   })
 
@@ -375,9 +397,10 @@ exports.deleteProject = (req, res) => {
 
   Project.deleteOne({ _id: project }, function (err) {
     if (err) console.log(err);
+    const currentuser = isUserLoggedIn(req.user)
 
     res.render(`user/profile/:user`, {
-      currentUser: req.user
+      currentUser: currentuser
     })
   })
 
@@ -389,9 +412,10 @@ exports.deleteWaste = (req, res) => {
 
   Waste.deleteOne({ _id: waste }, function (err) {
     if (err) console.log(err);
+    const currentuser = isUserLoggedIn(req.user)
 
     res.render(`user/profile/:user`, {
-      currentUser: req.user
+      currentUser: currentuser
     })
   })
 
@@ -405,8 +429,8 @@ exports.updateUser =
     data = req.body
     console.log('in update user', user, data)
     await getData(data)
-  
-    function getData(data) {
+
+    async function getData(data) {
       if (data.photo) {
         photoName = data.photo.key.toString()
         photoURL = data.photo.location.toString()
@@ -429,15 +453,20 @@ exports.updateUser =
         updateUser('phone', phone)
       }
       if (data.text.location) {
-        address = data.text.location.address
-        updateUser('location', address)
+        addy = data.text.location.address
+        const coords = await getCoords(addy)
+        console.log('coords in update user', coords)
+        updateUser('location', {
+          address: addy,
+          coordinates: coords
+        })
       }
       if (data.text.description) {
         description = data.text.description
         updateUser('description', description)
       }
     }
-  
+
 
     function updateUser(property, data) {
       switch (property) {
@@ -450,7 +479,7 @@ exports.updateUser =
           })
           break;
         case 'name':
-        User.findOneAndUpdate({ _id: user }, {
+          User.findOneAndUpdate({ _id: user }, {
             name: data
           }, (err, user) => {
             if (err) { console.log(err) }
@@ -458,7 +487,7 @@ exports.updateUser =
           })
           break;
         case 'email':
-        User.findOneAndUpdate({ _id: user }, {
+          User.findOneAndUpdate({ _id: user }, {
             email: data
           }, (err, user) => {
             if (err) { console.log(err) }
@@ -466,24 +495,27 @@ exports.updateUser =
           })
           break;
         case 'phone':
-        User.findOneAndUpdate({ _id: user }, {
+          User.findOneAndUpdate({ _id: user }, {
             phone: data
           }, (err, user) => {
             if (err) { console.log(err) }
             console.log('updating user', user)
           })
-          break;  
+          break;
         case 'location':
-        User.findOneAndUpdate({ _id: user }, { 
-            location: {address: data}
+          User.findOneAndUpdate({ _id: user }, {
+            location: {
+              address: data.address,
+              coordinates: data.coordinates
+            }
           }, (err, user) => {
             if (err) { console.log(err) }
             console.log('updating user', user)
           })
           break;
         case 'description':
-        User.findOneAndUpdate({ _id: user }, {
-            description : data
+          User.findOneAndUpdate({ _id: user }, {
+            description: data
           }, (err, user) => {
             if (err) { console.log(err) }
             console.log('updating user', user)
@@ -503,7 +535,7 @@ exports.updateProject = async (req, res) => {
   console.log('in update project', project, data)
   await getData(data)
 
-  function getData(data) {
+  async function getData(data) {
     if (data.photo) {
       photoName = data.photo.key.toString()
       photoURL = data.photo.location.toString()
@@ -522,8 +554,13 @@ exports.updateProject = async (req, res) => {
       updateProject('materials', materials)
     }
     if (data.text.location) {
-      location = data.text.location
-      updateProject('location', location)
+      addy = data.text.location
+      const coords = await getCoords(addy)
+      console.log('coords in update user', coords)
+      updateProject('location', {
+        address: addy,
+        coordinates: coords
+      })
     }
     if (data.text.description) {
       description = data.text.description
@@ -559,7 +596,10 @@ exports.updateProject = async (req, res) => {
         break;
       case 'location':
         Project.findOneAndUpdate({ _id: project }, {
-          'location': data
+          location: {
+            address: data.address,
+            coordinates: data.coordinates
+          }
         }, (err, project) => {
           if (err) { console.log(err) }
           console.log('updating project', project)
@@ -588,7 +628,7 @@ exports.updateWaste = async (req, res) => {
   console.log('in update waste, waste:', waste, 'data:', data)
   await getData(data)
 
-  function getData(data) {
+  async function getData(data) {
     if (data.photo) {
       photoName = data.photo.key.toString()
       photoURL = data.photo.location.toString()
@@ -614,8 +654,13 @@ exports.updateWaste = async (req, res) => {
       updateWaste('frequency', frequency)
     }
     if (data.text.location) {
-      location = data.text.location
-      updateWaste('location', location)
+      addy = data.text.location.address
+      const coords = await getCoords(addy)
+      console.log('coords in update user', coords)
+      updateWaste('location', {
+        address: addy,
+        coordinates: coords
+      })
     }
     if (data.text.description) {
       description = data.text.description
@@ -659,7 +704,10 @@ exports.updateWaste = async (req, res) => {
         break;
       case 'location':
         Waste.findOneAndUpdate({ _id: waste }, {
-          'location': data
+          location: {
+            address: data.address,
+            coordinates: data.coordinates
+          }
         }, (err, waste) => {
           if (err) { console.log(err) }
           console.log('updating waste', waste)
@@ -686,21 +734,25 @@ exports.addProjectGet = (req, res) => {
   res.render('user/profile/user/addProject', {
     title: 'Add a Project',
     user: user,
-    currentUser: req.user
+    currentUser: currentuser
   })
 }
 
 exports.addWasteGet = (req, res) => {
-  const user = req.params.user
+
+  // const user = req.params.user
+const currentuser = isUserLoggedIn(req.user)
+
   res.render('user/profile/user/addWaste', {
     title: 'Add Waste',
-    currentUser: req.user,
+    currentUser: currentuser,
     user: user
   })
 }
 
 
 exports.loginGet = (req, res) => {
+  
   res.render('login', { title: 'Login' })
 }
 
@@ -711,8 +763,10 @@ exports.loginPost = (req, res) => {
       res.render('login', { title: 'Error, try again' })
     } else {
       console.log('found user in login post')
+      const currentuser = isUserLoggedIn(req.user)
+
       res.render('user/profile/:user', {
-        currentUser: req.user,
+        currentUser: currentuser,
         user: user
       })
     }
@@ -721,9 +775,11 @@ exports.loginPost = (req, res) => {
 
 exports.registerGet = (req, res) => {
   // console.log(req.body)
+  const currentuser = isUserLoggedIn(req.user)
+
   res.render('register', {
     title: 'Sign Up',
-    currentUser: req.user
+    currentUser: currentuser
   })
 }
 
@@ -743,8 +799,13 @@ exports.registerPost = (req, res) => {
     console.log('new user: ' + newUser)
     newUser.save(function (err) {
       console.log('new user save callback', err)
+      const currentuser = isUserLoggedIn(req.user)
+
       if (err) {
-        res.render('register', { title: 'Error, try again' })
+        res.render('register', { 
+          title: 'Error, try again',
+          currentUser: currentuser
+        })
       } else {
         res.redirect('/')
       }

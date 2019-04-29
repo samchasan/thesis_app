@@ -4,40 +4,43 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Project = new Schema({
-  userID: {type: String},
-  username: {type: String},
-  title: {type: String},
-  materials: {type: Array},
-  location: {type: String},
-  photo: {
-    bucket: {type:String},
-    key: {type:String},
-    url: {type: String},
+  userID: { type: String },
+  username: { type: String },
+  title: { type: String },
+  materials: { type: Array },
+  location: {
+    address: { type: String },
+    coordinates: { type: Object }
   },
-  complexity: {type: String},
-  expense: {type: String},
-  tags: {type: Array},
-  headline: {type: String},
-  description: {type: String}
+  photo: {
+    bucket: { type: String },
+    key: { type: String },
+    url: { type: String },
+  },
+  complexity: { type: String },
+  expense: { type: String },
+  tags: { type: Array },
+  headline: { type: String },
+  description: { type: String }
 });
 
 Project
-.virtual('name')
-.get(function () {
-  return this.title;
-});
+  .virtual('name')
+  .get(function () {
+    return this.title;
+  });
 
 Project
-.virtual('details')
-.get(function () {
-  return `DETAILS: materials: ${this.materials}, complexity: ${this.complexity}, distance: ${this.expense}`;
-});
+  .virtual('details')
+  .get(function () {
+    return `DETAILS: materials: ${this.materials}, complexity: ${this.complexity}, distance: ${this.expense}`;
+  });
 
 Project
-.virtual('desc')
-.get(function () {
-  return this.description;
-});
+  .virtual('desc')
+  .get(function () {
+    return this.description;
+  });
 
 //Export model
 module.exports = mongoose.model('Projects', Project);

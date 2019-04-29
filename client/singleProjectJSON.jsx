@@ -11,10 +11,10 @@ class ProjectJSON extends React.Component {
   }
 
   componentDidMount() {
-    const user = this.state.path.replace('/catalog/user/profile/', '')
+    // const user = this.state.path.replace('/catalog/user/profile/', '')
 
     console.log('posting single project')
-    axios.post(`${user}/singleProjectJSON`)
+    axios.post('singleProjectJSON')
     console.log('single project posted')
   }
 

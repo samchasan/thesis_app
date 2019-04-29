@@ -8,7 +8,10 @@ const Waste = new Schema({
   username: { type: String },
   title: { type: String },
   material: { type: String },
-  location: { type: String },
+  location: {
+    address: { type: String },
+    coordinates: { type: Object }
+  },
   photo: {
     bucket: { type: String },
     key: { type: String },

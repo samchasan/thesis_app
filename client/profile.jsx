@@ -100,15 +100,18 @@ class Profile extends React.Component {
       const currentUser = res.data.user
       const avatar = res.data.avatar
       let avatarURL = ''
+      let isBusiness = false
+      let description = ''
+      let location = ''
+      let phone = ''
       console.log('got user', currentUser)
 
-        // if(currentUser.location.address){
-        //   console.log(currentUser.location)
-        //   currentComponent.setState({'user': {
-        //     'location': currentUser.location,
-        //  } }) }else{
-        //    console.log('no location')
-        //  }
+        if(currentUser.location){
+          console.log(currentUser.location)
+          location = currentUser.location.address
+           }else{
+           console.log('no location')
+         }
 
         if(avatar){
           console.log(avatar.url)
@@ -117,30 +120,38 @@ class Profile extends React.Component {
           console.log('no avatar')
         } 
 
-        // if(currentUser.description){
-        //   console.log(currentUser.description)
-        //   currentComponent.setState({'user': {
-        //     'description': currentUser.description
-        //   } }) }else{
-        //     console.log('no description')
-        //   }  
+        if(currentUser.description){
+          console.log(currentUser.description)
+            description = currentUser.description
+            }else{
+            console.log('no description')
+          }  
          
-        // if(currentUser.isBusiness){
-        //   console.log(currentUser.isBusiness)
-        //   currentComponent.setState({'user': {
-        //     'isBusiness': currentUser.isBusiness
-        //   } }) } else{
-        //     console.log('not a business')
-        //   }   
+        if(currentUser.isBusiness){
+          console.log(currentUser.isBusiness)
+            isBusiness = currentUser.isBusiness
+          } else{
+            console.log('not a business')
+          }   
+
+        if(currentUser.phone){
+          console.log(currentUser.phone)
+            phone = currentUser.phone
+          } else{
+            console.log('not a business')
+          }   
         
+      // debugger  
+          
       currentComponent.setState({'user': {
         'email': currentUser.email,
         'username': currentUser.username,
         'id': currentUser._id,
-        'description': currentUser.description,
-        'isBusiness': currentUser.isBusiness,
+        'description': description,
+        'isBusiness': isBusiness,
         'avatarURL': avatarURL,
-        'location': currentUser.location.address
+        'phone': phone,
+        'location': {'address': location}
       }})
 
       console.log('user asssigned', currentComponent.state.user)
@@ -151,11 +162,11 @@ class Profile extends React.Component {
         // const currentUser = res.data.currentUser
         // console.log('user loggin in', user)
 
-        console.log('id1',res.data.currentUser._id)
+        console.log('id1',res.data.activeUser._id)
         console.log('id2',currentComponent.state.user.id)
 
 
-        if (res.data.currentUser._id === currentComponent.state.user.id){
+        if (res.data.activeUser._id === currentComponent.state.user.id){
           currentComponent.setState({isOwner:true})
           console.log(currentComponent.state.isOwner)
 
@@ -212,7 +223,7 @@ class Profile extends React.Component {
     })
     }else if (!currentComponent.state.file){
       //console.log('no file, posting without photo')
-      debugger
+      // debugger
       const jsonse = JSON.stringify({'text': currentComponent.state});
       const blob = new Blob([jsonse], {type: "application/json"});
       axios.post(`${currentComponent.state.user.id}`, blob, {
@@ -369,15 +380,32 @@ class Profile extends React.Component {
       }}
     }
 
-    // const checkAddress = () =>  {
-    //   if(this.state.user.location.address){ 
-    //     return (
-    //       <div>
-    //       <p> {user.location.address} </p>        
-    //       </div>
-    //       )
-    //   }
-    // }
+    const checkAddress = () =>  {
+      if(this.state.user.location.address){ 
+        return (
+          <div>
+          <p> {user.location.address} </p>        
+          </div>
+          )
+      }
+    }
+    const checkContact = () =>  {
+      // debugger
+      if(this.state.user.phone){ 
+        return (
+          <div>
+            <p>{user.email}</p>
+            <p>{user.phone}</p>
+          </div>
+          )
+      }else{
+        return (
+          <div>
+            <p>{user.email}</p>
+          </div>
+          )
+      }
+    }
 
     const staticView = () => { 
       //console.log('staticView', user.avatarURL)
@@ -388,11 +416,19 @@ class Profile extends React.Component {
               <img src={user.avatarURL}></img>
             </div>
             <div className='column is-half' id='userInfo'>
-                <h2> {user.username}</h2>
-                <p>{user.email}</p>
-                {/* <div id='userAddress'>
-                  {checkAddress()}
-                </div>                 */}
+                <h4 id='usernameTitle' class="title is-4">{user.username}</h4>
+
+                <div id='userContactInfo'>
+                  <div id='userAddress'>
+                    {checkAddress()}
+                  </div>  
+                  <div id='userContact'>
+                    {checkContact()}
+                  </div>       
+                </div>                 
+          
+
+
                 <div id='userDescription'>
                   {checkDescription()}
                 </div>
@@ -414,23 +450,23 @@ class Profile extends React.Component {
               <form method='POST' encType='multipart/form-data'>
                 <label htmlFor='name'>
                   Username:
-                  <input type='text' placeholder={this.state.user.name} defaultValue={this.state.user.name} onChange={this.setName} name='name' />
+                  <input type='text' placeholder={this.state.user.name} onChange={this.setName} name='name' />
                 </label>
                 <label htmlFor='location'>
                   Location:
-                  <input type='text' placeholder={this.state.user.location} defaultValue={this.state.user.location} onChange={this.setLocation} name='location' />
+                  <input type='text' placeholder={this.state.user.location.address}  onChange={this.setLocation} name='location' />
                 </label>
                 <label htmlFor='email'>
                   E-mail:
-                  <input type='text' placeholder={this.state.user.email} defaultValue={this.state.user.email} onChange={this.setEmail} name='email' />
+                  <input type='text' placeholder={this.state.user.email}  onChange={this.setEmail} name='email' />
                 </label>
                 <label htmlFor='phone'>
                   Phone:
-                  <input type='text' placeholder={this.state.user.phone} defaultValue={this.state.user.phone} onChange={this.setPhone} name='phone' />
+                  <input type='text' placeholder={this.state.user.phone}  onChange={this.setPhone} name='phone' />
                 </label>
                 <label htmlFor='description'>
                   Description:
-                  <textarea rows="10" cols="19" placeholder={this.state.user.description} defaultValue={this.state.user.description} onChange={this.setDescription} name='description' />
+                  <textarea rows="10" cols="19" placeholder={this.state.user.description}  onChange={this.setDescription} name='description' />
                 </label>
                 <label>
                   {indicatorText}

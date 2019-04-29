@@ -23,7 +23,7 @@ const upload = multer({
 
 // GET/POST catalog home page.
 router.get('/', roaster.index);
-router.post('/', roaster.search);
+router.post('/', user.search);
 
 // about page
 router.get('/about', about.about);
@@ -31,6 +31,7 @@ router.get('/about', about.about);
 router.get('/data', roaster.data);
 // router.post('/data', roaster.abdataout);
 
+router.get('/currentUserJSON', user.currentUserJSON);
 
 // project page
 router.get('/projects', project.projects);
@@ -93,21 +94,15 @@ router.post('/user/profile/:user/waste/:waste/deleteWaste', user.deleteWaste)
 router.post('/user/profile/:user/waste/:waste', user.updateWaste)
 router.get('/user/profile/:user/waste/:waste', user.viewWaste)
 
-
-
 // user login page
 router.get('/login', user.loginGet);
 router.post('/login', passport.authenticate('local'), user.loginPost);
-
 
 // GET project page.
 router.get('/project/list', project.list);
 
 // GET project detail page.
 router.get('/project/list/:id', project.detail);
-
-// router.post('/', roaster.search);
-
 
 // GET/POST register a roaster
 router.get('/roaster/create', roaster.createGet);

@@ -27,12 +27,21 @@ exports.wastesJSON =
     })
   }
 
+function isUserLoggedIn(user) {
+  if(user){
+    return user.username
+  }else{
+    return null
+  }
+}
+
 exports.wastes =
   (req, res) => {
     const user = req.params.user
+    const currentuser = isUserLoggedIn(req.user)
     res.render('wastes', {
       title: 'waste',
-      currentUser: req.user
+      currentUser: currentuser
     })
   }
 

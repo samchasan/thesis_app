@@ -68,16 +68,42 @@ class Project extends React.Component {
       console.log('axios got url', response);
       const project = response.data.project
       console.log('got project', project)
+
+      let location = ''
+      let materials = ''
+      let description = ''
+
+      if(project.location){
+        console.log('project location', project.location)
+        location = project.location.address
+         }else{
+         console.log('no location')
+       }
+
+       if(project.materials){
+        console.log('project location', project.location)
+        materials = project.materials
+         }else{
+         console.log('no location')
+       }
+
+       if(project.description){
+        console.log('project location', project.description)
+        description = project.description
+         }else{
+         console.log('no location')
+       }
+
       currentComponent.setState({project: {
-        location: project.location,
-        materials: project.materials,
+        location: location,
+        materials: materials,
         photoURL: project.photo.url,
         title: project.title,
         key: project.photo.key,
         userID: project.userID,
         username: project.username,
         id: project._id,
-        description: project.description
+        description: description
       }})
       console.log(currentComponent.state.project)
 
@@ -291,7 +317,7 @@ class Project extends React.Component {
             <div className='column is-one-quarter' id='projectInfo'>
                   <h2> {project.title}</h2>
               <p>{`Made with ${project.materials}`}</p>
-              <p>{`Found ${insertText(project.location)} ${project.location}`}</p>
+              <p>{`Found ${insertText(project.location.address)} ${project.location.address}`}</p>
               <p> By&nbsp; <a href={`../${project.username}`}> {project.username} </a> </p>
               <div className='columns'>
                 <div className='column is-two-quarters' id='editControls'> {editButton()}</div>
@@ -325,7 +351,7 @@ class Project extends React.Component {
                 </label>
                 <label htmlFor='location'>
                   Found at:
-                  <input type='text' placeholder={this.state.project.location} defaultValue={this.state.project.location} onChange={this.setLocation} name='location' />
+                  <input type='text' placeholder={this.state.project.location.address} defaultValue={this.state.project.location.address} onChange={this.setLocation.address} name='location' />
                 </label>
                 <label htmlFor='description'>
                   Description:

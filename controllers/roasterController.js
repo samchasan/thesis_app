@@ -56,23 +56,19 @@ exports.data = (req, res, next) => {
 }
 
 exports.index = (req, res) => {
+
+  let user;
+
   if (req.user) {
-    user = req.user
+    user = req.user.username
   } else {
     user = null
   }
-  // if(passport.userLoggedIn){
   console.log(googleToken)
-  //   currentUser = user
-  // }else{
-  //   currentUser = null
-  // }
-  //
-  // console.log(currentUser)
+ 
   async.series({
     roaster_count: (callback) => {
       Roaster.countDocuments({ 'userID': uniqueID }, callback);
-      // console.log(callback)
     }
   }, (err, results) => {
     console.log(results)
@@ -121,6 +117,9 @@ exports.search = (req, res, next) => {
   let results = [];
 
   client.search(searchRequest).then(response => {
+    const resString = JSON.stringify(response)
+    const res = JSON.parse(resString)
+    console.log('response', res)
     const keys = Object.keys(response.jsonBody.businesses)
     console.log(keys)
     for (let i = 0; i < keys.length; i++) {

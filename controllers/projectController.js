@@ -27,11 +27,21 @@ exports.projectsJSON =
     })
   }
 
+
+function isUserLoggedIn(user) {
+  if(user){
+    return user.username
+  }else{
+    return null
+  }
+}
+
 exports.projects =
   (req, res) => {
+    const currentuser = isUserLoggedIn(req.user)
     res.render('projects', {
       title: 'Projects',
-      currentUser: req.user
+      currentUser: currentuser
     })
   }
 

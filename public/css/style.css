@@ -37,13 +37,42 @@ body {
   float: right;
 }
 
+#nav-bar a{
+margin: 2px;
+}
+
+#nav-bar img{
+  width: 50%;
+}
+
+.nav-bar-start{
+  /* max-width: 50%; */
+  position: relative; 
+  display: inline-block;
+}
+.nav-bar-end{
+  max-width: 30%;  
+  position: relative; 
+  /* display: inline-block; */
+  float: right;
+}
+
 #editButtons{
   position: absolute;
   right: 20px;
 }
 
+#userContactInfo p{
+  font-size: 12px;
+  font-weight: 400,
+}
+
+h4#usernameTitle.title.is-4{  
+  margin-bottom: 5px;
+}
+
 #userInfo{
-  width: 150px;
+  /* width: 150px; */
   padding-top: 2em;
   padding-left: 10px;
   display: inline-block;
