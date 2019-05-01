@@ -56,10 +56,10 @@ class Navbar extends React.Component {
     return(
       <div id='nav-bar'>
         <div class="nav-bar-start">
-            <a href='/catalog' class='button is-small is-inverted is-link'> Home </a>
-            <a href='/catalog/projects' class='button is-small is-inverted is-link'> Projects </a>
-            <a href='/catalog/wastes'class='button is-small is-inverted is-link'> Waste </a>
-            <a href='/catalog/about' class='button is-small is-inverted is-link'> About </a>
+            <a href='/catalog'> <img id='navLogo' alt-text='ChaffMap' src='img/logoWhite.png' /> </a>
+            <a href='/catalog/projects' class='button is-success is-inverted is-outlined'> Projects </a>
+            <a href='/catalog/wastes'class='button is-success is-inverted is-outlined'> Waste </a>
+            <a href='/catalog/about' class='button is-success  is-inverted is-outlined'> About </a>
         </div>
         <div class="nav-bar-end">
             {checkLoggedIn()}
