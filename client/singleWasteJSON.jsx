@@ -12,12 +12,8 @@ class WasteJSON extends React.Component {
 
   componentDidMount() {
     const path = this.state.path.replace('/catalog/user/profile/', '')
-
-
-
     console.log('posting single waste', path)
     axios.post(`../../${path}/singleWasteJSON`)
-    // console.log('single waste posted')
   }
 
   render(){

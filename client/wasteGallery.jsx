@@ -22,18 +22,30 @@ class Waste extends React.Component {
 
     axios.get(`${user}/userJSON`)
     .then((res) => {      
-      // console.log('res.data', res.data)
+      if(res.data.waste.length > 1){
       res.data.waste.forEach((waste) => { 
       this.state.waste.push(waste)
       if(res.data.currentUser){
         const user = res.data.currentUser
-        // console.log('user found', user)
         if (user._id === waste.userID){
           this.setState({isOwner:true})
-          // console.log(this.state.isOwner)
         }
       }
     })
+    }else{
+      this.setState({
+        waste: [res.data.waste[0]]
+      })
+      if(res.data.currentUser){
+        const user = res.data.currentUser
+        if (user._id === waste.userID){
+          this.setState({isOwner:true})
+        }
+      }
+    }
+    
+    
+    
       // console.log(this.state.waste)
       this.setState({
         wasteLoaded: true

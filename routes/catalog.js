@@ -23,7 +23,7 @@ const upload = multer({
 
 // GET/POST catalog home page.
 router.get('/', roaster.index);
-router.post('/', user.search);
+router.post('/', roaster.search);
 
 // about page
 router.get('/about', about.about);

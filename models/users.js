@@ -10,18 +10,23 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  phone: {type: String},
-  description: {type: String},
+  phone: { type: String },
+  description: { type: String },
   username: {
     type: String,
     unique: true,
     required: true,
     trim: true
   },
+  photo: {
+    bucket: { type: String },
+    key: { type: String },
+    location: { type: String },
+  },
   location: {
-    address: {type: String},
-    coordinates: {type: Object},
-    hours: {type: Object}
+    address: { type: String },
+    coordinates: { type: Object },
+    hours: { type: Object }
   },
   password: {
     type: String,
@@ -29,26 +34,26 @@ const UserSchema = new mongoose.Schema({
   },
   salt: String,
   hash: String,
-  isAdmin: {type: Boolean, default: false},
-  isBusiness:{type: Boolean, default: false, required: true,},
+  isAdmin: { type: Boolean, default: false },
+  isBusiness: { type: Boolean, default: false, required: true, },
 });
 
 UserSchema.pre('save', function (next) {
   const user = this;
-  bcrypt.genSalt(10, function (err, salt){
-  bcrypt.hash(user.password, 10, function (err, hash){
-    if (err) {
-      return next(err);
-    }
-    user.password = hash;
-    next();
+  bcrypt.genSalt(10, function (err, salt) {
+    bcrypt.hash(user.password, 10, function (err, hash) {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      next();
     });
   });
 });
 
 
 
-UserSchema.methods.compare = function (pw){
+UserSchema.methods.compare = function (pw) {
   return bcrypt.compareSync(pw, this.password)
 }
 

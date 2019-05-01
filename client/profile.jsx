@@ -72,6 +72,7 @@ class Profile extends React.Component {
       location: {},
       path: window.location.pathname,
       file:'',
+      url: 'img/blank-user-avatar.png',
       user: {
         location: {},
         username: '',
@@ -98,7 +99,7 @@ class Profile extends React.Component {
     .then(function (res) {
       // console.log('axios got url', res);
       const currentUser = res.data.user
-      const avatar = res.data.avatar
+      // const avatar = res.data.avatar
       let avatarURL = ''
       let isBusiness = false
       let description = ''
@@ -113,9 +114,9 @@ class Profile extends React.Component {
            console.log('no location')
          }
 
-        if(avatar){
-          console.log(avatar.url)
-          avatarURL = avatar.url
+        if(currentUser.photo){
+          console.log(currentUser.photo.location)
+          avatarURL = currentUser.photo.location
         }else{
           console.log('no avatar')
         } 
@@ -212,7 +213,14 @@ class Profile extends React.Component {
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      })
+      // const jsonsePhoto = JSON.stringify(photoMeta);
+      // const blobPhoto = new Blob([jsonsePhoto], {type: "application/json"});
+      // axios.post('postAvatar', blobPhoto, {
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
     })
     .then( () => {
       window.location = currentComponent.state.user.username
@@ -413,7 +421,7 @@ class Profile extends React.Component {
         <div id='staticView'>
           <div className='columns' id='userHeader'>
             <div className='column is-one-quarter' id='avatar'>
-              <img src={user.avatarURL}></img>
+              <img src={this.state.user.avatarURL}></img>
             </div>
             <div className='column is-half' id='userInfo'>
                 <h4 id='usernameTitle' class="title is-4">{user.username}</h4>

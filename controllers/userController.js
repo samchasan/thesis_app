@@ -66,6 +66,7 @@ exports.postAvatar = (req, res) => {
   const currentuser = isUserLoggedIn(req.user)
 
   makeNewPhoto(name, url, category, userID, username)
+
   res.render('user/profile/:username', {
     title: 'Cool new avatar',
     currentUser: currentuser,
@@ -126,6 +127,9 @@ exports.addWastePost =
     const username = req.user.username
     const frequency = req.body.text.frequency
     const location = req.body.text.location
+
+    console.log(location)
+
     const name = req.body.text.name
     const material = req.body.text.material
     const amount = req.body.text.amount
@@ -202,14 +206,14 @@ exports.userJSON =
     console.log('IN USER JSON:', user)
     let avatar, projects, waste
 
-    await Photo.findOne({ username: user }).exec((err, photo) => {
-      if (err) return next(err);
-      if (photo) {
-        const photoparsed = JSON.stringify(photo)
-        const av = JSON.parse(photoparsed)
-        avatar = av;
-      }
-    })
+    // await Photo.findOne({ username: user }).exec((err, photo) => {
+    //   if (err) return next(err);
+    //   if (photo) {
+    //     const photoparsed = JSON.stringify(photo)
+    //     const av = JSON.parse(photoparsed)
+    //     avatar = av;
+    //   }
+    // })
 
     await Project.find({ username: user }).exec((err, projs) => {
       if (err) return next(err);
@@ -233,7 +237,7 @@ exports.userJSON =
         console.log('user found ' + user)
         res.json({
           'user': user,
-          'avatar': avatar,
+          // 'photo': photo,
           'projects': projects,
           'waste': waste,
           'currentUser': currentuser,
@@ -434,9 +438,12 @@ exports.updateUser =
       if (data.photo) {
         photoName = data.photo.key.toString()
         photoURL = data.photo.location.toString()
+        photobucket = data.photo.bucket.toString()
+
         const photo = {
+          'bucket': photobucket,
           'key': photoName,
-          'url': photoURL
+          'location': photoURL
         }
         updateUser('photo', photo)
       }
@@ -471,7 +478,7 @@ exports.updateUser =
     function updateUser(property, data) {
       switch (property) {
         case 'photo':
-          Photo.findOneAndUpdate({ _id: user }, {
+          User.findOneAndUpdate({ _id: user }, {
             photo: data
           }, (err, user) => {
             if (err) { console.log(err) }
@@ -654,11 +661,11 @@ exports.updateWaste = async (req, res) => {
       updateWaste('frequency', frequency)
     }
     if (data.text.location) {
-      addy = data.text.location.address
-      const coords = await getCoords(addy)
+      address = data.text.location
+      const coords = await getCoords(address)
       console.log('coords in update user', coords)
       updateWaste('location', {
-        address: addy,
+        address: address,
         coordinates: coords
       })
     }
@@ -730,6 +737,8 @@ exports.updateWaste = async (req, res) => {
 
 exports.addProjectGet = (req, res) => {
   const user = req.params.user
+
+  const currentuser = isUserLoggedIn(req.user)
 
   res.render('user/profile/user/addProject', {
     title: 'Add a Project',

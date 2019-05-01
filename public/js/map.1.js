@@ -1,25 +1,29 @@
 let dataPoints = [];
 let ibArray = [];
 let center = { lng: -73.97332, lat: 40.685787 };
-let items = [];
+let roasters = [];
 let markerList = [];
 
 makeMap('googleMap', () => {
   console.log('making map')
 })
 
-async function doStuff() {
+async function mapMadeAddData() {
   console.log('doing stuff')
-  const data = await getSomeAsyncData('catalog/projectsJSON')
-  console.log('projects', data.projects)
-  await addMarkers(data.projects, () => {
+  const projects = await getSomeAsyncData('/projectsJSON')
+  console.log(projects)
+  await addMarkers(roasters, () => {
   })
-  const data2 = await getSomeAsyncData('catalog/wastesJSON')
-  console.log('waste', data2.wastes)
-  await addMarkers(data2.wastes, () => {
-  })
+  // .catch((e) => {
+  //   console.log(e)
+  // });
 }
 
+
+async function getSomeAsyncData(value) {
+  const result = await fetchTheData(value);
+  return result;
+}
 
 function fetchTheData(someValue) {
   return new Promise((resolve, reject) => {
@@ -29,9 +33,51 @@ function fetchTheData(someValue) {
   });
 }
 
-async function getSomeAsyncData(value) {
-  const result = await fetchTheData(value);
-  return result;
+
+
+function getData(path, callback) {
+  console.log('getting data')
+
+  const jSON = $.getJSON(path, (roasterList) => {
+    dataPoints = roasterList.data
+    if (dataPoints) {
+      dataPoints.forEach(dataPoint => {
+        // console.log(dataPoint)
+        let lat = dataPoint.coordinates.lat
+        let long = dataPoint.coordinates.lng
+
+        // console.log(dataPoint.id)
+
+        let roaster = {
+          id: dataPoint.id,
+          name: `${dataPoint.name}`,
+          address: `${dataPoint.address}`,
+          coordinates: `latitude: ${lat}, longitude: ${long}`,
+          phone: `${dataPoint.phone}`,
+          distance: `${dataPoint.distance}`,
+          coordinatesObj: dataPoint.coordinates
+        }
+        // const coords = dataPoint.coordinates;
+        roasters.push(roaster)
+        // console.log(roaster)
+      })
+
+
+    } else {
+      console.log('waiting for input')
+    }
+  })
+    .fail(() => {
+      console.log("error");
+    })
+    .always(() => {
+      console.log("got data");
+      // newCoords(roasters)
+    });
+  jSON.done((roasters) => {
+    callback(roasters)
+
+  });
 }
 
 
@@ -49,112 +95,52 @@ function setMap(coords) {
 }
 
 
-
-function getData(path, callback) {
-  console.log('getting data')
-
-  const jSON = $.getJSON(path, (itemList) => {
-    dataPoints = itemList.data
-    if (dataPoints) {
-      dataPoints.forEach(dataPoint => {
-        // console.log(dataPoint)
-        let lat = dataPoint.coordinates.lat
-        let long = dataPoint.coordinates.lng
-
-        // console.log(dataPoint.id)
-
-        let item = {
-          id: dataPoint.id,
-          name: `${dataPoint.name}`,
-          address: `${dataPoint.address}`,
-          coordinates: `latitude: ${lat}, longitude: ${long}`,
-          phone: `${dataPoint.phone}`,
-          distance: `${dataPoint.distance}`,
-          coordinatesObj: dataPoint.coordinates
-        }
-        // const coords = dataPoint.coordinates;
-        items.push(item)
-        // console.log(item)
-      })
-
-
-    } else {
-      console.log('waiting for input')
-    }
-  })
-    .fail(() => {
-      console.log("error");
-    })
-    .always(() => {
-      console.log("got data");
-      // newCoords(items)
-    });
-  jSON.done((items) => {
-    callback(items)
-
-  });
-}
-
-let mapNotSet = true;
-
-function addMarkers(data, callback) {
-  console.log('adding', data, 'markers')
-  if (data.length === 0) {
+function addMarkers(roasters, callback) {
+  console.log('in addMarkers')
+  console.log(roasters.data.length)
+  if (roasters.data.length === 0) {
     center = { lng: -73.97332, lat: 40.685787 };
     setMap(center)
   } else {
-    data.forEach(item => {
-      console.log('item:', item)
-      // console.log(item.)
+    center = roasters.data[0].coordinates
+    console.log(center)
+    setMap(center)
+    roasters.data.forEach(roaster => {
+      // console.log(roaster)
+      // console.log(roaster.)
       let infoBox;
-      if (item.location) {
-        if (mapNotSet) {
-          setMap(item.location.coordinates)
-          mapNotSet = false;
-        }
-        addMarkerFunctions(item, infoWindow => {
-          infoBox = infoWindow
-        })
+      addMarkerFunctions(roaster, infoWindow => {
+        infoBox = infoWindow
+      })
+      const marker = new google.maps.Marker({
+        position: roaster.coordinates,
+        map: map
+      });
 
-        const marker = new google.maps.Marker({
-          position: item.location.coordinates,
-          map: map
-        });
-
-        marker.addListener('click', () => {
-          closeBoxes()
-          infoBox.open(map, marker);
-        });
-      }
+      marker.addListener('click', () => {
+        closeBoxes()
+        infoBox.open(map, marker);
+      });
     })
   }
-
 
   callback(markerList)
 
 }
 
 
-function addMarkerFunctions(item, callback) {
+function addMarkerFunctions(roaster, callback) {
 
-  let category = ''
-  let moment = ''
-
-  if (item.category) {
-    category = item.frequency.category
-    moment = item.frequency.moment
-  }
-
-  // console.log(item)
+  // console.log(roaster)
   const contentString = '<div id="content">' +
     '<div id="siteNotice">' +
     '</div>' +
-    `<a href= '/catalog/user/profile/${item.username}/${item._id}'<h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
+    `<a href= '/catalog/roasters/${roaster.id}'<h3 id="firstHeading" class="firstHeading">${roaster.name}</h3></a>` +
     '<div id="bodyContent">' +
-    `<p><b>Address:</b> ${item.location.address}` +
-    `<p><b>Coordinates:</b> ${item.location.coordinates}` +
-    `<p><b>Distance:</b> ${item.material}` +
-    `<p><b>Frequency:</b> ${category}, at ${moment}` +
+    `<p><b>Address:</b> ${roaster.address}` +
+    `<p><b>Coordinates:</b> ${roaster.coordinates}` +
+    `<p><b>Distance:</b> ${roaster.distance}` +
+    `<p><b>Phone:</b> ${roaster.phone}` +
     '</div>' +
     '</div>';
 
@@ -480,7 +466,7 @@ function makeMap(id, callback) {
   });
   google.maps.event.addListenerOnce(map, 'idle', () => {
     console.log('map loaded')
-    doStuff()
+    mapMadeAddData()
   })
 
   // console.log(map)
