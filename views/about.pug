@@ -1,19 +1,33 @@
 extends layout
 
 block content
-  h3 About
-  //- h4 #{user}
-
-
-  p Coffee Chaff is a highly nutritious soil additive created as a byproduct of coffee roasting. It it is the husk of the coffee bean, and during the roasting process it heats up, eventually falling off to be removed by the roaster.
-  | It is light and fibrous, has high nitrogen content, and contains many other nutrients in trace amounts. This makes it ideal for composting, mulching, chicken bedding, cattle feed, briquettes, mushroom growing, and many others uses.
-  | A single roaster can produce 4,000 lbs of chaff per month. Many roasters have found direct outlets for their chaff, but even then they often produce more than their recyclers can take.
-  | Chaff Map is here to help you get started using this amazing material in your own projects.
 
   hr
 
-  div
-  a(href='/') Find Roasters
+  div.columns
+    
+    div.column
+      img(src='../img/chaff-map-art.png')
 
-  div
-  a(href='/catalog/project/list')  Follow Tutorials
+    div.column
+      h3.title Give. Make.
+
+      p Every day, people around the world send millions of tons of waste to landfills. Why? 
+      br
+      p Often the answer is that it’s cheaper and easier than any other option. 
+        | But it doesn’t have to be. 
+      br
+      p Chaff map is here to provide place to share waste so that it may be used 
+        | for an alternate purpose and stay out of our landfills.
+      br
+      p We have one house, let’s keep it clean. 
+      br
+  
+      a(class='button is-primary is-medium' href='/catalog/register' ) Sign up
+
+      hr
+
+      div
+      a(class='button is-link' href='/catalog/projects')  Find Projects
+
+      a(style="margin-left:5px" class='button is-link' href='/catalog/wastes')  Use Waste

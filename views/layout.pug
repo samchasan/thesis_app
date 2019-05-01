@@ -16,18 +16,11 @@ html(lang='en')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css')
     script.
           let user = `#{currentUser}`
-          //- let userString1 = user.toString()
-          //- let userString = JSON.stringify(userString1)
-          //- let userParsed = JSON.parse(userString)
-          //- let newObj = Object.assign({}, userParsed); 
-          //- console.log('userParsed', user)
-          //- if(user.length>0){
             window.currentUser = `#{currentUser}`
-          //- }
   body
 
     div#navbar
-      script(src='/js/navbar.js')
+      script(src='../js/navbar.js')
         
     div(class='col-sm-12')
       block content
