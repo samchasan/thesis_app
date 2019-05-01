@@ -12,11 +12,11 @@ async function doStuff() {
   console.log('doing stuff')
   const data = await getSomeAsyncData('catalog/projectsJSON')
   console.log('projects', data.projects)
-  await addMarkers(data.projects, () => {
+  await addMarkers('project', data.projects, () => {
   })
   const data2 = await getSomeAsyncData('catalog/wastesJSON')
   console.log('waste', data2.wastes)
-  await addMarkers(data2.wastes, () => {
+  await addMarkers('waste', data2.wastes, () => {
   })
 }
 
@@ -57,7 +57,7 @@ function getData(path, callback) {
     dataPoints = itemList.data
     if (dataPoints) {
       dataPoints.forEach(dataPoint => {
-        // console.log(dataPoint)
+        console.log('dataPoint', dataPoint)
         let lat = dataPoint.coordinates.lat
         let long = dataPoint.coordinates.lng
 
@@ -97,28 +97,42 @@ function getData(path, callback) {
 
 let mapNotSet = true;
 
-function addMarkers(data, callback) {
-  console.log('adding', data, 'markers')
+function addMarkers(flag, data, callback) {
+
+  console.log('adding', data, flag, 'markers')
   if (data.length === 0) {
     center = { lng: -73.97332, lat: 40.685787 };
     setMap(center)
   } else {
-    data.forEach(item => {
-      console.log('item:', item)
+
+    data.forEach((item) => {
       // console.log(item.)
       let infoBox;
       if (item.location) {
+        console.log('item:', item, flag)
         if (mapNotSet) {
           setMap(item.location.coordinates)
           mapNotSet = false;
         }
-        addMarkerFunctions(item, infoWindow => {
+        addMarkerFunctions(flag, item, infoWindow => {
           infoBox = infoWindow
         })
 
+        function icon(flag) {
+          if (flag == 'waste') {
+            return '/img/trash.png'
+          }
+          if (flag == 'project') {
+            return '/img/hammer.png'
+          }
+        }
+
+        // console.log(flag, icon)
+
         const marker = new google.maps.Marker({
           position: item.location.coordinates,
-          map: map
+          map: map,
+          icon: icon(flag)
         });
 
         marker.addListener('click', () => {
@@ -129,34 +143,47 @@ function addMarkers(data, callback) {
     })
   }
 
-
   callback(markerList)
 
 }
 
 
-function addMarkerFunctions(item, callback) {
+function addMarkerFunctions(flag, item, callback) {
 
   let category = ''
   let moment = ''
+  let contentString = ''
 
   if (item.category) {
     category = item.frequency.category
     moment = item.frequency.moment
   }
 
-  // console.log(item)
-  const contentString = '<div id="content">' +
-    '<div id="siteNotice">' +
-    '</div>' +
-    `<a href= '/catalog/user/profile/${item.username}/${item._id}'<h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
-    '<div id="bodyContent">' +
-    `<p><b>Address:</b> ${item.location.address}` +
-    `<p><b>Coordinates:</b> ${item.location.coordinates}` +
-    `<p><b>Distance:</b> ${item.material}` +
-    `<p><b>Frequency:</b> ${category}, at ${moment}` +
-    '</div>' +
-    '</div>';
+  if (flag == 'project') {
+    console.log('in project')
+    contentString = '<div id="content">' +
+      '<div id="siteNotice">' +
+      '</div>' +
+      `<a href= '/catalog/user/profile/${item.username}/${item._id}'
+      <h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
+      '<div id="bodyContent">' +
+      `<p><b>Address:</b> ${item.location.address}` +
+      `<p><b>Materials:</b> ${item.materials}` +
+      '</div>' +
+      '</div>';
+  } else if (flag == 'waste') {
+    contentString = '<div id="content">' +
+      '<div id="siteNotice">' +
+      '</div>' +
+      `<a href= '/catalog/user/profile/${item.username}/waste/${item._id}'
+      <h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
+      '<div id="bodyContent">' +
+      `<p><b>Address:</b> ${item.location.address}` +
+      `<p><b>Material:</b> ${item.material}` +
+      `<p><b>Frequency:</b> ${category}, at ${moment}` +
+      '</div>' +
+      '</div>';
+  }
 
   infowindow = new google.maps.InfoWindow({
     content: contentString,
