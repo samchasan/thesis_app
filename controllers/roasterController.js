@@ -65,7 +65,7 @@ exports.index = (req, res) => {
     user = null
   }
   console.log(googleToken)
- 
+
   async.series({
     roaster_count: (callback) => {
       Roaster.countDocuments({ 'userID': uniqueID }, callback);
@@ -75,6 +75,7 @@ exports.index = (req, res) => {
     res.render('index', {
       title: 'Home',
       googleKey: googleToken,
+      why: 'thisshit dumb',
       currentUser: user,
       error: err,
       user: 'blank',

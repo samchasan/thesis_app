@@ -9,10 +9,10 @@ const roaster_controller = require('../controllers/roasterController');
 // =============================================================================
 
 // middleware to use for all requests
-router.use(function(req, res, next) {
-	// do logging
-	console.log('Something is happening.');
-	next();
+router.use(function (req, res, next) {
+  // do logging
+  console.log('Something is happening.');
+  next();
 });
 
 router.get('', roaster_controller.data);

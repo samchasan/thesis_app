@@ -11,7 +11,8 @@ const googleToken = '&key=' + process.env.GoogleToken;
 const akid = process.env.AWSAccessKeyId
 const asak = process.env.AWSSecretKey
 let coordinates = {}
-
+const googI = process.env.GoogleToken;
+const googleMapToken = 'https://maps.googleapis.com/maps/api/js?key=' + googI;
 
 async function getCoords(inputContent) {
   const locationInput = googleGeocode + inputContent + googleToken
@@ -31,13 +32,61 @@ async function getCoords(inputContent) {
   return coords
 }
 
+let newCoords = []
+
 exports.search = async (req, res, next) => {
   let inputContent = req.body.searchInput;
   console.log('inputContent', inputContent);
   const coords = await getCoords(inputContent)
-  console.log('coords', coords)
-  res.redirect(req.get('referer'));
+  // stringCoords = JSON.stringify(coords)
+  // parsedCoords = JSON.parse(stringCoords)
+
+  const lat = coords.lat
+  const lng = coords.lng
+
+  newCoords = [lat, lng]
+
+  console.log('coords', newCoords)
+  // const currentuser = isUserLoggedIn(req.user)
+
+  res.render('', {
+    // currentUser: currentuser
+  });
 }
+
+
+exports.index = async (req, res) => {
+
+  let lng = -73.97332;
+  let lat = 40.685787;
+
+  let user;
+
+  if (req.user) {
+    user = req.user.username
+  } else {
+    user = null
+  }
+  // console.log(googleToken)
+
+  async function checkCoords() {
+    if (newCoords.length > 0) {
+      lat = newCoords[0]
+      lng = newCoords[1]
+    }
+  }
+
+  await checkCoords()
+
+  res.render('index', {
+    title: 'Chaff Map',
+    newLat: lat,
+    newLng: lng,
+    currentUser: user,
+    googleKey: googleMapToken
+  });
+
+};
 
 const makeNewPhoto = (name, url, category, userID, username) => {
   console.log(url + ' / ' + category)
@@ -355,7 +404,7 @@ exports.profileGet =
         const currentuser = isUserLoggedIn(req.user)
 
         res.render(`user/profile/:user`, {
-          title: 'Profile:',
+          title: 'Profile',
           user: user,
           activeUser: req.user,
           currentUser: currentuser

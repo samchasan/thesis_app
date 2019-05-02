@@ -22,8 +22,8 @@ const upload = multer({
 /// roaster ROUTES ///
 
 // GET/POST catalog home page.
-router.get('/', roaster.index);
-router.post('/', roaster.search);
+router.get('/', user.index);
+router.post('/', user.search);
 
 // about page
 router.get('/about', about.about);

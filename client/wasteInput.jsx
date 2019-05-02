@@ -17,7 +17,7 @@ const config = {
   region: 'us-east-2',
   accessKeyId: akid,
   secretAccessKey: asak
-}
+} 
 
 class WasteInput extends React.Component {
   constructor(props) {

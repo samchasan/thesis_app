@@ -25,6 +25,10 @@ html(lang='en')
     script.
           let user = `#{currentUser}`
             window.currentUser = `#{currentUser}`
+            console.log('currentUser', window.currentUser)
+            window.newLat = `#{newLat}`
+            window.newLng = `#{newLng}`
+            console.log('coords', window.newLat, window.newLng)
   body
 
     div#navbar

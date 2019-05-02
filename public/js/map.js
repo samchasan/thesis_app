@@ -3,6 +3,10 @@ let ibArray = [];
 let center = { lng: -73.97332, lat: 40.685787 };
 let items = [];
 let markerList = [];
+let newLat = window.newLat
+let newLng = window.newLng
+
+
 
 makeMap('googleMap', () => {
   console.log('making map')
@@ -100,7 +104,7 @@ let mapNotSet = true;
 function addMarkers(flag, data, callback) {
 
   console.log('adding', data, flag, 'markers')
-  if (data.length === 0) {
+  if (data.length === 0 && !newLat) {
     center = { lng: -73.97332, lat: 40.685787 };
     setMap(center)
   } else {
@@ -110,7 +114,7 @@ function addMarkers(flag, data, callback) {
       let infoBox;
       if (item.location) {
         console.log('item:', item, flag)
-        if (mapNotSet) {
+        if (mapNotSet && !newLat) {
           setMap(item.location.coordinates)
           mapNotSet = false;
         }
@@ -510,7 +514,13 @@ function makeMap(id, callback) {
     doStuff()
   })
 
-  // console.log(map)
-
+  if (newLat) {
+    const newCoords = {
+      'lat': parseFloat(newLat),
+      'lng': parseFloat(newLng)
+    }
+    setMap(newCoords)
+    console.log(newCoords)
+  }
   callback(map)
 }
