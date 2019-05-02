@@ -40,6 +40,30 @@ class Waste extends React.Component {
       return s.charAt(0).toUpperCase() + s.slice(1)
     }
 
+
+
+    const frequencyIsEmpty = (frequency) => {
+      for (var key in frequency) {
+        if (frequency.hasOwnProperty(key)){
+          console.log(frequency)
+          return <p>{`${capitalize(frequency.category)}, ${insertText(frequency.category)} ${frequency.moment}`}</p>
+      }else{
+      return <div id='noFrequency'></div>
+         }
+      }
+    }
+    const locationIsEmpty = (location) => {
+      for (var key in location) {
+        if (location.hasOwnProperty(key)){
+          console.log(location)
+          return <p>{`${capitalize(location.address)}`}</p>
+      }else{
+      return <div id='noLocation'></div>
+         }
+      }
+    }
+
+
     const insertText = (s) => {
       switch (s){
         case'daily':
@@ -61,7 +85,8 @@ class Waste extends React.Component {
       <h2><a href={`user/profile/${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
       <p><a href={`user/profile/${waste.username}`}>{waste.username}</a></p>
       <p>{`${waste.amount} lbs`} </p>
-      <p>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</p>
+      <p>{locationIsEmpty(waste.location)}</p>
+      <p>{frequencyIsEmpty(waste.frequency)}</p>
       </div>
       </div>
     );

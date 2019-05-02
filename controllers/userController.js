@@ -675,6 +675,15 @@ exports.updateWaste = async (req, res) => {
     }
   }
 
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
+
   function updateWaste(property, data) {
     switch (property) {
       case 'photo':
@@ -694,12 +703,16 @@ exports.updateWaste = async (req, res) => {
         })
         break;
       case 'frequency':
-        Waste.findOneAndUpdate({ _id: waste }, {
-          'frequency': data
-        }, (err, waste) => {
-          if (err) { console.log(err) }
-          console.log('updating waste', waste, 'in frequency with', data)
-        })
+        if (isEmpty(data)) {
+          console.log('no frequency to update')
+        } else {
+          Waste.findOneAndUpdate({ _id: waste }, {
+            'frequency': data
+          }, (err, waste) => {
+            if (err) { console.log(err) }
+            console.log('updating waste', waste, 'in frequency with', data)
+          })
+        }
         break;
       case 'material':
         Waste.findOneAndUpdate({ _id: waste }, {

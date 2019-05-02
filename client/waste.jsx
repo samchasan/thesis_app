@@ -79,7 +79,7 @@ class Waste extends React.Component {
       console.log('got waste', waste)
       currentComponent.setState({waste: {
         title: waste.title,
-        // location: waste.location.address,
+        location: waste.location.address,
         material: waste.material,
         frequency: waste.frequency,
         amount: waste.amount,

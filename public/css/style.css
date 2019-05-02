@@ -158,13 +158,17 @@ h4#usernameTitle.title.is-4{
 }
 
 .projectThumbs{
-  width: 250px;
-  height: 110px;
+  width: 280px;
+  height: 150px;
   display: inline-block;
   position: relative;
-  border: solid black;
-  border-width: 2px;
+  border: dashed lightgray;
+  border-width: 1px;
   margin: 5px;
+}
+
+.projectThumbs:hover{
+  background-color:rgb(245, 255, 254);
 }
 
 
@@ -200,13 +204,17 @@ h4#usernameTitle.title.is-4{
 }
 
 .wasteThumbs{
-  width: 250px;
-  height: 110px;
+  width: 280px;
+  height: 150px;
   display: inline-block;
   position: relative;
-  border: solid black;
-  border-width: 2px;
+  border: dashed lightgray;
+  border-width: 1px;
   margin: 5px;
+}
+
+.wasteThumbs:hover{
+  background-color:rgb(245, 255, 254);
 }
 
 #frequencyInputAmountInput {
