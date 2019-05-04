@@ -72,7 +72,7 @@ class Profile extends React.Component {
       location: {},
       path: window.location.pathname,
       file:'',
-      url: 'img/blank-user-avatar.png',
+      url: '/img/blank-user-avatar.png',
       user: {
         location: {},
         username: '',
@@ -388,6 +388,18 @@ class Profile extends React.Component {
       }}
     }
 
+    const checkPhoto = () => {
+      if(this.state.user.avatarURL){
+        return (
+          this.state.user.avatarURL
+        )
+      }else{
+        return (
+          this.state.url
+        )
+      }
+    }
+
     const checkAddress = () =>  {
       if(this.state.user.location.address){ 
         return (
@@ -421,7 +433,7 @@ class Profile extends React.Component {
         <div id='staticView'>
           <div className='columns' id='userHeader'>
             <div className='column is-one-quarter' id='avatar'>
-              <img src={this.state.user.avatarURL}></img>
+              <img src={checkPhoto()}></img>
             </div>
             <div className='column is-half' id='userInfo'>
                 <h4 id='usernameTitle' class="title is-4">{user.username}</h4>

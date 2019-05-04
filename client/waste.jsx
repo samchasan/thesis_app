@@ -17,6 +17,15 @@ const config = {
   secretAccessKey: asak
 }
 
+function isEmpty(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key))
+      console.log('obj', obj)
+      return true;
+  }
+  return false;
+}
+
 
 class Waste extends React.Component {
   constructor(props) {
@@ -77,9 +86,17 @@ class Waste extends React.Component {
       console.log('axios got url', res);
       const waste = res.data.waste
       console.log('got waste', waste)
+      
+      let address = ''
+      if(!waste.location){
+        address = address
+      } else {
+        address = waste.location.address
+      }
+
       currentComponent.setState({waste: {
         title: waste.title,
-        location: waste.location.address,
+        location: address,
         material: waste.material,
         frequency: waste.frequency,
         amount: waste.amount,
@@ -399,12 +416,43 @@ class Waste extends React.Component {
 
 
     const frequencyIndicator = (waste) => {
-      if(waste.frequency){
+      if(waste.frequency.moment){
         console.log('frequency indicator', waste)
         return(
-          <span>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</span>
+          <span>{`${capitalize(waste.frequency.category)} 
+                  ${insertText(waste.frequency.category)} 
+                  ${checkFreqMoment(waste.frequency.moment)}`}
+          </span>
         )
-      } 
+      } else if(waste.frequency){
+        return(
+        <span>{`${capitalize(waste.frequency.category)} 
+                ${checkFreqMoment(waste.frequency.moment)}`}
+        </span>
+        )
+        } else {
+        return null
+      }
+    }
+
+      const checkFreqMoment = (obj) =>  {
+      if(obj){ 
+        return obj
+      }else{
+        return ''
+      }
+    }
+
+
+    const checkAmount = () =>  {
+      if(this.state.waste.amount){ 
+        // console.log(this.state.waste.location)
+        return (
+          `${waste.amount} lbs |`
+        )
+      }else{
+        return null
+      }
     }
 
 
@@ -415,9 +463,9 @@ class Waste extends React.Component {
             <div className='column is-one-quarter' id='wasteInfo'>
             <h3 class="title is-3"> {capitalize(waste.title)}</h3>
                   {/* NEED TO ADD LINKS THAT GO TO SEARCH PAGE HERE FOR MATERIAL AND LOCATION */}
-              <p class="subtitle is-5">{`${waste.amount} lbs`} | {frequencyIndicator(waste)} </p>
+              <p class="subtitle is-5">{checkAmount()} {frequencyIndicator(waste)} </p>
               <p>{`Material: `} <a> {waste.material}</a></p>
-              <p>{`Located: `}  <a> {waste.location} </a> </p>
+              <p>{`Located: `}<a> {waste.location} </a>  </p>
               <p> {`Producer: `} <a href={`../../${waste.username}`}> {waste.username} </a> </p>
                  
               <div className='columns'>
