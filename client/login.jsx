@@ -45,9 +45,9 @@ class Login extends React.Component {
 return(
     <div className='columns'>
     <div className='column is-quarter'></div>
-    <div className='column is-half'>
+    <div id='simpleForm' className='column is-half'>
       <h3 class='title is-h3'> Welcome Back</h3>
-      <form id='simpleForm'>
+      <form >
         <div className='form-group'>
         <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='username' name='username'> 
         </input>

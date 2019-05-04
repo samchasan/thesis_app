@@ -107,7 +107,7 @@ return(
           </div>
         </div>
 
-      <button className='button is-primary' type='button' onClick={this.register} > Register </button>
+      <button className='button is-primary is-medium' type='button' onClick={this.register} > Register </button>
       </form>
       </div>
       <div className='column is-quarter'></div>
