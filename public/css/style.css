@@ -15,9 +15,6 @@ body {
   font-family: "Sans-serif", Helvetica;
 }
 
-.title{
-  width:200px;
-}
 
 #coverArea{
   height: 200px;
@@ -49,8 +46,15 @@ body {
   border: none;
 }
 
+#businessYesNo {
+  margin: 10px;
+}
 
 
+#simpleForm{
+  padding: 0px 100px 0px 100px; 
+  text-align: center;
+}
 
 
 

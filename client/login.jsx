@@ -43,19 +43,24 @@ class Login extends React.Component {
 
   render() {
 return(
-      <form >
+    <div className='columns'>
+    <div className='column is-quarter'></div>
+    <div className='column is-half'>
+      <h3 class='title is-h3'> Welcome Back</h3>
+      <form id='simpleForm'>
         <div className='form-group'>
-        <label htmlFor='username'> Username:</label>
-        <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='madDasher' name='username'> 
+        <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='username' name='username'> 
         </input>
         </div>
       <div className='form-group'>
-        <label htmlFor='password'> Password:</label>
-        <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='********' name='password' >
+        <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='password' name='password' >
         </input>
         </div>
-      <button className='btn.btn-primary' type='button' onClick={this.login} > Submit</button>
+      <button className='button is-medium is-primary' type='button' onClick={this.login} > Login </button>
       </form>
+      </div>
+      <div className='column is-quarter'></div>
+    </div> 
     )
   }
 }

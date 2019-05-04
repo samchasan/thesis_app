@@ -79,8 +79,10 @@ class Register extends React.Component {
 
   render() {
 return(
-  <div>
-<h3 class="title is-3">Sign Up</h3>
+  <div className='columns'>
+  <div className='column is-quarter'></div>
+  <div  id='simpleForm' className='column is-half'>
+  <h3 class="title is-3">Sign Up!</h3>
       <form>
         <div className='form-group'>
             <input id='username' onChange={this.setUsername} className='form-control' type='text' placeholder='username' name='username'> 
@@ -108,6 +110,9 @@ return(
       <button className='button is-primary' type='button' onClick={this.register} > Register </button>
       </form>
       </div>
+      <div className='column is-quarter'></div>
+    </div> 
+
     )
   }
 }
