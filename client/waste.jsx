@@ -416,15 +416,16 @@ class Waste extends React.Component {
 
 
     const frequencyIndicator = (waste) => {
-      if(waste.frequency.moment){
-        console.log('frequency indicator', waste)
-        return(
-          <span>{`${capitalize(waste.frequency.category)} 
-                  ${insertText(waste.frequency.category)} 
-                  ${checkFreqMoment(waste.frequency.moment)}`}
-          </span>
-        )
-      } else if(waste.frequency){
+      if(waste.frequency){
+        if(waste.frequency.moment){
+          console.log('frequency indicator', waste)
+          return(
+            <span>{`${capitalize(waste.frequency.category)} 
+                    ${insertText(waste.frequency.category)} 
+                    ${checkFreqMoment(waste.frequency.moment)}`}
+            </span>
+          )
+        }
         return(
         <span>{`${capitalize(waste.frequency.category)} 
                 ${checkFreqMoment(waste.frequency.moment)}`}

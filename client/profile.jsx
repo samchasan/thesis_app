@@ -348,6 +348,7 @@ class Profile extends React.Component {
 
     const editButtons = () => {
       if(this.state.isOwner){ 
+        if(!this.state.editing){
         return (
           <div id='editButtons'>
             <a id='editButton' className='button is-small is-primary' 
@@ -360,6 +361,16 @@ class Profile extends React.Component {
             {deleteButton()}
           </div>
           )
+        }else if (this.state.editing){
+          return(
+          <div id='editButtons'>
+            <a id='editButton' className='button is-small is-primary' 
+            href={`${user.username}/addProject`}>+ project</a>
+            <a id='editButton' className='button is-small is-primary' 
+            href={`${user.username}/addWaste`}>+ waste</a>
+            <br></br>
+          </div>
+          )}
       } else {
         return (
           <div id='editButtons'>
@@ -437,7 +448,6 @@ class Profile extends React.Component {
             </div>
             <div className='column is-half' id='userInfo'>
                 <h4 id='usernameTitle' class="title is-4">{user.username}</h4>
-
                 <div id='userContactInfo'>
                   <div id='userAddress'>
                     {checkAddress()}
@@ -446,9 +456,6 @@ class Profile extends React.Component {
                     {checkContact()}
                   </div>       
                 </div>                 
-          
-
-
                 <div id='userDescription'>
                   {checkDescription()}
                 </div>
@@ -463,54 +470,54 @@ class Profile extends React.Component {
     const editView = () => { 
       return ( 
         <span>
-
-
           <div className='columns' >
-            <div className='column is-half' id='userInfoUpdate'>
-              <form method='POST' encType='multipart/form-data'>
-                <label htmlFor='name'>
-                  Username:
-                  <input type='text' placeholder={this.state.user.name} onChange={this.setName} name='name' />
-                </label>
-                <label htmlFor='location'>
-                  Location:
-                  <input type='text' placeholder={this.state.user.location.address}  onChange={this.setLocation} name='location' />
-                </label>
-                <label htmlFor='email'>
-                  E-mail:
-                  <input type='text' placeholder={this.state.user.email}  onChange={this.setEmail} name='email' />
-                </label>
-                <label htmlFor='phone'>
-                  Phone:
-                  <input type='text' placeholder={this.state.user.phone}  onChange={this.setPhone} name='phone' />
-                </label>
-                <label htmlFor='description'>
-                  Description:
-                  <textarea rows="10" cols="19" placeholder={this.state.user.description}  onChange={this.setDescription} name='description' />
-                </label>
-                <label>
+          <div className='column is-one-quarter' id='avatarInput'>
+              <img src={checkPhoto()}></img>
+              <label>
                   {indicatorText}
                   <div id='addPhotoInput'>
                     <input type='file' name='file' onChange={this.uploadPhoto} />
                   </div>
                 </label>
-                <div id='updateSubmitButtons' className='columns'>
-                  <div className='column is-half' >
-                      <a type='button' className='button is-primary' 
-                      onClick={this.postProfile}> Update
-                      </a>
-                  </div>
-                  <div id='editButton' className='column is-one-quarter'> 
-                      <a type='button' className="button is-small is-danger is-outlined" 
-                      onClick={this.stopEditing}> Cancel
-                      </a>
-                  </div>
-                  <div id='editButton' className='column is-one-quarter' id='deleteButton'>
-                    {deleteButton()}
-                  </div>
-                </div>
-              </form>
             </div>
+            <div className='column is-half' id='userInfoUpdate'>
+              <h4 id='usernameTitle' class="title is-4">{user.username}</h4> 
+                  <form method='POST' encType='multipart/form-data'>    
+                    <label htmlFor='location'>
+                      <input type='text' placeholder={this.state.user.location.address}  onChange={this.setLocation} name='location' />
+                    </label>
+                    <label htmlFor='email'>
+                      <input type='text' placeholder={this.state.user.email}  onChange={this.setEmail} name='email' />
+                    </label>
+                    <label htmlFor='phone'>
+                      <input type='text' placeholder={this.state.user.phone}  onChange={this.setPhone} name='phone' />
+                    </label>
+                    <label htmlFor='description'>
+                      <textarea rows="5" cols="40" placeholder={this.state.user.description}  onChange={this.setDescription} name='description' />
+                    </label>
+                    <div id='updateSubmitButtons' className='columns'>
+                      <div className='column is-half' >
+                          <a type='button' className='button is-primary' 
+                          onClick={this.postProfile}> Update
+                          </a>
+                      </div>
+                      <div id='editButton' className='column is-one-quarter'> 
+                          <a type='button' className="button is-small is-danger is-outlined" 
+                          onClick={this.stopEditing}> Cancel
+                          </a>
+                      </div>
+                      <div id='editButton' className='column is-one-quarter' id='deleteButton'>
+                        {deleteButton()}
+                      </div>
+                      </div>
+
+                    </form>
+              </div>
+            
+            
+            <div className='column is-one-quarter' id='editButtons'>
+              {editButtons()}
+            </div>  
           </div>
         </span>
       );

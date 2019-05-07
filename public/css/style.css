@@ -497,6 +497,10 @@ ol{
   max-width: 80%;
 }
 
+#editList b{
+  margin-bottom: 20px;
+}
+
 #googleMap {
   position: relative;
   /* top: 110px; */

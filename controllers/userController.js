@@ -559,15 +559,19 @@ exports.updateUser =
           })
           break;
         case 'location':
-          User.findOneAndUpdate({ _id: user }, {
-            location: {
-              address: data.address,
-              coordinates: data.coordinates
-            }
-          }, (err, user) => {
-            if (err) { console.log(err) }
-            console.log('updating user', user)
-          })
+          if (!data.address) {
+            'no location to update'
+          } else {
+            User.findOneAndUpdate({ _id: user }, {
+              location: {
+                address: data.address,
+                coordinates: data.coordinates
+              }
+            }, (err, user) => {
+              if (err) { console.log(err) }
+              console.log('updating user', user)
+            })
+          }
           break;
         case 'description':
           User.findOneAndUpdate({ _id: user }, {
@@ -675,7 +679,13 @@ exports.updateProject = async (req, res) => {
 
 }
 
-
+function isEmpty(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}
 
 exports.updateWaste = async (req, res) => {
   let waste, data, photoName, photoURL, title, material, location, description
@@ -723,15 +733,6 @@ exports.updateWaste = async (req, res) => {
       updateWaste('description', description)
     }
   }
-
-  function isEmpty(obj) {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key))
-        return false;
-    }
-    return true;
-  }
-
 
   function updateWaste(property, data) {
     switch (property) {
