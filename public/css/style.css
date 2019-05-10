@@ -28,7 +28,7 @@ margin-bottom: 10px
 .scrollFix {
   line-height: 1.35;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: wrap;
 }
 
 #content img{
@@ -126,6 +126,22 @@ h4#usernameTitle.title.is-4{
   position: relative;
 }
 
+.back-nav{
+  height: 40px;
+  font-size: 14px;
+  background:#eee;
+  padding: 10px;
+  width: 100%
+}
+
+.back-nav p{
+  padding-left: 2px
+}
+
+
+#address{
+  font-size: 12px;
+}
 .columns{
   padding: 10px
 }
@@ -151,10 +167,10 @@ h4#usernameTitle.title.is-4{
   display: inline-block;
   width: 200px;
 }
-
+/* 
 #projectInfo p {
   font-size: 12px;
-}
+} */
 
 #projectInfo h2 {
   font-weight: bold;
@@ -210,6 +226,9 @@ h4#usernameTitle.title.is-4{
   background-color:rgb(245, 255, 254);
 }
 
+#wasteInfoBox{
+  padding-top: 10px
+}
 
 .wasteGallery{
   position: relative;
@@ -555,10 +574,21 @@ ol{
   visibility: visible;
 }
 
+
 #nav{
   position: static;
   top: 30px;
   left: 220px;
+}
+
+#itemDescription{
+  margin-top: 5px;
+  font-size: 16px;
+  color:#848484;
+}
+
+#singleItemTitle{
+  margin-bottom: 0px;
 }
 
 #title{

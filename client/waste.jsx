@@ -387,7 +387,6 @@ class Waste extends React.Component {
       if(this.state.waste.description){ 
         return (
           <div>
-          Description: <br></br>
           <p> {waste.description} </p>        
           </div>
           )
@@ -470,7 +469,7 @@ class Waste extends React.Component {
         return  null
       } else {
         return (
-          <p> {`Located: `} <a href={`https://www.google.com/maps/place/${location.address}`}> {location.address} </a> </p>
+          <p> <a href={`https://www.google.com/maps/place/${location.address}`}> {location.address} </a> </p>
         )
     }
   }
@@ -478,29 +477,34 @@ class Waste extends React.Component {
 
     const staticView = () => { 
       return (
-        <div id='staticView'>
+        <div >
+          <div className='back-nav'>
+          <div className='container'>
+            <p> <a href={`../../${waste.username}`}> {waste.username}</a>'s byproduct </p>
+          </div>
+          </div>
+        <div id='staticView' className='container'>
           <div className='columns' id='wasteInfoBox'>
-            <div className='column is-one-quarter' id='wasteInfo'>
-            <h3 class="title is-3"> {capitalize(waste.title)}</h3>
-                  {/* NEED TO ADD LINKS THAT GO TO SEARCH PAGE HERE FOR MATERIAL AND LOCATION */}
-              <p class="subtitle is-5">{checkAmount()} {frequencyIndicator(waste)} </p>
-              <p>{`Material: `} <a> {waste.material}</a></p>
-              <p>{checkLocation(waste.location)}  </p>
-              <p> {`Producer: `} <a href={`../../${waste.username}`}> {waste.username} </a> </p>
-                 
-              <div className='columns'>
-                <div className='column is-two-quarters' id='editControls'> {editButton()}</div>
-                <div className='column is-one-quarter' id='deleteButton'>{deleteButton()}</div>
+            <div className='column' id='wasteInfo'>
+              <div id='singleItemTitle'>
+                <h3 class="title is-3"> {capitalize(waste.title)}</h3>
+                <h5 class="subtitle is-5">{checkAmount()} {frequencyIndicator(waste)} </h5>
               </div>
-              <div id='wasteDescription'>
-              {checkDescription()}
+              <div id='singleItemText'>
+                <p id='address'>{checkLocation(waste.location)}  </p>                 
+                <div id='itemDescription'>
+                  {checkDescription()}
+                </div>
+                <hr></hr>
+                  <b>Item details:</b> 
+                <p><a> {waste.material}</a></p>
               </div>
             </div>
-            <div className='column is-three-quarters' id='wasteImage'>
+            <div className='column' id='wasteImage'>
               <img src={waste.photoURL}></img>
             </div>
           </div>
-         
+          </div>
         </div>
     )}
 

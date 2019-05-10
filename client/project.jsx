@@ -318,28 +318,64 @@ function isEmpty(obj) {
       }
     }
 
-
-    const staticView = () => { 
-      return (
-        <div id='staticView'>
-          <div className='columns' id='projectInfoBox'>
-            <div className='column is-one-quarter' id='projectInfo'>
-                  <h2> {project.title}</h2>
-              <p>{`Made with ${project.materials}`}</p>
-              <p>{`Found ${insertText(project.location.address)} ${project.location.address}`}</p>
-              <p> By&nbsp; <a href={`../${project.username}`}> {project.username} </a> </p>
-              <div className='columns'>
+    const checkLoggedIn = () =>{
+      if(this.state.isOwner === true){
+        return(
+          <div className='columns'>
                 <div className='column is-two-quarters' id='editControls'> {editButton()}</div>
                 <div className='columns is-one-quarter' />
                 <div className='column is-one-quarter' id='deleteButton'>{deleteButton()}</div>
               </div>
-              <div id='projectDescription'>
+        )
+      }else{
+        return null
+      }
+    }
+
+    const checkLocation = (location) => {
+      if(isEmpty(location)){
+        return  null
+      } else {
+        return (
+          <p> <a href={`https://www.google.com/maps/place/${location.address}`}> {location.address} </a> </p>
+        )
+    }
+  }
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
+
+    const staticView = () => { 
+      return (
+        <div >
+        <div className='back-nav'>
+        <div className='container'>
+          <p> <a href={`../../${project.username}`}> {project.username}</a>'s project </p>
+        </div>
+        </div>
+        <div id='staticView' className='container'>
+          <div className='columns' id='projectInfoBox'>
+            <div className='column' id='projectInfo'>
+              <div id='singleItemTitle'>
+                  <h3 class="title is-3"> {project.title}</h3>
+                  <h5 class="subtitle is-5">{project.materials} </h5>
+                </div>
+              <p id='address'>{checkLocation(project.location)}</p>
+              {checkLoggedIn()}
+              <div id='itemDescription'>
                 {checkDescription()}
               </div>
             </div>
-            <div className='column is-three-quarters' id='projectImage'>
+            <div className='column' id='projectImage'>
               <img src={project.photoURL}></img>
             </div>
+          </div>
           </div>
         </div>
     )}
