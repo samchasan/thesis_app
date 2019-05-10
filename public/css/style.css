@@ -82,26 +82,54 @@ margin-bottom: 10px
 
 
 
-#navbar{
+#navbarItems{
+  width: 200px;
+  /* position: relative; */
+  /* float: right; */
+  right: 55px;
+  /* display: block; */
+}
+.navbar{
   background-color: #23D160
 }
 
+#main-nav{
+  background-color: #23D160;
+  height: 55px;
+  
+}
+
+.navbar-menu.is-active {
+  border-width: 0.01em;
+  border: solid  #23D160;
+  position: absolute;
+  /* right: 65px; */
+}
+
 #navLogo{
-  width: 80px;
-  height: auto;
+  margin-right: 0px;
+}
+
+.navbar-burger.burger {
+	/* margin-right: auto; */
+  position: absolute;
+  right: 20px;
+  top: 5px;
+}
+
+.navbar-item{
+  max-width: 200px;
+}
+
+.navbar-item:hover{
+  background-color: gray;
 }
 
 
-.nav-bar-start{
-  /* max-width: 50%; */
-  position: relative; 
-  display: inline-block;
-}
-.nav-bar-end{
-  max-width: 30%;  
-  position: relative; 
-  /* display: inline-block; */
-  float: right;
+
+.navbar-brand{
+  /* height: 90px; */
+  background: #23D160;
 }
 
 #editButtons{

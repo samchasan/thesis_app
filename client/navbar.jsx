@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React from 'react';
+import Nav from 'react-bootstrap/Nav';
+
 
 
 class Navbar extends React.Component {
@@ -37,15 +39,15 @@ class Navbar extends React.Component {
       
         return(
           <div>
-             <a href = {`/catalog/user/profile/${user}`} class='button is-small is-primary'> {user} </a>
-             <a href = '/catalog/logout' class='button is-danger is-small is-inverted is-link'> Logout </a>
+             <a href = {`/catalog/user/profile/${user}`} className='button is-small is-primary'> {user} </a>
+             <a href = '/catalog/logout' className='button is-danger is-small is-inverted is-link'> Logout </a>
           </div>
         )
       }else{
         return(
-          <div>
-            <a href='/catalog/login' class='button is-small is-inverted is-link'> Login </a>
-            <a href='/catalog/register' class='button is-small is-inverted is-link'> Register </a>
+          <div className='navbar-end'>
+          <a href='/catalog/login' className='navbar-item is-small is-link is-inverted'> Login </a>
+            <a href='/catalog/register' className='navbar-item is-small is-link is-inverted'> Register </a>
           </div>
         )
       }
@@ -54,18 +56,28 @@ class Navbar extends React.Component {
 
 
     return(
-      <div id='nav-bar'>
-        <div class="nav-bar-start">
-            <a id='navLogoLink' href='/catalog'> <img id='navLogo' alt-text='ChaffMap' src='/img/logoWhite.png' /> </a>
-            <a href='/catalog/projects' class='button is-success is-inverted is-outlined'> Projects </a>
-            <a href='/catalog/wastes'class='button is-success is-inverted is-outlined'> Waste </a>
-            <a href='/catalog/about' class='button is-success  is-inverted is-outlined'> About </a>
-        </div>
-        <div class="nav-bar-end">
-            {checkLoggedIn()}
-         </div>
-
-      </div>
+      <nav id='main-nav' className='navbar is-success' role='navigation' aria-label='main navigation'>
+        <div className='container'>
+          <div className='navbar-brand'>
+            <a className='navbar-item' href='/catalog'> 
+              <img id='navLogo' alt-text='ChaffMap' src='/img/logoWhite.png' /> 
+            </a>
+            <div className='navbar-burger burger' data-target='navbarItems'>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div id='navbarItems' className='navbar-menu'>
+              <div className='navbar-start'>
+                <a href='/catalog/projects' className='navbar-item '> Projects </a>
+                <a href='/catalog/wastes'className='navbar-item'> Waste </a>
+                <a href='/catalog/about' className='navbar-item'> About </a>
+              </div>
+                {checkLoggedIn()}
+              </div>
+          </div>
+        </nav>
     )
   }
 }
