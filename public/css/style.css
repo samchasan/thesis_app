@@ -15,6 +15,30 @@ body {
   font-family: "Sans-serif", Helvetica;
 }
 
+#content p{
+  /* margin-block-end: none; */
+  width: 100%;
+}
+
+#searchInput {
+width: 300px;
+margin-bottom: 10px
+}
+
+.scrollFix {
+  line-height: 1.35;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#content img{
+  width: 90px;
+  margin-right: 10px;
+}
+
+#bodyContent {
+  width: 100%;
+}
 
 #coverArea{
   height: 200px;
@@ -501,10 +525,31 @@ ol{
   margin-bottom: 20px;
 }
 
+
+#homeText  {
+  margin-top: 15px;
+  color: gray;
+}
+
+
+#homeText p {
+  font-size: 15px;
+}
+
+
+#homeText h5 {
+  margin-bottom: 5px;
+  color: rgb(90, 90, 90);
+}
+/*.title {
+  margin-bottom: 0px;
+} */
+
+
 #googleMap {
   position: relative;
   /* top: 110px; */
-  height: 800px;
+  height: 550px;
   /* bottom: 0; */
   width: 100%;
   visibility: visible;

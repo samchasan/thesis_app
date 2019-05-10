@@ -158,29 +158,45 @@ function addMarkerFunctions(flag, item, callback) {
   let moment = ''
   let contentString = ''
 
-  if (item.category) {
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
+
+  if (!isEmpty(item.frequency)) {
     category = item.frequency.category
     moment = item.frequency.moment
   }
 
   if (flag == 'project') {
     console.log('in project')
-    contentString = '<div id="content">' +
-      '<div id="siteNotice">' +
+    contentString =
+      '<div class="columns" id="content">' +
+      '<div class="column is-one-third">' +
+      `<img src='${item.photo.url}' />` +
       '</div>' +
+      '<div class="column is-two-thirds">' +
       `<a href= '/catalog/user/profile/${item.username}/${item._id}'
-      <h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
+          <h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
       '<div id="bodyContent">' +
       `<p><b>Address:</b> ${item.location.address}` +
       `<p><b>Materials:</b> ${item.materials}` +
-      '</div>' +
       '</div>';
+    '</div>';
   } else if (flag == 'waste') {
-    contentString = '<div id="content">' +
-      '<div id="siteNotice">' +
+    contentString =
+      '<div class="columns" id="content">' +
+      '<div class="column is-one-third" id="content">' +
+      `<img src='${item.photo.url}' />` +
       '</div>' +
+      '<div class="column is-two-thirds">' +
       `<a href= '/catalog/user/profile/${item.username}/waste/${item._id}'
-      <h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
+          <h3 id="firstHeading" class="firstHeading">${item.title}</h3></a>` +
       '<div id="bodyContent">' +
       `<p><b>Address:</b> ${item.location.address}` +
       `<p><b>Material:</b> ${item.material}` +
@@ -190,8 +206,7 @@ function addMarkerFunctions(flag, item, callback) {
   }
 
   infowindow = new google.maps.InfoWindow({
-    content: contentString,
-    maxWidth: 320
+    content: '<div class="scrollFix">' + contentString + '</div>'
   });
   ibArray.push(infowindow)
 

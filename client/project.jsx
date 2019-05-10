@@ -73,9 +73,18 @@ class Project extends React.Component {
       let materials = ''
       let description = ''
 
-      if(project.location){
+
+function isEmpty(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}
+
+      if(!isEmpty(project.location)){
         console.log('project location', project.location)
-        location = project.location.address
+        location = project.location
          }else{
          console.log('no location')
        }
@@ -167,7 +176,7 @@ class Project extends React.Component {
     })
     }else if (!currentComponent.state.file){
       console.log('no file, posting without photo')
-      debugger
+      // debugger
       const jsonse = JSON.stringify({'text': currentComponent.state});
       const blob = new Blob([jsonse], {type: "application/json"});
       axios.post(`${currentComponent.state.project.id}`, blob, {
@@ -351,7 +360,7 @@ class Project extends React.Component {
                 </label>
                 <label htmlFor='location'>
                   Found at:
-                  <input type='text' placeholder={this.state.project.location.address} defaultValue={this.state.project.location.address} onChange={this.setLocation.address} name='location' />
+                  <input type='text' placeholder={this.state.project.location.address} defaultValue={this.state.project.location.address} onChange={this.setLocation} name='location' />
                 </label>
                 <label htmlFor='description'>
                   Description:

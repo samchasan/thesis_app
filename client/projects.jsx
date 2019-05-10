@@ -47,6 +47,25 @@ class Projects extends React.Component {
       } 
     }
 
+
+    function isEmpty(obj) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+          return false;
+      }
+      return true;
+    }
+
+    const checkLocation = (location) => {
+      if(isEmpty(location)){
+        return  null
+      } else {
+        return (
+          <p> {`Found ${insertText(location.address)} ${location.address}`} </p>
+        )
+    }
+  }
+
     
 
     const projects = this.state.projects.map((project,key)=>
@@ -56,7 +75,7 @@ class Projects extends React.Component {
       <h2><a href={`user/profile/${project.username}/${project._id}`}> {project.title} </a> </h2>
       <p><a href={`user/profile/${project.username}`}>{project.username}</a></p>
       <p>{`Made with ${project.materials}`}</p>
-      <p>{`Found ${insertText(project.location)} ${project.location}`}</p>
+      <p>{checkLocation(project.location)}</p>
       </div>
       </div>
     );

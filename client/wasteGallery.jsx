@@ -98,11 +98,33 @@ class Waste extends React.Component {
       } 
     }
 
-    const frequencyIndicator = (waste) => {
-      if(waste.frequency){
+
+    function isEmpty(obj) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+          return false;
+      }
+      return true;
+    }
+
+    const checkLocation = (location) => {
+      if(isEmpty(location)){
+        return  null
+      } else {
+        return (
+          <p> {`Found ${insertText(location.address)} ${location.address}`} </p>
+        )
+    }
+  }
+
+
+    const frequencyIndicator = (frequency) => {
+      if(isEmpty(frequency)){
+        return null
+      }else{
         // console.log('frequency indicator', waste)
         return(
-          <p>{`${capitalize(waste.frequency.category)} ${insertText(waste.frequency.category)} ${waste.frequency.moment}`}</p>
+          <p>{`${capitalize(frequency.category)} ${insertText(frequency.category)} ${frequency.moment}`}</p>
         )
       } 
     }
@@ -114,7 +136,8 @@ class Waste extends React.Component {
           <h2><a href={`${waste.username}/waste/${waste._id}`}> {waste.title} </a> </h2>
           <div>{editButton(waste)}</div>
           <p>{`${waste.amount} lbs`}</p>
-            {frequencyIndicator(waste)}      
+            {frequencyIndicator(waste.frequency)}    
+            {checkLocation(waste.location)}  
         </div>
       </div>
     );

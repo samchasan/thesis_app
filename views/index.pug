@@ -4,15 +4,33 @@ block content
 
   br
   div.columns
-    div.column
-      h2.title Find Projects and Materials by you! 
+    div.column.is-one-third
+      h2.title.is-2 Find Projects and Materials by you! 
       p Enter an address, city, or zip code
-
-    div.column
       div#searchBox
         script(src='../js/searchInput.js') 
+      
+      div#homeText
+        h5.title.is-5 Producing Waste?
+        p Save a buck or two by posting your byproducts here 
+          | for artists, makers, and even other businesses 
+          | to repurpose.
 
-  hr
+        br  
 
-  div#googleMap
-    script(src='../js/map.js')
+        h5.title.is-5 Making Something?
+        p Check here first for free items of all types, 
+          | whether it's organics, steel 
+          | scrap, or anything 
+          | in between.   
+      
+      br
+
+      b Join today 
+        a(class='button is-link is-small' href='/catalog/register' ) Sign up
+     
+
+    div.column.is-two-thirds
+      div#googleMap
+        script(src='../js/map.js')
+  

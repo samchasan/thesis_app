@@ -30,22 +30,22 @@ class Search extends React.Component {
   }
   setInput(event){
     this.setState({searchInput: event.target.value});
-    console.log(this.state.searchInput)
+    console.log(this.state.searchInput )
   }
   
 
 
   render() {
 return(
-      <form >
+      <form method='POST' preventDefault='true' onSubmit={this.search}>
         <div className='form-group'>
         <label htmlFor='searchInput'></label>
         <input id='searchInput' onChange={this.setInput} className='form-control' type='text' placeholder='Seattle' name='searchInput'> 
-        </input>
-        </div>
-     
+        </input>     
       <button class='button is-primary is-large' type='button' onClick={this.search} > search </button>
-      </form>
+      </div>
+
+       </form> 
     )
   }
 }

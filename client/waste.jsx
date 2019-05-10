@@ -87,16 +87,16 @@ class Waste extends React.Component {
       const waste = res.data.waste
       console.log('got waste', waste)
       
-      let address = ''
-      if(!waste.location){
-        address = address
-      } else {
-        address = waste.location.address
-      }
+      // let address = ''
+      // if(!waste.location){
+      //   address = address
+      // } else {
+      //   address = waste.location.address
+      // }
 
       currentComponent.setState({waste: {
         title: waste.title,
-        location: address,
+        location: waste.location,
         material: waste.material,
         frequency: waste.frequency,
         amount: waste.amount,
@@ -457,6 +457,25 @@ class Waste extends React.Component {
     }
 
 
+    function isEmpty(obj) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+          return false;
+      }
+      return true;
+    }
+
+    const checkLocation = (location) => {
+      if(isEmpty(location)){
+        return  null
+      } else {
+        return (
+          <p> {`Located: `} <a href={`https://www.google.com/maps/place/${location.address}`}> {location.address} </a> </p>
+        )
+    }
+  }
+
+
     const staticView = () => { 
       return (
         <div id='staticView'>
@@ -466,7 +485,7 @@ class Waste extends React.Component {
                   {/* NEED TO ADD LINKS THAT GO TO SEARCH PAGE HERE FOR MATERIAL AND LOCATION */}
               <p class="subtitle is-5">{checkAmount()} {frequencyIndicator(waste)} </p>
               <p>{`Material: `} <a> {waste.material}</a></p>
-              <p>{`Located: `}<a> {waste.location} </a>  </p>
+              <p>{checkLocation(waste.location)}  </p>
               <p> {`Producer: `} <a href={`../../${waste.username}`}> {waste.username} </a> </p>
                  
               <div className='columns'>
@@ -501,7 +520,7 @@ class Waste extends React.Component {
                 </label>
                 <label htmlFor='location'>
                   Location:
-                  <input type='text' placeholder={this.state.waste.location} defaultValue={this.state.waste.location} onChange={this.setLocation} name='location' />
+                  <input type='text' placeholder={this.state.waste.location.address} defaultValue={this.state.waste.location.address} onChange={this.setLocation} name='location' />
                 </label>
                 <div id='frequencyInput'>
                         <label htmlFor='frequency'>

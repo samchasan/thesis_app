@@ -509,11 +509,11 @@ exports.updateUser =
         updateUser('phone', phone)
       }
       if (data.text.location) {
-        addy = data.text.location.address
-        const coords = await getCoords(addy)
+        location = data.text.location.address
+        const coords = await getCoords(location)
         console.log('coords in update user', coords)
         updateUser('location', {
-          address: addy,
+          address: location,
           coordinates: coords
         })
       }
@@ -614,11 +614,11 @@ exports.updateProject = async (req, res) => {
       updateProject('materials', materials)
     }
     if (data.text.location) {
-      addy = data.text.location
-      const coords = await getCoords(addy)
+      location = data.text.location
+      const coords = await getCoords(location)
       console.log('coords in update user', coords)
       updateProject('location', {
-        address: addy,
+        address: location,
         coordinates: coords
       })
     }
@@ -720,11 +720,11 @@ exports.updateWaste = async (req, res) => {
       updateWaste('frequency', frequency)
     }
     if (data.text.location) {
-      address = data.text.location
-      const coords = await getCoords(address)
+      location = data.text.location
+      const coords = await getCoords(location)
       console.log('coords in update user', coords)
       updateWaste('location', {
-        address: address,
+        address: location,
         coordinates: coords
       })
     }
