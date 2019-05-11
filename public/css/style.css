@@ -90,7 +90,8 @@ margin-bottom: 10px
   /* display: block; */
 }
 .navbar{
-  background-color: #23D160
+  background-color: #23D160;
+  margin-bottom: 0px;
 }
 
 #main-nav{
@@ -250,6 +251,8 @@ h4#usernameTitle.title.is-4{
   margin: 5px;
 }
 
+
+
 .projectThumbs:hover{
   background-color:rgb(245, 255, 254);
 }
@@ -290,13 +293,13 @@ h4#usernameTitle.title.is-4{
 }
 
 .wasteThumbs{
-  width: 280px;
-  height: 150px;
+  width: 291px;
+  height: 130px;
   display: inline-block;
   position: relative;
   border: dashed lightgray;
   border-width: 1px;
-  margin: 5px;
+  margin: 8px;
 }
 
 .wasteThumbs:hover{
@@ -576,11 +579,26 @@ ol{
 #homeText  {
   margin-top: 15px;
   color: gray;
+  text-align: center;
+  line-height: 1em;
 }
 
 
 #homeText p {
-  font-size: 15px;
+  font-size: 9pt;
+  width: 100%
+}
+
+#disclaimerText {
+  color:gray;
+  font-size: 10pt;
+  width: 100%
+}
+
+#actionButtons a{
+  white-space: unset;
+  margin: 5px;
+  width: 180px;
 }
 
 

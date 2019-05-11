@@ -411,28 +411,40 @@ class Profile extends React.Component {
       }
     }
 
-    const checkAddress = () =>  {
-      if(this.state.user.location.address){ 
+
+     
+    const checkLocation = (location) => {
+      if(isEmpty(location)){
+        return  null
+      } else {
         return (
-          <div>
-          <p> {user.location.address} </p>        
-          </div>
-          )
-      }
+          <p> <a href={`https://www.google.com/maps/place/${location.address}`}> {location.address} </a> </p>
+        )
     }
+  }
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+ 
+
     const checkContact = () =>  {
       // debugger
       if(this.state.user.phone){ 
         return (
           <div>
-            <p>{user.email}</p>
+            <p><a href={user.email}>{user.email}</a></p>
             <p>{user.phone}</p>
           </div>
           )
       }else{
         return (
           <div>
-            <p>{user.email}</p>
+            <p><a href={user.email}>{user.email}</a></p>
           </div>
           )
       }
@@ -450,7 +462,7 @@ class Profile extends React.Component {
                 <h4 id='usernameTitle' class="title is-4">{user.username}</h4>
                 <div id='userContactInfo'>
                   <div id='userAddress'>
-                    {checkAddress()}
+                    {checkLocation(this.state.user.location)}
                   </div>  
                   <div id='userContact'>
                     {checkContact()}
@@ -465,6 +477,7 @@ class Profile extends React.Component {
             </div>           
           </div>
         </div>
+        
     )}
 
     const editView = () => { 

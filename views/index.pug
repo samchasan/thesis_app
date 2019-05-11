@@ -3,34 +3,30 @@ extends layout
 block content
 
   br
-  div.columns
-    div.column.is-one-third
-      h2.title.is-2 Find Projects and Materials by you! 
-      p Enter an address, city, or zip code
-      div#searchBox
-        script(src='../js/searchInput.js') 
+  div.container
+    div.columns
+      div.column.is-one-third
+        h2.title.is-2 Find Projects and Materials by you! 
+        p Enter an address, city, or zip code
+        div#searchBox
+          script(src='../js/searchInput.js') 
+        
+        div#homeText.box
+          h5.title.is-5 Save Money
+          p Find free items, or offload unneeded items! Chaffmap 
+            | is here to connect you, and inspire you to make your
+            | next masterpiece.
+          div#actionButtons
+            a.button.is-link.is-outlined(href='/wastes') <b>Find materials </b> 
+            a.button.is-link.is-outlined(href='/projects') <b>Find projects</b> 
+              
+        br
+
+        b Join today 
+          a(class='button is-link is-small' href='/catalog/register' ) Sign up
       
-      div#homeText
-        h5.title.is-5 Producing Waste?
-        p Save a buck or two by posting your byproducts here 
-          | for artists, makers, and even other businesses 
-          | to repurpose.
 
-        br  
-
-        h5.title.is-5 Making Something?
-        p Check here first for free items of all types, 
-          | whether it's organics, steel 
-          | scrap, or anything 
-          | in between.   
-      
-      br
-
-      b Join today 
-        a(class='button is-link is-small' href='/catalog/register' ) Sign up
-     
-
-    div.column.is-two-thirds
-      div#googleMap
-        script(src='../js/map.js')
+      div.column.is-two-thirds
+        div#googleMap
+          script(src='../js/map.js')
   

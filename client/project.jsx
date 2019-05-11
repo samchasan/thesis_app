@@ -356,7 +356,7 @@ function isEmpty(obj) {
         <div >
         <div className='back-nav'>
         <div className='container'>
-          <p> <a href={`../../${project.username}`}> {project.username}</a>'s project </p>
+          <p> <a href={`../${project.username}`}> {project.username}</a>'s project </p>
         </div>
         </div>
         <div id='staticView' className='container'>
