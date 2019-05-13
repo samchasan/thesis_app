@@ -175,9 +175,16 @@ exports.addWastePost =
     const userID = req.user.id
     const username = req.user.username
     const frequency = req.body.text.frequency
-    const location = req.body.text.location
+    let location = {}
 
     console.log(location)
+    if (req.body.text.location) {
+      userInput = req.body.text.location
+      const coords = await getCoords(userInput)
+      console.log('coords in update user', coords)
+      location.address = userInput
+      location.coordinates = coords
+    }
 
     const name = req.body.text.name
     const material = req.body.text.material
