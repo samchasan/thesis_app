@@ -53,6 +53,7 @@ class Waste extends React.Component {
       material: '',
       location: '',
       frequency:{},
+      frequencyView: {},
       amount: '',
       path: window.location.pathname,
       file:'',
@@ -229,16 +230,26 @@ class Waste extends React.Component {
   setFrequencyCategory(event){
     switch(event.target.value){
       case 'daily':
-        this.setState({frequency: {category: 'daily'}})
+        this.setState({
+          frequency: {category: 'daily'}}, )
       break;
       case 'weekly':
-        this.setState({frequency: {category: 'weekly'}})
+        this.setState({
+          frequency: {category: 'weekly'},
+          frequencyView:{view: 'boxes', value:'7'}
+        })
+        // debugger
       break;
       case 'monthly':
-        this.setState({frequency: {category: 'monthly'}})
+        this.setState({
+          frequency: {category: 'monthly'},
+          frequencyView:{view: 'calendar', value:'31'}
+        })
       break;
       case 'yearly':
-        this.setState({frequency: {category: 'yearly'}})
+        this.setState({frequency: {category: 'yearly'},
+        frequencyView:{view: 'boxes', value:'12'}
+      })
       break;
     }
     
@@ -347,6 +358,7 @@ class Waste extends React.Component {
 
 
   render() {
+
     let indicatorText;
     let currentComponent = this
 
@@ -412,24 +424,148 @@ class Waste extends React.Component {
       )
       }
     }
+    let tablemade = false
+
+       const frequencyVisual = (category, moment) =>  {
+
+        // debugger
+
+        switch (category){
+          case'daily':
+            return (
+            <div id='dailyView'>
+                <table className='table'>
+                  <thead>
+                      <tr>
+                        <th id='12:00 am'><abbr title="12a"></abbr>12 am</th>
+                        <th id='3:00 am'><abbr title="3a"></abbr>3 am</th>
+                        <th id='6:00 am'><abbr title="6a"></abbr>6 am</th>
+                        <th id='9:00 am'><abbr title="9a"></abbr>9 am</th>
+                        <th id='12:00 pm' ><abbr title="12p"></abbr>12 pm</th>
+                        <th id='3:00 pm'><abbr title="3p"></abbr>3 pm</th>
+                        <th id='6:00 pm'><abbr title="6p"></abbr>6 pm</th>
+                        <th id='9:00 pm'><abbr title="9p"></abbr>9 pm</th>
+                      </tr>
+                    </thead>
+                </table>
+              </div>            )
+          break;
+          case 'weekly':
+              tablemade = true
+          return (
+            <div id='weekView'>
+              <table className='table'>
+                <thead>
+                    <tr>
+                      <th id='Sunday'><abbr title="Sunday"></abbr>Su</th>
+                      <th id='Monday'><abbr title="Monday"></abbr>M</th>
+                      <th id='Tuesday'><abbr title="Tuesday"></abbr>T</th>
+                      <th id='Wednesday'><abbr title="Wednesday"></abbr>W</th>
+                      <th id='Thursday' ><abbr title="Thursday"></abbr>Th</th>
+                      <th id='Friday'><abbr title="Friday"></abbr>F</th>
+                      <th id='Saturday'><abbr title="Saturday"></abbr>Sa</th>
+                    </tr>
+                  </thead>
+              </table>
+            </div>
+          )
+
+          break;
+          case 'monthly':
+          return (
+            <div id='monthView'>
+              <table className='table'>
+                <thead>
+                    <tr>
+                      <th id='1'><abbr title="1"></abbr>1</th>
+                      <th id='2'><abbr title="2"></abbr>2</th>
+                      <th id='3'><abbr title="3"></abbr>3</th>
+                      <th id='4'><abbr title="5"></abbr>4</th>
+                      <th id='5' ><abbr title="5"></abbr>5</th>
+                      <th id='6'><abbr title="6"></abbr>6</th>
+                      <th id='7'><abbr title="7"></abbr>7</th>
+                      <th id='8'><abbr title="8"></abbr>8</th>
+
+                    </tr>
+                    <tr>
+                      <th id='9'><abbr title="9"></abbr>9</th>
+                      <th id='11'><abbr title="11"></abbr>10</th>
+                      <th id='12'><abbr title="12"></abbr>12</th>
+                      <th id='13' ><abbr title="13"></abbr>13</th>
+                      <th id='14'><abbr title="14"></abbr>14</th>
+                      <th id='15'><abbr title="15"></abbr>15</th>
+                      <th id='16'><abbr title="16"></abbr>16</th>
+                      <th id='17'><abbr title="17"></abbr>17</th>
+                    </tr>
+                    <tr>
+                      <th id='18'><abbr title="18"></abbr>18</th>
+                      <th id='19'><abbr title="19"></abbr>19</th>
+                      <th id='20'><abbr title="20"></abbr>20</th>
+                      <th id='21' ><abbr title="21"></abbr>21</th>
+                      <th id='22'><abbr title="22"></abbr>22</th>
+                      <th id='23'><abbr title="23"></abbr>23</th>
+                      <th id='24'><abbr title="24"></abbr>24</th>
+                      <th id='25' ><abbr title="25"></abbr>25</th>                    </tr>
+                    <tr id='lastRow'>
+                      <th id='26'><abbr title="26"></abbr>26</th>
+                      <th id='27'><abbr title="27"></abbr>27</th>
+                      <th id='28'><abbr title="28"></abbr>28</th>
+                      <th id='29'><abbr title="29"></abbr>29</th>
+                      <th id='30'><abbr title="30"></abbr>30</th>
+                      <th id='31'><abbr title="31"></abbr>31</th>
+                      <th id='null'><abbr title="null"></abbr></th>
+                      <th id='null'><abbr title="null"></abbr></th>
+                    </tr>
+                  </thead>
+              </table>
+            </div>          )
+
+          break;
+          case 'yearly' :
+            return (
+              <div id='yearView'>
+              <table className='table'>
+                <thead>
+                    <tr>
+                      <th id='January'><abbr title="January"></abbr>JAN</th>
+                      <th id='February'><abbr title="February"></abbr>FEB</th>
+                      <th id='March'><abbr title="March"></abbr>MAR</th>
+                      <th id='April'><abbr title="April"></abbr>APR</th>
+                      <th id='May'><abbr title="May"></abbr>MAY</th>
+                      <th id='June'><abbr title="June"></abbr>JUN</th>
+                      <th id='July'><abbr title="July"></abbr>JUL</th>
+                      <th id='August'><abbr title="August"></abbr>AUG</th>
+                      <th id='September'><abbr title="September"></abbr>SEP</th>
+                      <th id='October'><abbr title="October"></abbr>OCT</th>
+                      <th id='November'><abbr title="November"></abbr>NOV</th>
+                      <th id='December'><abbr title="December"></abbr>DEC</th>
+                    </tr>
+                  </thead>
+              </table>
+            </div>
+            )
+          break;
+        } 
+    }
+
 
 
     const frequencyIndicator = (waste) => {
       if(waste.frequency){
-        if(waste.frequency.moment){
-          console.log('frequency indicator', waste)
+        if(!isEmpty(waste.frequency.moment)){
+          console.log('frequency indicator', this.state)
+          const visuals = frequencyVisual(waste.frequency.category,waste.frequency.moment)
           return(
-            <span>{`${capitalize(waste.frequency.category)} 
-                    ${insertText(waste.frequency.category)} 
-                    ${checkFreqMoment(waste.frequency.moment)}`}
+            <span>
+                  {visuals}
             </span>
           )
         }
-        return(
-        <span>{`${capitalize(waste.frequency.category)} 
-                ${checkFreqMoment(waste.frequency.moment)}`}
-        </span>
-        )
+        // return(
+        // <span>{`${capitalize(waste.frequency.category)} 
+        //         ${checkFreqMoment(waste.frequency.moment)}`}
+        // </span>
+        // )
         } else {
         return null
       }
@@ -442,6 +578,8 @@ class Waste extends React.Component {
         return ''
       }
     }
+
+    
 
 
     const checkAmount = () =>  {
@@ -471,8 +609,8 @@ class Waste extends React.Component {
         return (
           <p> <a href={`https://www.google.com/maps/place/${location.address}`}> {location.address} </a> </p>
         )
+      }
     }
-  }
 
 
     const staticView = () => { 
@@ -486,9 +624,12 @@ class Waste extends React.Component {
         <div id='staticView' className='container'>
           <div className='columns' id='wasteInfoBox'>
             <div className='column' id='wasteInfo'>
-              <div id='singleItemTitle'>
-                <h3 class="title is-3"> {capitalize(waste.title)}</h3>
-                <h5 class="subtitle is-5">{checkAmount()} {frequencyIndicator(waste)} </h5>
+              <div id='singleItemTitle'className='level'>
+                <h3 class="title is-3 level-left"> {capitalize(waste.title)}</h3>
+                <h5 class="subtitle is-5 level-right">{checkAmount()} {capitalize(waste.frequency.category)}</h5>
+              </div>
+              <div id='frequencyView'>
+              {frequencyIndicator(waste)}
               </div>
               <div id='singleItemText'>
                 <p id='address'>{checkLocation(waste.location)}  </p>                 
@@ -504,9 +645,20 @@ class Waste extends React.Component {
               <img src={waste.photoURL}></img>
             </div>
           </div>
-          </div>
+          </div>        
         </div>
     )}
+
+
+    const highlightFrequencyMoment = () => {
+      if(tablemade){
+      const moment = JSON.stringify(waste.frequency.moment)
+
+      const boxesToHighlight = document.getElementById("Thursday")
+      // boxesToHighlight.style.backgroundColor = 'red'
+      console.log('boxesToHighlight', boxesToHighlight)
+      }
+    }
 
     const editView = () => { 
       return ( 
@@ -605,9 +757,11 @@ class Waste extends React.Component {
     }
 
     let waste = this.state.waste
-    // console.log(url)
-      return ( 
-        <div> {viewCheck()} </div>
+
+    highlightFrequencyMoment()
+
+    return ( 
+         <div> {viewCheck()} </div>
       );
     }
   }
