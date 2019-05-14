@@ -455,7 +455,7 @@ class Profile extends React.Component {
       return (
         <div id='staticView'>
           <div className='columns is-mobile' id='userHeader'>
-            <div className='column is-one-quarter' id='avatar'>
+            <div className='column is-one-quarter' id='avatar' class='mobile'>
               <img src={checkPhoto()}></img>
             </div>
             <div className='column is-half' id='userInfo'>

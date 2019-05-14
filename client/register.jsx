@@ -93,7 +93,7 @@ return(
           </input>
         </div>
         <div className='form-group'>
-            <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='password' name='password' >
+            <input id='password' onChange={this.setPassword} className='form-control' type='password' placeholder='password' name='password' >
           </input>
         </div>
         <div id='businessYesNo'>

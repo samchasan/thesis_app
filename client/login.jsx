@@ -53,7 +53,7 @@ return(
         </input>
         </div>
       <div className='form-group'>
-        <input id='password' onChange={this.setPassword} className='form-control' type='text' placeholder='password' name='password' >
+        <input id='password' onChange={this.setPassword} className='form-control' type='password' placeholder='password' name='password' >
         </input>
         </div>
       <button className='button is-medium is-primary' type='button' onClick={this.login} > Login </button>
