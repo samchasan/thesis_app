@@ -1,0 +1,9 @@
+@charset "utf-8";
+@import "./node_modules/bulma/bulma.sass";
+
+
+#avatar {
+  @include until($tablet) {
+      width: 25%;
+  }
+}
