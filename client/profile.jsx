@@ -454,7 +454,7 @@ class Profile extends React.Component {
       //console.log('staticView', user.avatarURL)
       return (
         <div id='staticView'>
-          <div className='columns' id='userHeader'>
+          <div className='columns is-mobile' id='userHeader'>
             <div className='column is-one-quarter' id='avatar'>
               <img src={checkPhoto()}></img>
             </div>

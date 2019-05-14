@@ -175,6 +175,11 @@ h4#usernameTitle.title.is-4{
   padding: 10px
 }
 
+@media screen and (max-width: 767px) {   
+  #avatar{
+    width: 25%
+  } 
+}
 .subtitle.is-5{
   margin: -20px 0px 5px
 }
