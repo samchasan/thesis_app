@@ -88,16 +88,22 @@ class Waste extends React.Component {
       const waste = res.data.waste
       console.log('got waste', waste)
       
-      // let address = ''
-      // if(!waste.location){
-      //   address = address
-      // } else {
-      //   address = waste.location.address
-      // }
+      let addr = ''
+      const coords = {lat: '', lng: ''}
+      let location
+
+
+      if(!waste.location){
+        location = {address: addr, location: coords}
+      } else {
+        location = waste.location
+      }
+
+
 
       currentComponent.setState({waste: {
         title: waste.title,
-        location: waste.location,
+        location: location,
         material: waste.material,
         frequency: waste.frequency,
         amount: waste.amount,
@@ -396,6 +402,7 @@ class Waste extends React.Component {
     }
 
     const checkDescription = () =>  {
+      if(this.state.isOwner){
       if(this.state.waste.description){ 
         return (
           <div>
@@ -410,6 +417,14 @@ class Waste extends React.Component {
 
         )
       }
+    }else {
+      return (
+        <div>
+        <p> No description! </p> 
+        </div>
+
+      )
+    }
     }
 
     const deleteButton = () => {
